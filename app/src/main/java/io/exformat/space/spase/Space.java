@@ -20,9 +20,6 @@ public class Space extends Screen {
     private double STEP = 0.01;
     private int stepCount = 0;
 
-    private int touchX;
-    private int touchY;
-
     private int touchDownX;
     private int touchDownY;
 
@@ -32,7 +29,6 @@ public class Space extends Screen {
     private boolean trust = false;
 
     private float angle;
-    private float angle2;
 
 
     FlyObject flyObject = new FlyObject();
@@ -62,73 +58,33 @@ public class Space extends Screen {
 
             TouchEvent event = touchEvents.get(i);
 
-            if (event.type == TouchEvent.TOUCH_DOWN &&
-                    inBounds(event,
-                        buttons.getJoystickX() - (Assets.joystickButton.getWidth() / 2),
-                        buttons.getJoystickY() - (Assets.joystickButton.getWidth() / 2),
-                           Assets.joystickButton.getWidth(),
-                           Assets.joystickButton.getHeight())){
+            if (event.type == TouchEvent.TOUCH_DOWN){
 
                 touchDownX = event.x;
                 touchDownY = event.y;
-                calcTouch = true;
-            }
 
-            if (event.type == TouchEvent.TOUCH_DOWN &&
-                    inBounds(event,
-                        buttons.getButtonTrustX() - (Assets.trustButton.getWidth() / 2),
-                        buttons.getButtonTrustY() - (Assets.trustButton.getHeight() / 2),
-                           Assets.trustButton.getWidth(),
-                           Assets.trustButton.getHeight())){
-
-                trust = true;
+                //calcTouch = true;
             }
 
             if (event.type == TouchEvent.TOUCH_DRAGGED) {
 
-                if (inBounds(event,
-                        buttons.getJoystickX() - (Assets.joystickButton.getWidth() / 2),
-                        buttons.getJoystickY() - (Assets.joystickButton.getWidth() / 2),
-                        Assets.joystickButton.getWidth(),
-                        Assets.joystickButton.getHeight())) {
+                touchDraggedX = event.x;
+                touchDraggedY = event.y;
 
-                    touchDraggedX = event.x;
-                    touchDraggedY = event.y;
-
-
-                    angle = calculateDirect.getAngle(touchDownX, touchDownY,
+                angle = calculateDirect.getAngle(touchDownX, touchDownY,
                             touchDraggedX, touchDraggedY);
-                }
 
-                if (inBounds(event,
-                        buttons.getButtonTrustX() - (Assets.trustButton.getWidth() / 2),
-                        buttons.getButtonTrustY() - (Assets.trustButton.getHeight() / 2),
-                        Assets.trustButton.getWidth(),
-                        Assets.trustButton.getHeight())){
+                //высчитываем новое направление
+                calculateDirect.calculateDirection(flyObject, 1, angle, 0);
 
-                    calculateDirect.calculateDirection(flyObject, 1, angle, 0);
-
-                }
+                //рисуем новую ракету
+                trust = true;
             }
+
             if (event.type == TouchEvent.TOUCH_UP){
 
-                if (inBounds(event,
-                        buttons.getJoystickX() - (Assets.joystickButton.getWidth() / 2),
-                        buttons.getJoystickY() - (Assets.joystickButton.getWidth() / 2),
-                        Assets.joystickButton.getWidth(),
-                        Assets.joystickButton.getHeight())){
-
-                    calcTouch = false;
-                }
-
-                if (inBounds(event,
-                        buttons.getButtonTrustX() - (Assets.trustButton.getWidth() / 2),
-                        buttons.getButtonTrustY() - (Assets.trustButton.getHeight() / 2),
-                        Assets.trustButton.getWidth(),
-                        Assets.trustButton.getHeight())){
-
-                    trust = false;
-                }
+                //calcTouch = false;
+                trust = false;
             }
         }
     }
@@ -165,7 +121,6 @@ public class Space extends Screen {
                 buttons.getButtonTrustY() - (Assets.trustButton.getWidth() / 2));
 
         graphics.drawText(" " + buttons.getJoystickX() + buttons.getJoystickY() + "angle: " + angle, 500, 100, WHITE);
-        graphics.drawText("touch: " + touchX + " " + touchY, 300,250, WHITE);
 
         update(deltaTime);
         stepCount++;
