@@ -25,7 +25,6 @@ public class Space extends Screen {
 
     private int touchDraggedX;
     private int touchDraggedY;
-    private boolean calcTouch;
     private boolean trust = false;
 
     private float angle;
@@ -50,43 +49,7 @@ public class Space extends Screen {
     @Override
     public void update(float deltaTime) {
 
-        calculateCoordinate.calculate(massObjects,flyObject,STEP);
-
-        List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
-        int len = touchEvents.size();
-        for (int i = 0; i < len; i++) {
-
-            TouchEvent event = touchEvents.get(i);
-
-            if (event.type == TouchEvent.TOUCH_DOWN){
-
-                touchDownX = event.x;
-                touchDownY = event.y;
-
-                //calcTouch = true;
-            }
-
-            if (event.type == TouchEvent.TOUCH_DRAGGED) {
-
-                touchDraggedX = event.x;
-                touchDraggedY = event.y;
-
-                angle = calculateDirect.getAngle(touchDownX, touchDownY,
-                            touchDraggedX, touchDraggedY);
-
-                //высчитываем новое направление
-                calculateDirect.calculateDirection(flyObject, 1, angle, 0);
-
-                //рисуем новую ракету
-                trust = true;
-            }
-
-            if (event.type == TouchEvent.TOUCH_UP){
-
-                //calcTouch = false;
-                trust = false;
-            }
-        }
+        control();
     }
 
     @Override
@@ -102,7 +65,7 @@ public class Space extends Screen {
                     (int) flyObject.getX() - Assets.flyObject.getWidth() / 2,
                     (int) flyObject.getY() - Assets.flyObject.getHeight() / 2);
         }else{
-            graphics.drawPixmap(Assets.flyObjectTust,
+            graphics.drawPixmap(Assets.flyObjectTrust,
                     (int) flyObject.getX() - Assets.flyObject.getWidth() / 2,
                     (int) flyObject.getY() - Assets.flyObject.getHeight() / 2);
         }
@@ -113,12 +76,17 @@ public class Space extends Screen {
                     (int) massObj.getY(), 20, WHITE);
 
         }
+
+        /*
         graphics.drawPixmap(Assets.joystickButton,
                 buttons.getJoystickX() - (Assets.joystickButton.getWidth() / 2),
                 buttons.getJoystickY() - (Assets.joystickButton.getWidth() / 2));
         graphics.drawPixmap(Assets.trustButton,
                 buttons.getButtonTrustX() - (Assets.trustButton.getHeight() / 2),
                 buttons.getButtonTrustY() - (Assets.trustButton.getWidth() / 2));
+        */
+
+        graphics.drawText("fuel: " + flyObject.getFuelMass(), 1000, 1000, WHITE);
 
         graphics.drawText(" " + buttons.getJoystickX() + buttons.getJoystickY() + "angle: " + angle, 500, 100, WHITE);
 
@@ -155,13 +123,58 @@ public class Space extends Screen {
 
     }
 
+    private void control(){
+
+        calculateCoordinate.calculate(massObjects,flyObject,STEP);
+
+        List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
+
+        int len = touchEvents.size();
+
+        for (int i = 0; i < len; i++) {
+
+            TouchEvent event = touchEvents.get(i);
+
+            //первое касание записываем координаты
+            if (event.type == TouchEvent.TOUCH_DOWN){
+
+                touchDownX = event.x;
+                touchDownY = event.y;
+            }
+
+            //передвижение считаем
+            //записываем координаты
+            //считаем угол от первого касания
+            if (event.type == TouchEvent.TOUCH_DRAGGED) {
+
+                touchDraggedX = event.x;
+                touchDraggedY = event.y;
+
+                angle = calculateDirect.getAngle(touchDownX, touchDownY,
+                        touchDraggedX, touchDraggedY);
+
+                //высчитываем новое направление
+                calculateDirect.calculateDirection(flyObject, 1, angle, 0);
+
+                //рисуем огонёк у ракеты
+                trust = true;
+            }
+
+            if (event.type == TouchEvent.TOUCH_UP){
+
+                //ракета без огонька
+                trust = false;
+            }
+        }
+    }
+
     private class AddMassObject{
 
         ArrayList<MassObject> massObjects = new ArrayList<>();
 
         public ArrayList<MassObject> getMassObjects(){
 
-            massObjects.add(new MassObject(960,512,0,200000));
+            massObjects.add(new MassObject(960,512,0,200000, 54));
 
             return this.massObjects;
         }

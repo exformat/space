@@ -17,7 +17,7 @@ public class CalculateCoordinate{
 	private double coordinateZ = 0;
 	
 	
-	private double calculateRadius(FlyObject flyObject, MassObject massObject){
+	public double calculateRadius(FlyObject flyObject, MassObject massObject){
 		
 		return Math.sqrt(Math.pow(flyObject.getX() - massObject.getX(), 2) +
 						 Math.pow(flyObject.getY() - massObject.getY(), 2) +

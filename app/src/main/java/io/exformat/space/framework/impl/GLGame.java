@@ -18,13 +18,8 @@ import io.exformat.space.framework.Graphics;
 import io.exformat.space.framework.Input;
 import io.exformat.space.framework.Screen;
 
-/**
- * Created by mamy on 12.03.18.
- */
-
 public abstract class GLGame extends Activity implements Game, GLSurfaceView.Renderer {
 
-    /*
     enum GLGameState {
         Initialized,
         Running,
@@ -32,6 +27,7 @@ public abstract class GLGame extends Activity implements Game, GLSurfaceView.Ren
         Finished,
         Idle
     }
+
     GLSurfaceView glView;
     GLGraphics glGraphics;
     Audio audio;
@@ -77,14 +73,17 @@ public abstract class GLGame extends Activity implements Game, GLSurfaceView.Ren
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+
         glGraphics.setGL(gl);
-    }
-    synchronized(stateChanged) {
-        if(state == GLGameState.Initialized)
-            screen = getStartScreen();
-        state = GLGameState.Running;
-        screen.resume();
-        startTime = System.nanoTime();
+
+        synchronized(stateChanged) {
+
+            if(state == GLGameState.Initialized)
+                screen = getStartScreen();
+            state = GLGameState.Running;
+            screen.resume();
+            startTime = System.nanoTime();
+        }
     }
 
     @Override
@@ -182,7 +181,4 @@ public abstract class GLGame extends Activity implements Game, GLSurfaceView.Ren
     public Screen getCurrentScreen(){
         return screen;
     }
-
-    */
-
 }

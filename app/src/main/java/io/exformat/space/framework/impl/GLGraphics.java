@@ -12,18 +12,22 @@ public class GLGraphics {
 
         this.glView = glView;
     }
+
     public GL10 getGL() {
 
         return gl;
     }
+
     void setGL(GL10 gl) {
 
         this.gl = gl;
     }
+
     public int getWidth() {
 
         return glView.getWidth();
     }
+
     public int getHeight() {
 
         return glView.getHeight();

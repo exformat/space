@@ -3,12 +3,14 @@ package io.exformat.space.model;
 public class FlyObject
 {
 
-	private double M = 0;
+	private double M = 110;
 
-	private double dryMass = 0;
-	private float fuelMass = 0;
-	private float fuelOut = 0;
-	private float powerTrust = 0;	
+	private double radius = 50;
+
+	private double dryMass = 10;
+	private float fuelMass = 100;
+	private float fuelOut = 0.1f;
+	private float powerTrust = 100;
 	
 	private double x = 0;
 	private double y = 0;
@@ -43,6 +45,14 @@ public class FlyObject
 		this.Vy = Vy;
 		this.Vz = Vz;
 		this.name = name;
+	}
+
+	public double getRadius() {
+		return radius;
+	}
+
+	public void setRadius(double radius) {
+		this.radius = radius;
 	}
 
 	public float getAngleDirectXY() {

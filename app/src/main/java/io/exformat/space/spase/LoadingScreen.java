@@ -28,7 +28,8 @@ public class LoadingScreen extends Screen {
         Assets.joystickButton = graphics.newPixmap("stick.png", PixmapFormat.ARGB4444);
         Assets.trustButton = graphics.newPixmap("trust_button.png", PixmapFormat.ARGB4444);
         Assets.background = graphics.newPixmap("background.png", PixmapFormat.ARGB4444);
-        Assets.flyObjectTust = graphics.newPixmap("rocket_trust.png", PixmapFormat.ARGB4444);
+        Assets.flyObjectTrust = graphics.newPixmap("rocket_trust.png", PixmapFormat.ARGB4444);
+
 
         //тут нужно будет реализовать получение разрешения экрана девайса
         //TODO hardcodee...
@@ -45,6 +46,7 @@ public class LoadingScreen extends Screen {
 
         //загрузка экрана игры
         game.setScreen(new Space(game));
+
     }
 
     @Override
