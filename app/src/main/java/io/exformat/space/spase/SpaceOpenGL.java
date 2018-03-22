@@ -1,5 +1,7 @@
 package io.exformat.space.spase;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,221 +16,286 @@ import io.exformat.space.framework.impl.GLGame;
 import io.exformat.space.framework.impl.GLGraphics;
 import io.exformat.space.framework.openGL.FPSCounter;
 import io.exformat.space.model.FlyObject;
+import io.exformat.space.model.FuelCountModel;
 import io.exformat.space.model.MassObject;
 import io.exformat.space.model.Models;
 import io.exformat.space.model.Textures;
+import io.exformat.space.spase.settings.SettingsModels;
 
 
-public class SpaceOpenGL extends Screen{
+public class SpaceOpenGL extends Screen {
 
-        private GLGraphics glGraphics;
-        private FPSCounter fps = new FPSCounter();
+    private GLGraphics glGraphics;
+    private FPSCounter fps = new FPSCounter();
 
-        private double STEP = 0.01;
+    private FuelCountModel fuelCountModel = new FuelCountModel();
 
-        private int touchDownX;
-        private int touchDownY;
+    private double STEP = 0.01;
 
-        private int touchDraggedX;
-        private int touchDraggedY;
+    private int touchDownX;
+    private int touchDownY;
 
-        private boolean trust = false;
-        private boolean crash = false;
+    private int touchDraggedX;
+    private int touchDraggedY;
 
-        private float angle;
+    private boolean trust = false;
+    private boolean fuelOut = false;
+    private boolean fuelOutSignal = false;
+    private boolean crash = false;
 
-        private float scale = 0.1f;
+    private int finishDate = 0;
+    private boolean finish = false;
 
-        FlyObject flyObject = new FlyObject();
+    private float angle;
 
-        CalculateCoordinate calculateCoordinate = new CalculateCoordinate();
-        CalculateDirect calculateDirect = new CalculateDirect();
 
-        //сразу инициализируем массив при старте этого класса
-        //инициализация идет через вложенный класс
-        ArrayList<MassObject> massObjects = new AddMassObject().getMassObjects();
+    private FlyObject flyObject = new FlyObject();
 
-        public SpaceOpenGL(Game game) {
+    private CalculateCoordinate calculateCoordinate = new CalculateCoordinate();
+    private CalculateDirect calculateDirect = new CalculateDirect();
 
-            super(game);
-            glGraphics = ((GLGame)game).getGLGraphics();
+    //сразу инициализируем массив при старте этого класса
+    //инициализация идет через вложенный класс
+    private ArrayList<MassObject> massObjects = Levels.getMassObjects();
+
+    public SpaceOpenGL(Game game) {
+
+        super(game);
+        glGraphics = ((GLGame) game).getGLGraphics();
+        flyObject.setX(150);
+        flyObject.setY(150);
+    }
+
+    @Override
+    public void update(float deltaTime) {
+
+
+        fuelOut = flyObject.getFuelMass() > 0.01;
+
+        //fuelOutSignal = flyObject.getFuelMass() <= 10;
+
+        if (fuelOut) {
+
+            if (trust) {
+                fuelCountModel.reloadModel(fuelCountModel.getHeightFuelCountModel() - (flyObject.getFuelOut() * (7.55f * SettingsModels.scaleX) / 2));
+            }
+        } else {
+            trust = false;
+
         }
 
-        @Override
-        public void update(float deltaTime) {
 
+        isFinish();
+        isCrash();
+        control();
 
-            if (trust){
-                scale += 0.1f;
-            }
-            isCrash();
-            control();
+        if (finishDate >= 500){
+
+            game.setScreen(new LevelClearScreen(game));
+        }
+    }
+
+    @Override
+    public void present(float deltaTime) {
+
+        fps.logFrame();
+
+        GL10 gl = glGraphics.getGL();
+
+        if (!crash) {
+            gl.glClearColor(0, 0, 0, 0);
+        } else {
+            gl.glClearColor(1, 0, 0, 0);
         }
 
-        @Override
-        public void present(float deltaTime) {
+        if (finish){
+            gl.glClearColor(0, 0, 1, 0);
+        }
 
-            fps.logFrame();
+        gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+        gl.glMatrixMode(GL10.GL_PROJECTION);
+        gl.glLoadIdentity();
+        gl.glOrthof(0, Assets.displayWidth, 0, Assets.displayHeight, 1, -1);
+        gl.glEnable(GL10.GL_TEXTURE_2D);
+        gl.glEnable(GL10.GL_BLEND);
+        gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 
-            GL10 gl = glGraphics.getGL();
+        //=================================================
+        Textures.finishTexture.bind();
+        gl.glMatrixMode(GL10.GL_MODELVIEW);
+        gl.glLoadIdentity();
+        gl.glTranslatef(Levels.getFinishX(), Levels.getFinishY(), 0);
+        gl.glScalef(SettingsModels.scaleX, SettingsModels.scaleY, 0);
+        Models.finishModel.draw(GL10.GL_TRIANGLES, 0, 6);
 
-            if (!crash) {
-                gl.glClearColor(0, 0, 0, 0);
-            }
-            else {
-                gl.glClearColor(1, 0, 0, 0);
+        //==================================================
+        Textures.starTexture.bind();
+        gl.glMatrixMode(GL10.GL_MODELVIEW);
+        gl.glLoadIdentity();
+        gl.glTranslatef(SettingsModels.displayWidth_05, SettingsModels.displayHeight_05, 0);
+        gl.glScalef(SettingsModels.scaleX, SettingsModels.scaleY, 0);
+        Models.starVertices.draw(GL10.GL_TRIANGLES, 0, 6);
 
-            }
-            gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-            gl.glMatrixMode(GL10.GL_PROJECTION);
-            gl.glLoadIdentity();
-            gl.glOrthof(0, 1920, 0, 1080, 1, -1);
-            gl.glEnable(GL10.GL_TEXTURE_2D);
-            gl.glEnable(GL10.GL_BLEND);
-            gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+        //==================================================
+        Textures.fuelCountTexture.bind();
+        gl.glMatrixMode(GL10.GL_MODELVIEW);
+        gl.glLoadIdentity();
+        gl.glTranslatex(SettingsModels.fuelCountModelHeightMin, SettingsModels.fuelCountModelHeightTHIS, 0);
+        gl.glScalef(SettingsModels.scaleX, SettingsModels.scaleY, 0);
+        Models.fuelCountVertices.draw(GL10.GL_TRIANGLES, 0, 6);
 
+        //==================================================
+        Textures.fuelBagTexture.bind();
+        gl.glMatrixMode(GL10.GL_MODELVIEW);
+        gl.glLoadIdentity();
+        gl.glTranslatef(SettingsModels.fuelBagTranslateX, SettingsModels.fuelBagTranslateY, 0);
+        gl.glScalef(SettingsModels.scaleX, SettingsModels.scaleY, 0);
+        Models.fuelBagVertices.draw(GL10.GL_TRIANGLES, 0, 6);
 
-            Textures.starTexture.bind();
-            gl.glMatrixMode(GL10.GL_MODELVIEW);
-            gl.glLoadIdentity();
-            Models.starVertices.draw(GL10.GL_TRIANGLES, 0, 6);
+            /*
+            //==================================================
+            if (!fuelOutSignal) {
 
-            Textures.fuelCountTexture.bind();
-            gl.glMatrixMode(GL10.GL_MODELVIEW);
-            gl.glLoadIdentity();
-
-            gl.glScalef(2 ,scale,0);
-
-            Models.fuelCountVertices.draw(GL10.GL_TRIANGLES, 0 , 6);
-
-            if(!trust){
-
-                Textures.rocketTexture.bind();
-
+                Textures.fuelOutSignalTexture.bind();
             }else {
 
-                Textures.rocketTrustTexture.bind();
+                Textures.fuelOutSignal2Texture.bind();
             }
-
             gl.glMatrixMode(GL10.GL_MODELVIEW);
-
             gl.glLoadIdentity();
+            gl.glScalef(SettingsModels.scaleX,SettingsModels.scaleY,0);
+            Models.fueloutSignalVertices.draw(GL10.GL_TRIANGLES, 0 , 6);
+            */
 
-            gl.glTranslatef((float) flyObject.getX(), (float) flyObject.getY(), 0);
+        //==================================================
+        if (trust) {
 
-            gl.glRotatef(angle, 0, 0, 1);
-            Models.rocketVertices.draw(GL10.GL_TRIANGLES, 0, 6);
+            Textures.rocketTrustTexture.bind();
 
-            update(deltaTime);
+        } else {
+
+            Textures.rocketTexture.bind();
         }
 
-        @Override
-        public void pause() {
+        gl.glMatrixMode(GL10.GL_MODELVIEW);
+        gl.glLoadIdentity();
+        gl.glTranslatef((float) flyObject.getX(), (float) flyObject.getY(), 0);
+        gl.glRotatef(angle, 0, 0, 1);
+        gl.glScalef(SettingsModels.scaleX, SettingsModels.scaleY, 0);
+        Models.rocketVertices.draw(GL10.GL_TRIANGLES, 0, 6);
 
-        }
 
-        @Override
-        public void resume() {
+        //==================================================
+        update(deltaTime);
+    }
 
-        }
+    @Override
+    public void pause() {
 
-        @Override
-        public void dispose() {
+    }
 
-        }
+    @Override
+    public void resume() {
 
-        private void control(){
+    }
 
-            calculateCoordinate.calculate(massObjects,flyObject,STEP);
+    @Override
+    public void dispose() {
 
-            List<Input.TouchEvent> touchEvents = game.getInput().getTouchEvents();
+    }
 
-            int len = touchEvents.size();
+    private void control() {
 
-            for (int i = 0; i < len; i++) {
+        calculateCoordinate.calculate(massObjects, flyObject, STEP);
 
-                Input.TouchEvent event = touchEvents.get(i);
+        List<Input.TouchEvent> touchEvents = game.getInput().getTouchEvents();
 
-                //первое касание записываем координаты
-                if (event.type == Input.TouchEvent.TOUCH_DOWN){
+        int len = touchEvents.size();
 
-                    touchDownX = event.x;
-                    touchDownY = event.y;
-                }
+        for (int i = 0; i < len; i++) {
 
-                //передвижение считаем
-                //записываем координаты
-                //считаем угол от первого касания
-                if (event.type == Input.TouchEvent.TOUCH_DRAGGED) {
+            Input.TouchEvent event = touchEvents.get(i);
 
-                    touchDraggedX = event.x;
-                    touchDraggedY = event.y;
+            //первое касание записываем координаты
+            if (event.type == Input.TouchEvent.TOUCH_DOWN) {
 
-                    angle = calculateDirect.getAngle(touchDownX, touchDownY,
-                            touchDraggedX, touchDraggedY);
+                touchDownX = event.x;
+                touchDownY = event.y;
+            }
 
-                    //высчитываем новое направление
-                    calculateDirect.calculateDirection(flyObject, 1, angle, 0);
+            //передвижение считаем
+            //записываем координаты
+            //считаем угол от первого касания
+            if (event.type == Input.TouchEvent.TOUCH_DRAGGED) {
 
-                    //рисуем огонёк у ракеты
-                    if (flyObject.getFuelMass() > 0) {
-                        trust = true;
-                    }
-                }
+                touchDraggedX = event.x;
+                touchDraggedY = event.y;
 
-                if (event.type == Input.TouchEvent.TOUCH_UP){
+                angle = calculateDirect.getAngle(touchDownX, touchDownY,
+                        touchDraggedX, touchDraggedY);
 
-                    //ракета без огонька
-                    trust = false;
+                //высчитываем новое направление
+                calculateDirect.calculateDirection(flyObject, 1, angle, 0);
+
+                //рисуем огонёк у ракеты
+                if (flyObject.getFuelMass() > 0) {
+                    trust = true;
                 }
             }
-        }
 
-        private void isCrash(){
+            if (event.type == Input.TouchEvent.TOUCH_UP) {
 
-            for (MassObject massObject: massObjects){
-
-                double distance = calculateCoordinate.calculateRadius(flyObject,massObject);
-
-                distance = distance - massObject.getRadius() - flyObject.getRadius();
-
-                if (distance < 0){
-
-                    crash = true;
-                    break;
-                }
-                else {
-                    crash = false;
-                }
+                //ракета без огонька
+                trust = false;
             }
         }
+    }
 
-        private boolean inBounds(Input.TouchEvent event, int x, int y, int width, int height){
+    private void isCrash() {
 
-        if(event.x > x && event.x < x + width - 1 &&
-                event.y > y && event.y < y + height - 1){
-            return true;
+        for (MassObject massObject : massObjects) {
+
+            double distance = calculateCoordinate.calculateRadius(flyObject, massObject);
+
+            distance = distance - massObject.getRadius() - flyObject.getRadius();
+
+            if (distance < 0) {
+
+                crash = true;
+                break;
+            } else {
+                crash = false;
+            }
+        }
+    }
+
+    private void isFinish() {
+
+        double radius = Math.sqrt(Math.pow(flyObject.getX() - Levels.getFinishX(), 2) +
+                                  Math.pow(flyObject.getY() - Levels.getFinishY(), 2));
+
+        if (radius <= 100) {
+
+            finishDate++;
+            finish = true;
         }
         else {
+
+            finishDate = 0;
+            finish = false;
+        }
+    }
+
+    private boolean inBounds(Input.TouchEvent event, int x, int y, int width, int height) {
+
+        if (event.x > x && event.x < x + width - 1 &&
+                event.y > y && event.y < y + height - 1) {
+            return true;
+        } else {
             return false;
         }
     }
 
 
-    private class AddMassObject{
-
-            ArrayList<MassObject> massObjects = new ArrayList<>();
-
-            public ArrayList<MassObject> getMassObjects(){
-
-                massObjects.add(new MassObject(Assets.displayWidth / 2,
-                                               Assets.displayHeight / 2,
-                                               0,
-                                               200000,
-                                               54));
-
-                return this.massObjects;
-            }
-        }
-    }
+}
 

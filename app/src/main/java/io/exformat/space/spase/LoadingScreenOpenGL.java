@@ -11,6 +11,8 @@ import io.exformat.space.framework.openGL.Texture;
 import io.exformat.space.framework.openGL.Vertices;
 import io.exformat.space.model.Models;
 import io.exformat.space.model.Textures;
+import io.exformat.space.model.models.modelsFHD.ModelsFHD;
+import io.exformat.space.spase.settings.SettingsModels;
 
 public class LoadingScreenOpenGL extends Screen {
 
@@ -33,9 +35,16 @@ public class LoadingScreenOpenGL extends Screen {
         Log.d("height: ", "" + Assets.displayHeight);
         Log.d("width:  ", "" + Assets.displayWidth);
 
+
+        Settings settings = new Settings();
+
+        settings.calculateModels();
+
         loadTextures();
 
         loadModels();
+
+        new Levels().choiceLevel(0);
 
         game.setScreen(new SpaceOpenGL(game));
     }
@@ -62,45 +71,46 @@ public class LoadingScreenOpenGL extends Screen {
 
     private void loadModels(){
 
-        int x = Assets.displayWidth / 2;
-        int y = Assets.displayHeight / 2;
 
-        int xx = Assets.displayWidth / 10 / 2;
+        //load fuel out signal============================================
+        Models.fueloutSignalVertices = new Vertices(glGraphics,
+                4,12,false,true);
+        Models.fueloutSignalVertices.setVertices(new float[]{
+                -25 + SettingsModels.fuelOutSignalX, -25 + SettingsModels.fuelOutSignalY, 0, 1,
+                 25 + SettingsModels.fuelOutSignalX, -25 + SettingsModels.fuelOutSignalY, 1, 1,
+                 25 + SettingsModels.fuelOutSignalX,  25 + SettingsModels.fuelOutSignalY, 1, 0,
+                -25 + SettingsModels.fuelOutSignalX,  25 + SettingsModels.fuelOutSignalY, 0, 0}, 0, 16);
+        Models.fueloutSignalVertices.setIndices(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
 
-
-        Models.fuelCountVertices = new Vertices(glGraphics,
-                4,12, false, true);
-
-        Models.fuelCountVertices.setVertices(new float[]{
-                -54+xx, -400+y, 0, 1,
-                 54+xx, -400+y, 1, 1,
-                 54+xx,  400+y, 1, 0,
-                -54+xx,  400+y, 0, 0}, 0, 16);
-
+        //load count fuel=================================================
+        Models.fuelCountVertices = new Vertices(glGraphics, 4,12,false,true);
+        Models.fuelCountVertices.setVertices(ModelsFHD.fuelCountVertices, 0, 16);
         Models.fuelCountVertices.setIndices(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
 
-        //load rocket model
-        Models.rocketVertices = new Vertices(glGraphics,
-                4, 12, false, true);
+        //load bag fuel===================================================
+        Models.fuelBagVertices = new Vertices(glGraphics, 4,12, false, true);
+        Models.fuelBagVertices.setVertices(ModelsFHD.fuelBagVertices, 0, 16);
+        Models.fuelBagVertices.setIndices(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
 
-        Models.rocketVertices.setVertices(new float[]{-50, -50, 0, 1,
-                                                       50, -50, 1, 1,
-                                                       50,  50, 1, 0,
-                                                      -50,  50, 0, 0}, 0, 16);
-
+        //load rocket model=================================================
+        Models.rocketVertices = new Vertices(glGraphics, 4, 12, false, true);
+        Models.rocketVertices.setVertices(ModelsFHD.rocketVertices, 0, 16);
         Models.rocketVertices.setIndices(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
 
-        //load star model
-        Models.starVertices = new Vertices(glGraphics,
-                4, 12, false, true);
-
-        Models.starVertices.setVertices(new float[]{-50+x, -50+y, 0, 1,
-                                                     50+x, -50+y, 1, 1,
-                                                     50+x,  50+y, 1, 0,
-                                                    -50+x,  50+y, 0, 0},
-                                                0, 16);
-
+        //load star model=================================================
+        Models.starVertices = new Vertices(glGraphics, 4, 12, false, true);
+        Models.starVertices.setVertices(ModelsFHD.starVertices, 0, 16);
         Models.starVertices.setIndices(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
+
+        //load finish model===============================================
+        Models.finishModel = new Vertices(glGraphics, 4,12, false,true);
+        Models.finishModel.setVertices(ModelsFHD.finishVertices,0,16);
+        Models.finishModel.setIndices(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
+
+        //load clear level model==========================================
+        loadLevelClearModels();
+
+        //==============================================
     }
 
     private void loadTextures(){
@@ -109,6 +119,38 @@ public class LoadingScreenOpenGL extends Screen {
         Textures.rocketTrustTexture = new Texture((GLGame) game, "rocket_trust.png");
 
         Textures.starTexture        = new Texture((GLGame) game, "star.png");
-        Textures.fuelCountTexture = new Texture((GLGame) game, "fuel.png");
+
+        Textures.fuelBagTexture     = new Texture((GLGame) game, "fuel_bag.png");
+        Textures.fuelCountTexture   = new Texture((GLGame) game, "fuel_count.png");
+
+        Textures.fuelOutSignalTexture  = new Texture((GLGame) game, "signal_fuel_out.png");
+        Textures.fuelOutSignal2Texture = new Texture((GLGame) game, "signal_fuel_out_2.png");
+
+        Textures.finishTexture = new Texture((GLGame) game, "finish.png");
+
+        Textures.levelClearTexture = new Texture((GLGame) game, "level_clear.png");
+
+        loadLevelClearTextures();
+    }
+
+    //=============================================
+    private void loadLevelClearModels(){
+
+        //load level clear background model=================================================
+        Models.levelClearBackgroundVertices = new Vertices(glGraphics, 4,12,false,true);
+        Models.levelClearBackgroundVertices.setVertices(ModelsFHD.levelClearBackgroundVertices, 0, 16);
+        Models.levelClearBackgroundVertices.setIndices(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
+
+        //load level clear rocket model=====================================================
+        Models.levelClearRocketVertices = new Vertices(glGraphics, 4,12,false,true);
+        Models.levelClearRocketVertices.setVertices(ModelsFHD.levelClearRocketVertices, 0, 16);
+        Models.levelClearRocketVertices.setIndices(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
+
+    }
+
+    private void loadLevelClearTextures(){
+
+        Textures.levelClearBackgroundTexture = new Texture((GLGame) game, "level_clear_background.png");
+        Textures.levelClearRocketTexture = new Texture((GLGame) game, "level_clear_rocket.png");
     }
 }

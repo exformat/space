@@ -1,5 +1,7 @@
 package io.exformat.space.model;
 
+import android.util.Log;
+
 public class FlyObject
 {
 
@@ -11,7 +13,7 @@ public class FlyObject
 	private float fuelMass = 100;
 	private float fuelOut = 0.1f;
 	private float powerTrust = 100;
-	
+
 	private double x = 0;
 	private double y = 0;
 	private double z = 0;
@@ -102,6 +104,8 @@ public class FlyObject
 	public void setFuelMass(float fuelMass)
 	{
 		this.fuelMass = fuelMass;
+		Log.d("fuel: ", "" + this.fuelMass);
+
 	}
 
 	public float getFuelMass()
