@@ -1,7 +1,5 @@
 package io.exformat.space.spase;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +17,7 @@ import io.exformat.space.model.FlyObject;
 import io.exformat.space.model.FuelCountModel;
 import io.exformat.space.model.MassObject;
 import io.exformat.space.model.Models;
+import io.exformat.space.model.StarCoin;
 import io.exformat.space.model.Textures;
 import io.exformat.space.spase.settings.SettingsModels;
 
@@ -43,37 +42,49 @@ public class SpaceOpenGL extends Screen {
     private boolean fuelOutSignal = false;
     private boolean crash = false;
 
+    private int tick = 0;
+
     private int finishDate = 0;
     private boolean finish = false;
 
     private float angle;
 
+    private float angleFinish = 0;
 
-    private FlyObject flyObject = new FlyObject();
+    private int starCoinsUp = 0;
+
+
+
+    private FlyObject flyObject = Levels.getFlyObject();
 
     private CalculateCoordinate calculateCoordinate = new CalculateCoordinate();
     private CalculateDirect calculateDirect = new CalculateDirect();
 
-    //сразу инициализируем массив при старте этого класса
-    //инициализация идет через вложенный класс
+    //инициализируем массивные объекты и звёзды
     private ArrayList<MassObject> massObjects = Levels.getMassObjects();
+    private ArrayList<StarCoin> starCoins = Levels.getStarCoins();
 
     public SpaceOpenGL(Game game) {
 
         super(game);
         glGraphics = ((GLGame) game).getGLGraphics();
-        flyObject.setX(150);
-        flyObject.setY(150);
     }
 
     @Override
     public void update(float deltaTime) {
 
 
+        //Log.d("rocket X: ", flyObject.getX() + "");
+        //Log.d("rocket Y: ", flyObject.getY() + "");
+        //Log.d("scale X: ", SettingsModels.scaleX + "");
+        //Log.d("scale Y: ", SettingsModels.scaleY + "");
+
+        //rotate finish image
+        angleFinish += -0.1f;
+
         fuelOut = flyObject.getFuelMass() > 0.01;
 
-        //fuelOutSignal = flyObject.getFuelMass() <= 10;
-
+        //перерисовываем количество топлива
         if (fuelOut) {
 
             if (trust) {
@@ -81,15 +92,33 @@ public class SpaceOpenGL extends Screen {
             }
         } else {
             trust = false;
+            tick++;
 
         }
 
 
+        isStarCoinUp();
         isFinish();
         isCrash();
         control();
 
+        //если вылетели далеко за пределы экрана перезагружаем уровень
+        if (flyObject.getX() > SettingsModels.displayHeight * 2 || flyObject.getY() > SettingsModels.displayWidth * 2 ||
+                flyObject.getX() < -SettingsModels.displayHeight || flyObject.getY() < -SettingsModels.displayWidth){
+
+            game.setScreen(new LevelClearScreen(game));
+        }
+
+        //если натикало больше 500 в финишном поле
+        //то загружаем экран со статистикой и выбором уровня
         if (finishDate >= 500){
+
+            game.setScreen(new LevelClearScreen(game));
+        }
+
+        //если натикало больше 1000 после окончания топлива
+        //то загружаем экран со статистикой и выбором уровня
+        if (tick > 1000){
 
             game.setScreen(new LevelClearScreen(game));
         }
@@ -102,16 +131,6 @@ public class SpaceOpenGL extends Screen {
 
         GL10 gl = glGraphics.getGL();
 
-        if (!crash) {
-            gl.glClearColor(0, 0, 0, 0);
-        } else {
-            gl.glClearColor(1, 0, 0, 0);
-        }
-
-        if (finish){
-            gl.glClearColor(0, 0, 1, 0);
-        }
-
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
         gl.glMatrixMode(GL10.GL_PROJECTION);
         gl.glLoadIdentity();
@@ -120,28 +139,63 @@ public class SpaceOpenGL extends Screen {
         gl.glEnable(GL10.GL_BLEND);
         gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 
-        //=================================================
+        //draw background===========================================================================
+        Textures.gameBackgroundTexture.bind();
+        gl.glMatrixMode(GL10.GL_MODELVIEW);
+        gl.glLoadIdentity();
+        gl.glTranslatef(SettingsModels.displayWidth_05,SettingsModels.displayHeight_05,0);
+        gl.glScalef(SettingsModels.scaleX,SettingsModels.scaleX,0);
+        Models.backgroundVertices.draw(GL10.GL_TRIANGLES, 0, 6);
+
+        //draw star coins============================================================
+        for (StarCoin starCoin: starCoins) {
+
+            Textures.starCoinTexture.bind();
+            gl.glMatrixMode(GL10.GL_MODELVIEW);
+            gl.glLoadIdentity();
+            gl.glTranslatef(starCoin.getStarCoinX(), starCoin.getStarCoinY(), 0);
+            gl.glScalef(SettingsModels.scaleX, SettingsModels.scaleX, 0);
+            gl.glRotatef(angleFinish,0,0,1);
+            Models.starCoinVertices.draw(GL10.GL_TRIANGLES, 0, 6);
+        }
+
+        //draw crash texture===========================================================================
+        if (crash) {
+
+            Textures.crashTexture.bind();
+            gl.glMatrixMode(GL10.GL_MODELVIEW);
+            gl.glLoadIdentity();
+            gl.glTranslatef(SettingsModels.displayWidth_05,SettingsModels.displayHeight_05,0);
+            gl.glScalef(SettingsModels.scaleX,SettingsModels.scaleX,0);
+            Models.backgroundVertices.draw(GL10.GL_TRIANGLES, 0, 6);
+        }
+
+        //draw finish=================================================
         Textures.finishTexture.bind();
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
         gl.glTranslatef(Levels.getFinishX(), Levels.getFinishY(), 0);
-        gl.glScalef(SettingsModels.scaleX, SettingsModels.scaleY, 0);
+        gl.glScalef(SettingsModels.scaleX, SettingsModels.scaleX, 0);
+        gl.glRotatef(angleFinish,0,0,1);
         Models.finishModel.draw(GL10.GL_TRIANGLES, 0, 6);
 
-        //==================================================
-        Textures.starTexture.bind();
-        gl.glMatrixMode(GL10.GL_MODELVIEW);
-        gl.glLoadIdentity();
-        gl.glTranslatef(SettingsModels.displayWidth_05, SettingsModels.displayHeight_05, 0);
-        gl.glScalef(SettingsModels.scaleX, SettingsModels.scaleY, 0);
-        Models.starVertices.draw(GL10.GL_TRIANGLES, 0, 6);
+        //draw mass objects==================================================
+        for (MassObject massObject: massObjects) {
+
+            Textures.starTexture.bind();
+            gl.glMatrixMode(GL10.GL_MODELVIEW);
+            gl.glLoadIdentity();
+            gl.glTranslatef((float)massObject.getX(), (float)massObject.getY(), 0);
+            gl.glScalef(SettingsModels.scaleX, SettingsModels.scaleX, 0);
+            Models.starVertices.draw(GL10.GL_TRIANGLES, 0, 6);
+        }
 
         //==================================================
         Textures.fuelCountTexture.bind();
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
-        gl.glTranslatex(SettingsModels.fuelCountModelHeightMin, SettingsModels.fuelCountModelHeightTHIS, 0);
-        gl.glScalef(SettingsModels.scaleX, SettingsModels.scaleY, 0);
+        gl.glTranslatef(SettingsModels.fuelCountModelHeightMin, SettingsModels.fuelCountModelHeightTHIS, 0);
+        gl.glScalef(SettingsModels.scaleX, SettingsModels.scaleX, 0);
         Models.fuelCountVertices.draw(GL10.GL_TRIANGLES, 0, 6);
 
         //==================================================
@@ -149,23 +203,9 @@ public class SpaceOpenGL extends Screen {
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
         gl.glTranslatef(SettingsModels.fuelBagTranslateX, SettingsModels.fuelBagTranslateY, 0);
-        gl.glScalef(SettingsModels.scaleX, SettingsModels.scaleY, 0);
+        gl.glScalef(SettingsModels.scaleX, SettingsModels.scaleX, 0);
         Models.fuelBagVertices.draw(GL10.GL_TRIANGLES, 0, 6);
 
-            /*
-            //==================================================
-            if (!fuelOutSignal) {
-
-                Textures.fuelOutSignalTexture.bind();
-            }else {
-
-                Textures.fuelOutSignal2Texture.bind();
-            }
-            gl.glMatrixMode(GL10.GL_MODELVIEW);
-            gl.glLoadIdentity();
-            gl.glScalef(SettingsModels.scaleX,SettingsModels.scaleY,0);
-            Models.fueloutSignalVertices.draw(GL10.GL_TRIANGLES, 0 , 6);
-            */
 
         //==================================================
         if (trust) {
@@ -181,7 +221,7 @@ public class SpaceOpenGL extends Screen {
         gl.glLoadIdentity();
         gl.glTranslatef((float) flyObject.getX(), (float) flyObject.getY(), 0);
         gl.glRotatef(angle, 0, 0, 1);
-        gl.glScalef(SettingsModels.scaleX, SettingsModels.scaleY, 0);
+        gl.glScalef(SettingsModels.scaleX, SettingsModels.scaleX, 0);
         Models.rocketVertices.draw(GL10.GL_TRIANGLES, 0, 6);
 
 
@@ -234,6 +274,7 @@ public class SpaceOpenGL extends Screen {
                 angle = calculateDirect.getAngle(touchDownX, touchDownY,
                         touchDraggedX, touchDraggedY);
 
+                angle += 180;
                 //высчитываем новое направление
                 calculateDirect.calculateDirection(flyObject, 1, angle, 0);
 
@@ -265,6 +306,23 @@ public class SpaceOpenGL extends Screen {
                 break;
             } else {
                 crash = false;
+            }
+        }
+    }
+
+    //проверяем не собрана ли звезда
+    private void isStarCoinUp(){
+
+        for (StarCoin starCoin: starCoins) {
+
+            double radius = Math.sqrt(Math.pow(flyObject.getX() - starCoin.getStarCoinX(), 2) +
+                    Math.pow(flyObject.getY() - starCoin.getStarCoinY(), 2));
+
+            if (radius <= starCoin.getRadius()) {
+
+                starCoin.setStarCoinX(-10000);
+                starCoin.setStarCoinY(-10000);
+                starCoinsUp++;
             }
         }
     }

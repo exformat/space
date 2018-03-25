@@ -1,6 +1,7 @@
 package io.exformat.space.spase;
 
 
+
 import io.exformat.space.spase.settings.SettingsModels;
 
 public class Settings {
@@ -13,30 +14,30 @@ public class Settings {
         calcScaleX();
         calcScaleY();
 
-        SettingsModels.displayHeight_05 = SettingsModels.displayHeight / 2;
-        SettingsModels.displayWidth_05  = SettingsModels.displayWidth  / 2;
+        SettingsModels.displayHeight_05 = SettingsModels.displayHeight / 2f;
+        SettingsModels.displayWidth_05  = SettingsModels.displayWidth  / 2f;
 
-        SettingsModels.fuelBagTranslateX = SettingsModels.displayWidth / 10 / 2;
-        SettingsModels.fuelBagTranslateY = SettingsModels.displayHeight / 2;
+        SettingsModels.fuelBagTranslateX = SettingsModels.displayWidth / 10f / 2f;
+        SettingsModels.fuelBagTranslateY = SettingsModels.displayHeight / 2f;
 
 
     }
 
-    private void calcScaleX(){
+    private void calcScaleX() {
 
-        if (Assets.displayWidth < 1920){
-            SettingsModels.scaleX = 1920 / Assets.displayWidth - 1;
+        if (SettingsModels.displayHeight < 1080){
+            SettingsModels.scaleY = (1080 / SettingsModels.displayHeight) - 1;
         }
-        if (Assets.displayWidth > 1920){
-            SettingsModels.scaleX = 1920 / Assets.displayWidth;
+        if (SettingsModels.displayHeight > 1080){
+            SettingsModels.scaleY = 1080 / SettingsModels.displayHeight;
         }
-        if (Assets.displayWidth == 1920){
-            SettingsModels.scaleX = 1;
+        if (SettingsModels.displayHeight == 1080){
+            SettingsModels.scaleY = 1;
         }
-    }
 
-    private void calcScaleY(){
 
+
+        /*
         if(Assets.displayHeight < 1080){
             SettingsModels.scaleY = 1080 / Assets.displayHeight - 1;
         }
@@ -46,5 +47,31 @@ public class Settings {
         if(Assets.displayHeight == 1080){
             SettingsModels.scaleY = 1;
         }
+        */
+    }
+
+    private void calcScaleY(){
+
+        if (SettingsModels.displayWidth < 1920){
+            SettingsModels.scaleX = (1920 / SettingsModels.displayWidth) - 1;
+        }
+        if (SettingsModels.displayWidth > 1920){
+            SettingsModels.scaleX = 1920 / SettingsModels.displayWidth;
+        }
+        if (SettingsModels.displayWidth == 1920){
+            SettingsModels.scaleX = 1;
+        }
+
+        /*
+        if (Assets.displayWidth < 1920){
+            SettingsModels.scaleX = 1920 / Assets.displayWidth - 1;
+        }
+        if (Assets.displayWidth > 1920){
+            SettingsModels.scaleX = 1920 / Assets.displayWidth;
+        }
+        if (Assets.displayWidth == 1920){
+            SettingsModels.scaleX = 1;
+        }
+        */
     }
 }

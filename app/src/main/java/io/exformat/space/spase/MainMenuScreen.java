@@ -1,5 +1,6 @@
 package io.exformat.space.spase;
 
+import android.util.Log;
 
 import java.util.List;
 
@@ -10,44 +11,35 @@ import io.exformat.space.framework.Input;
 import io.exformat.space.framework.Screen;
 import io.exformat.space.framework.impl.GLGame;
 import io.exformat.space.framework.impl.GLGraphics;
-import io.exformat.space.model.LevelClearRocket;
 import io.exformat.space.model.Models;
 import io.exformat.space.model.Textures;
 import io.exformat.space.spase.settings.SettingsModels;
 
-public class LevelClearScreen extends Screen {
+
+public class MainMenuScreen extends Screen {
 
     private GLGraphics glGraphics;
 
-    private LevelClearRocket rocket = new LevelClearRocket();
-
-    //private int thisLevel = Levels.getThisLevel();
-
-    private Levels levels = new Levels();
+    private boolean sound = false;//TODO прикрутить запись настроек
 
     private int touchDownX;
     private int touchDownY;
 
+    private int touchUpX;
+    private int touchUpY;
+
     private int touchDraggedX;
     private int touchDraggedY;
 
-    private boolean startTouched = false;
-
-    private boolean nextLevel = false;
-    private boolean restart = false;
-
-
-    public LevelClearScreen(Game game) {
+    public MainMenuScreen(Game game) {
         super(game);
         glGraphics = ((GLGame) game).getGLGraphics();
-
     }
 
     @Override
     public void update(float deltaTime) {
 
-        controlRocket();
-        choiceLevel();
+        control();
     }
 
     @Override
@@ -55,7 +47,6 @@ public class LevelClearScreen extends Screen {
 
         GL10 gl = glGraphics.getGL();
 
-        //gl.glClearColor(0, 0, 0, 0);
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
         gl.glMatrixMode(GL10.GL_PROJECTION);
         gl.glLoadIdentity();
@@ -64,25 +55,35 @@ public class LevelClearScreen extends Screen {
         gl.glEnable(GL10.GL_BLEND);
         gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 
-
-
         //draw background===========================================================================
-        Textures.levelClearBackgroundTexture.bind();
+        Textures.mainMenuBackroundTexture.bind();
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
         gl.glTranslatef(SettingsModels.displayWidth_05,SettingsModels.displayHeight_05,0);
         gl.glScalef(SettingsModels.scaleX,SettingsModels.scaleX,0);
         Models.backgroundVertices.draw(GL10.GL_TRIANGLES, 0, 6);
 
-        //draw rocket===============================================================================
-        Textures.levelClearRocketTexture.bind();
+        //draw levels===========================================================================
+        Textures.rocketLevelsTexture.bind();
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
-        gl.glTranslatef((float)rocket.getX(), (float)rocket.getY(),0);
+        gl.glTranslatef(SettingsModels.displayWidth_05,SettingsModels.displayHeight_05,0);
         gl.glScalef(SettingsModels.scaleX,SettingsModels.scaleX,0);
-        Models.levelClearRocketVertices.draw(GL10.GL_TRIANGLES, 0, 6);
+        Models.rocketLevelsVertices.draw(GL10.GL_TRIANGLES, 0, 6);
 
-        //==========================================================================================
+        //draw sound===========================================================================
+        if (sound){
+            Textures.soundOnTexture.bind();
+        }
+        else {
+            Textures.soundOffTexture.bind();
+        }
+        gl.glMatrixMode(GL10.GL_MODELVIEW);
+        gl.glLoadIdentity();
+        gl.glTranslatef(1820 * SettingsModels.scaleX,980 * SettingsModels.scaleX,0);
+        gl.glScalef(SettingsModels.scaleX,SettingsModels.scaleX,0);
+        Models.buttonSoundVertices.draw(GL10.GL_TRIANGLES, 0, 6);
+
         update(deltaTime);
     }
 
@@ -101,21 +102,8 @@ public class LevelClearScreen extends Screen {
 
     }
 
-    //==============================================================================================
-    private void controlRocket(){
+    private void control(){
 
-        if (!startTouched) {
-
-            if (rocket.getX() >= SettingsModels.displayWidth_05) {
-
-                rocket.setvY(0);
-                startTouched = true;
-            } else {
-                rocket.setX(rocket.getX() + rocket.getvX());
-            }
-        }
-
-        //===================================================================
         List<Input.TouchEvent> touchEvents = game.getInput().getTouchEvents();
 
         int len = touchEvents.size();
@@ -129,6 +117,10 @@ public class LevelClearScreen extends Screen {
 
                 touchDownX = event.x;
                 touchDownY = event.y;
+
+                Log.d("touch down x: ", "" + touchDownX);
+                Log.d("touch down y: ", "" + touchDownY);
+
             }
 
             if (event.type == Input.TouchEvent.TOUCH_DRAGGED) {
@@ -136,51 +128,32 @@ public class LevelClearScreen extends Screen {
                 touchDraggedX = event.x;
                 touchDraggedY = event.y;
 
-                //высчитываем новое направление
-                if (touchDraggedX > touchDownX){
+            }
 
-                    rocket.setvY(10);
-                    nextLevel = true;
-                }else {
+            if (event.type == Input.TouchEvent.TOUCH_UP) {
 
-                    rocket.setvY(-10);
-                    restart = true;
+                touchUpX = event.x;
+                touchUpY = event.y;
+
+                Log.d("touch up x: ", "" + touchUpX);
+                Log.d("touch up y: ", "" + touchUpY);
+
+                if (touchUpX > 1800 * SettingsModels.scaleX && touchUpY < 250 * SettingsModels.scaleX){
+
+                    sound = !sound;
+                    Log.d("sound: ", "" + sound);
+
                 }
-            }
-        }
 
-        if (startTouched)
-        rocket.setX(rocket.getX() + rocket.getvX());
-    }
+                if (touchUpX > 704 * SettingsModels.scaleX && touchUpX < 1216 * SettingsModels.scaleX &&
+                    touchUpY > 248 * SettingsModels.scaleX && touchUpY < 796 * SettingsModels.scaleX){
 
-    private void choiceLevel(){
-
-        //load restart level==========================================
-        if (restart){
-
-            if (rocket.getX() < -SettingsModels.displayWidth){
-
-                levels.choiceLevel(Levels.getThisLevel());
-
-                game.setScreen(new SpaceOpenGL(game));
-            }
-        }
-
-        //load next level============================================
-        if (nextLevel){
-
-            if (rocket.getX() > SettingsModels.displayWidth * 2){
-
-                if (Levels.getThisLevel() != Levels.MAX_LEVEL) {
-
-                    levels.choiceLevel(Levels.getThisLevel() + 1);
-
+                    //TODO организовать экран выбора уровней
+                    new Levels().choiceLevel(0);
                     game.setScreen(new SpaceOpenGL(game));
                 }
             }
         }
-
-        //load levels menu
-        //===========================================================
     }
+
 }

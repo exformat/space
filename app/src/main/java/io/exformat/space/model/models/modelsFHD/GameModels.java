@@ -1,6 +1,6 @@
 package io.exformat.space.model.models.modelsFHD;
 
-public class ModelsFHD {
+public class GameModels {
 
     public static float[] fuelCountVertices = {
             -54, -370, 0, 1,
@@ -52,5 +52,13 @@ public class ModelsFHD {
              850,-250,1,1,
              850, 250,1,0,
             -850, 250,0,0
+    };
+
+    public static float[] starCoinVertices = {
+
+            -50, -50, 0, 1,
+             50, -50, 1, 1,
+             50,  50, 1, 0,
+            -50,  50, 0, 0
     };
 }
