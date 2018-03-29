@@ -6,9 +6,9 @@ import io.exformat.space.spase.settings.SettingsModels;
 
 public class FuelCountModel {
 
-    private int y = Assets.displayHeight / 2;
+    private float y = Assets.displayHeight / 2;
 
-    private int x = Assets.displayWidth / 10 / 2;
+    private float x = Assets.displayWidth / 10 / 2;
 
     private float heightFuelCountModel = SettingsModels.fuelCountModelHeightTHIS;
 

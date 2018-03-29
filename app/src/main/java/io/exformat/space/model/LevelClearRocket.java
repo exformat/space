@@ -8,7 +8,7 @@ public class LevelClearRocket {
     private double x = -SettingsModels.displayHeight;
     private double y = SettingsModels.displayHeight / 3;
 
-    private double vY = 10;
+    private double vX = 10;
 
     public LevelClearRocket(){
 
@@ -31,10 +31,10 @@ public class LevelClearRocket {
     }
 
     public double getvX() {
-        return vY;
+        return vX;
     }
 
-    public void setvY(double vY) {
-        this.vY = vY;
+    public void setvX(double vX) {
+        this.vX = vX;
     }
 }

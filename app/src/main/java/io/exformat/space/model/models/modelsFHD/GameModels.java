@@ -3,17 +3,24 @@ package io.exformat.space.model.models.modelsFHD;
 public class GameModels {
 
     public static float[] fuelCountVertices = {
-            -54, -370, 0, 1,
-             54, -370, 1, 1,
-             54,  400, 1, 0,
-            -54,  400, 0, 0
+            -400, -54, 0, 1,
+             400, -54, 1, 1,
+             400,  54, 1, 0,
+            -400,  54, 0, 0
+    };
+
+    public static float[] fuelCountReloadVertices = {
+            -400, -54, 0, 1,
+             400, -54, 1, 1,
+             400,  54, 1, 0,
+            -400,  54, 0, 0
     };
 
     public static float[] fuelBagVertices = {
-            -54, -400, 0, 1,
-             54, -400, 1, 1,
-             54,  400, 1, 0,
-            -54,  400, 0, 0
+            -400, -54, 0, 1,
+             400, -54, 1, 1,
+             400,  54, 1, 0,
+            -400,  54, 0, 0
     };
 
     public static float[] starVertices = {

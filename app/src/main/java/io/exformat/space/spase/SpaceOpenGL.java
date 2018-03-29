@@ -48,6 +48,7 @@ public class SpaceOpenGL extends Screen {
     private boolean finish = false;
 
     private float angle;
+    private float angleRotate = 0;
 
     private float angleFinish = 0;
 
@@ -73,6 +74,8 @@ public class SpaceOpenGL extends Screen {
     @Override
     public void update(float deltaTime) {
 
+        angleRotate += flyObject.getAngleSpeedXY() * STEP;
+
 
         //Log.d("rocket X: ", flyObject.getX() + "");
         //Log.d("rocket Y: ", flyObject.getY() + "");
@@ -88,12 +91,18 @@ public class SpaceOpenGL extends Screen {
         if (fuelOut) {
 
             if (trust) {
-                fuelCountModel.reloadModel(fuelCountModel.getHeightFuelCountModel() - (flyObject.getFuelOut() * (7.55f * SettingsModels.scaleX) / 2));
+                //высчитываем новое направление
+                calculateDirect.calculateDirection(flyObject, 0, angle, 0);
+
+                flyObject.setAngleSpeedXY(0);
+                angleRotate = angle;
+
+                SettingsModels.fuelCountTranslateX -= (flyObject.getFuelOut() * (7.15f * SettingsModels.scaleX));
+                //fuelCountModel.reloadModel(fuelCountModel.getHeightFuelCountModel() - (flyObject.getFuelOut() * (7.55f * SettingsModels.scaleX) / 2));
             }
         } else {
             trust = false;
             tick++;
-
         }
 
 
@@ -104,7 +113,7 @@ public class SpaceOpenGL extends Screen {
 
         //если вылетели далеко за пределы экрана перезагружаем уровень
         if (flyObject.getX() > SettingsModels.displayHeight * 2 || flyObject.getY() > SettingsModels.displayWidth * 2 ||
-                flyObject.getX() < -SettingsModels.displayHeight || flyObject.getY() < -SettingsModels.displayWidth){
+            flyObject.getX() < -SettingsModels.displayHeight || flyObject.getY() < -SettingsModels.displayWidth){
 
             game.setScreen(new LevelClearScreen(game));
         }
@@ -194,7 +203,7 @@ public class SpaceOpenGL extends Screen {
         Textures.fuelCountTexture.bind();
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
-        gl.glTranslatef(SettingsModels.fuelCountModelHeightMin, SettingsModels.fuelCountModelHeightTHIS, 0);
+        gl.glTranslatef(SettingsModels.fuelCountTranslateX, SettingsModels.fuelCountTranslateY, 0);
         gl.glScalef(SettingsModels.scaleX, SettingsModels.scaleX, 0);
         Models.fuelCountVertices.draw(GL10.GL_TRIANGLES, 0, 6);
 
@@ -220,7 +229,13 @@ public class SpaceOpenGL extends Screen {
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
         gl.glTranslatef((float) flyObject.getX(), (float) flyObject.getY(), 0);
-        gl.glRotatef(angle, 0, 0, 1);
+
+        /*
+        if (trust) {
+            gl.glRotatef(angle, 0, 0, 1);
+        }
+        */
+        gl.glRotatef(angleRotate, 0,0,1);
         gl.glScalef(SettingsModels.scaleX, SettingsModels.scaleX, 0);
         Models.rocketVertices.draw(GL10.GL_TRIANGLES, 0, 6);
 
@@ -244,6 +259,7 @@ public class SpaceOpenGL extends Screen {
 
     }
 
+    //=========================================================================
     private void control() {
 
         calculateCoordinate.calculate(massObjects, flyObject, STEP);
@@ -275,11 +291,11 @@ public class SpaceOpenGL extends Screen {
                         touchDraggedX, touchDraggedY);
 
                 angle += 180;
-                //высчитываем новое направление
-                calculateDirect.calculateDirection(flyObject, 1, angle, 0);
+
+                flyObject.setAngleDirectXY(angle);
 
                 //рисуем огонёк у ракеты
-                if (flyObject.getFuelMass() > 0) {
+                if (flyObject.getFuelMass() > 0.01) {
                     trust = true;
                 }
             }

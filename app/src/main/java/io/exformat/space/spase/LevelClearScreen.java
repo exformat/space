@@ -13,6 +13,7 @@ import io.exformat.space.framework.impl.GLGraphics;
 import io.exformat.space.model.LevelClearRocket;
 import io.exformat.space.model.Models;
 import io.exformat.space.model.Textures;
+import io.exformat.space.model.models.modelsFHD.GameModels;
 import io.exformat.space.spase.settings.SettingsModels;
 
 public class LevelClearScreen extends Screen {
@@ -108,7 +109,7 @@ public class LevelClearScreen extends Screen {
 
             if (rocket.getX() >= SettingsModels.displayWidth_05) {
 
-                rocket.setvY(0);
+                rocket.setvX(0);
                 startTouched = true;
             } else {
                 rocket.setX(rocket.getX() + rocket.getvX());
@@ -139,12 +140,21 @@ public class LevelClearScreen extends Screen {
                 //высчитываем новое направление
                 if (touchDraggedX > touchDownX){
 
-                    rocket.setvY(10);
+                    rocket.setX(touchDraggedX);
                     nextLevel = true;
                 }else {
 
-                    rocket.setvY(-10);
+                    rocket.setX(touchDraggedX);
                     restart = true;
+                }
+            }
+
+            if (event.type == Input.TouchEvent.TOUCH_UP){
+
+                if (touchDraggedX > touchDownX){
+                    rocket.setvX(12);
+                }else {
+                    rocket.setvX(-12);
                 }
             }
         }
@@ -162,6 +172,10 @@ public class LevelClearScreen extends Screen {
 
                 levels.choiceLevel(Levels.getThisLevel());
 
+                //reload fuel count
+                GameModels.fuelCountVertices = GameModels.fuelCountReloadVertices;
+                SettingsModels.fuelCountTranslateX = 390 * SettingsModels.scaleX;
+
                 game.setScreen(new SpaceOpenGL(game));
             }
         }
@@ -174,6 +188,10 @@ public class LevelClearScreen extends Screen {
                 if (Levels.getThisLevel() != Levels.MAX_LEVEL) {
 
                     levels.choiceLevel(Levels.getThisLevel() + 1);
+
+                    //reload fuel count
+                    GameModels.fuelCountVertices = GameModels.fuelCountReloadVertices;
+                    SettingsModels.fuelCountTranslateX = 390 * SettingsModels.scaleX;
 
                     game.setScreen(new SpaceOpenGL(game));
                 }

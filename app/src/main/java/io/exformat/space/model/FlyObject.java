@@ -1,11 +1,10 @@
 package io.exformat.space.model;
 
-import android.util.Log;
 
 public class FlyObject
 {
 
-	private double M = 110;
+	private double mass = 110;
 
 	private double radius = 50;
 
@@ -24,15 +23,18 @@ public class FlyObject
 
 	private float angleDirectXY = 0;
 	private float angleDirectYZ = 0;
-	
+
+	private float angleSpeedXY = 10f;
+	private float angleSpeedYZ = 0;
+
 	private String name = "";
-	
+
 	public FlyObject(){}
 
 	public FlyObject(double x,
 					 double y,
 					 double z,
-					 double M,
+					 double mass,
 					 double Vx,
 					 double Vy,
 					 double Vz,
@@ -42,12 +44,29 @@ public class FlyObject
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		this.M = M;
+		this.mass = mass;
 		this.Vx = Vx;
 		this.Vy = Vy;
 		this.Vz = Vz;
 		this.name = name;
 	}
+
+	public float getAngleSpeedXY() {
+		return angleSpeedXY;
+	}
+
+	public void setAngleSpeedXY(float angleSpeedXY) {
+		this.angleSpeedXY = angleSpeedXY;
+	}
+
+	public float getAngleSpeedYZ() {
+		return angleSpeedYZ;
+	}
+
+	public void setAngleSpeedYZ(float angleSpeedYZ) {
+		this.angleSpeedYZ = angleSpeedYZ;
+	}
+
 
 	public double getRadius() {
 		return radius;
@@ -56,6 +75,7 @@ public class FlyObject
 	public void setRadius(double radius) {
 		this.radius = radius;
 	}
+
 
 	public float getAngleDirectXY() {
 		return angleDirectXY;
@@ -73,6 +93,7 @@ public class FlyObject
 		this.angleDirectYZ = angleDirectYZ;
 	}
 
+
 	public double getDryMass() {
 		return dryMass;
 	}
@@ -80,6 +101,7 @@ public class FlyObject
 	public void setDryMass(double dryMass) {
 		this.dryMass = dryMass;
 	}
+
 
 	public void setPowerTrust(float powerTrust)
 	{
@@ -91,6 +113,7 @@ public class FlyObject
 		return powerTrust;
 	}
 
+
 	public void setFuelOut(float fuelOut)
 	{
 		this.fuelOut = fuelOut;
@@ -101,17 +124,16 @@ public class FlyObject
 		return fuelOut;
 	}
 
-	public void setFuelMass(float fuelMass)
-	{
-		this.fuelMass = fuelMass;
-		Log.d("fuel: ", "" + this.fuelMass);
 
+	public void setFuelMass(float fuelMass) {
+		this.fuelMass = fuelMass;
 	}
 
 	public float getFuelMass()
 	{
 		return fuelMass;
 	}
+
 
 	public void setName(String name)
 	{
@@ -122,6 +144,7 @@ public class FlyObject
 	{
 		return name;
 	}
+
 
 	public void setVz(double vz)
 	{
@@ -153,15 +176,17 @@ public class FlyObject
 		return Vx;
 	}
 
-	public void setM(double m)
+
+	public void setMass(double mass)
 	{
-		M = m;
+		this.mass = mass;
 	}
 
-	public double getM()
+	public double getMass()
 	{
-		return M;
+		return mass;
 	}
+
 
 	public void setZ(double z)
 	{

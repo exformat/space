@@ -17,8 +17,11 @@ public class Settings {
         SettingsModels.displayHeight_05 = SettingsModels.displayHeight / 2f;
         SettingsModels.displayWidth_05  = SettingsModels.displayWidth  / 2f;
 
-        SettingsModels.fuelBagTranslateX = SettingsModels.displayWidth / 10f / 2f;
-        SettingsModels.fuelBagTranslateY = SettingsModels.displayHeight / 2f;
+        SettingsModels.fuelBagTranslateX = 390 * SettingsModels.scaleX;
+        SettingsModels.fuelBagTranslateY = 1035 * SettingsModels.scaleX;
+
+        SettingsModels.fuelCountTranslateX = 390 * SettingsModels.scaleX;
+        SettingsModels.fuelCountTranslateY = 1035 * SettingsModels.scaleX;
 
 
     }

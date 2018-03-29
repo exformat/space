@@ -16,8 +16,11 @@ public class SettingsModels {
 
 
     //fuel count model
-    public static float fuelCountModelHeightMin = 170;
-    public static float fuelCountModelHeightTHIS = 940;
+    public static float fuelCountModelHeightMin;
+    public static float fuelCountModelHeightTHIS;
+
+    public static float fuelCountTranslateX;
+    public static float fuelCountTranslateY;
 
     public static float fuelBagTranslateX;
     public static float fuelBagTranslateY;

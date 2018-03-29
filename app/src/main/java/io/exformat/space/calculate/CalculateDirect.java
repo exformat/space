@@ -19,8 +19,9 @@ public class CalculateDirect
 
 			anglXY+=90;
 
-			accel = flyObject.getPowerTrust() / flyObject.getM();
-
+			if (accel == 0) {
+				accel = flyObject.getPowerTrust() / flyObject.getMass();
+			}
 			//ускорение воспринимаем как вектор,
 			//считаем по формуле, гипотенуза(вектор) * синус
 			//писать свою реализацию расчета синуса посчитал извращением))
@@ -45,9 +46,9 @@ public class CalculateDirect
 
 	private boolean fuelOut(FlyObject flyObject){
 
-		if (flyObject.getM() >= flyObject.getDryMass()) {
+		if (flyObject.getMass() >= flyObject.getDryMass()) {
 
-			flyObject.setM(flyObject.getM() - flyObject.getFuelOut());
+			flyObject.setMass(flyObject.getMass() - flyObject.getFuelOut());
 			flyObject.setFuelMass(flyObject.getFuelMass() - flyObject.getFuelOut());
 
 			return true;
