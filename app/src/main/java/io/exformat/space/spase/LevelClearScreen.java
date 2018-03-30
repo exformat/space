@@ -170,6 +170,7 @@ public class LevelClearScreen extends Screen {
 
             if (rocket.getX() < -SettingsModels.displayWidth){
 
+                Levels.starCoinUpCount = 0;
                 levels.choiceLevel(Levels.getThisLevel());
 
                 //reload fuel count
@@ -187,6 +188,7 @@ public class LevelClearScreen extends Screen {
 
                 if (Levels.getThisLevel() != Levels.MAX_LEVEL) {
 
+                    Levels.starCoinUpCount = 0;
                     levels.choiceLevel(Levels.getThisLevel() + 1);
 
                     //reload fuel count

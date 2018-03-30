@@ -68,4 +68,20 @@ public class GameModels {
              50,  50, 1, 0,
             -50,  50, 0, 0
     };
+
+    public static float[] bombVertices = {
+
+            -64, -64, 0, 1,
+             64, -64, 1, 1,
+             64,  64, 1, 0,
+            -64,  64, 0, 0
+    };
+
+    public static float[] bombBackgroundVertices = {
+
+            -128, -128, 0, 1,
+             128, -128, 1, 1,
+             128,  128, 1, 0,
+            -128,  128, 0, 0
+    };
 }

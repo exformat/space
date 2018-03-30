@@ -1,5 +1,7 @@
 package io.exformat.space.spase;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,12 +42,14 @@ public class SpaceOpenGL extends Screen {
     private boolean trust = false;
     private boolean fuelOut = false;
     private boolean fuelOutSignal = false;
+
     private boolean crash = false;
+    private boolean finish = false;
+    private boolean bombPursuit = false;
 
     private int tick = 0;
 
     private int finishDate = 0;
-    private boolean finish = false;
 
     private float angle;
     private float angleRotate = 0;
@@ -61,9 +65,10 @@ public class SpaceOpenGL extends Screen {
     private CalculateCoordinate calculateCoordinate = new CalculateCoordinate();
     private CalculateDirect calculateDirect = new CalculateDirect();
 
-    //инициализируем массивные объекты и звёзды
+    //инициализируем массивные объекты, звёзды и бомбы
     private ArrayList<MassObject> massObjects = Levels.getMassObjects();
     private ArrayList<StarCoin> starCoins = Levels.getStarCoins();
+    private ArrayList<FlyObject> bombs = Levels.getBombs();
 
     public SpaceOpenGL(Game game) {
 
@@ -73,6 +78,11 @@ public class SpaceOpenGL extends Screen {
 
     @Override
     public void update(float deltaTime) {
+
+        if (flyObject.getHealthPoints() <= 0){
+
+            game.setScreen(new LevelClearScreen(game));
+        }
 
         angleRotate += flyObject.getAngleSpeedXY() * STEP;
 
@@ -106,6 +116,9 @@ public class SpaceOpenGL extends Screen {
         }
 
 
+        if (!bombs.isEmpty()) {
+            isBombActivated();
+        }
         isStarCoinUp();
         isFinish();
         isCrash();
@@ -122,6 +135,7 @@ public class SpaceOpenGL extends Screen {
         //то загружаем экран со статистикой и выбором уровня
         if (finishDate >= 500){
 
+            Levels.starCoinUpCount = starCoinsUp;
             game.setScreen(new LevelClearScreen(game));
         }
 
@@ -166,6 +180,33 @@ public class SpaceOpenGL extends Screen {
             gl.glScalef(SettingsModels.scaleX, SettingsModels.scaleX, 0);
             gl.glRotatef(angleFinish,0,0,1);
             Models.starCoinVertices.draw(GL10.GL_TRIANGLES, 0, 6);
+        }
+
+        //draw bomb============================================================
+        if (!bombs.isEmpty()) {
+
+            for (FlyObject bomb : bombs) {
+
+                if (bomb.getActivated()) {
+                    Textures.bombActivateTexture.bind();
+                } else {
+                    Textures.bombNotActivateTexture.bind();
+                }
+                gl.glMatrixMode(GL10.GL_MODELVIEW);
+                gl.glLoadIdentity();
+                gl.glTranslatef((float) bomb.getX(), (float) bomb.getY(), 0);
+                gl.glScalef(SettingsModels.scaleX, SettingsModels.scaleX, 0);
+                gl.glRotatef(bomb.getAngleDirectXY(), 0, 0, 1);
+                Models.bombBackgroundVertices.draw(GL10.GL_TRIANGLES, 0, 6);
+
+                Textures.bombTexture.bind();
+                gl.glMatrixMode(GL10.GL_MODELVIEW);
+                gl.glLoadIdentity();
+                gl.glTranslatef((float) bomb.getX(), (float) bomb.getY(), 0);
+                gl.glScalef(SettingsModels.scaleX, SettingsModels.scaleX, 0);
+                gl.glRotatef(bomb.getAngleDirectXY(), 0, 0, 1);
+                Models.bombVertices.draw(GL10.GL_TRIANGLES, 0, 6);
+            }
         }
 
         //draw crash texture===========================================================================
@@ -358,6 +399,42 @@ public class SpaceOpenGL extends Screen {
             finishDate = 0;
             finish = false;
         }
+    }
+
+    private void isBombActivated(){
+
+
+            double bombAngle;
+
+            for (FlyObject bomb : bombs) {
+
+                double radius = Math.sqrt(Math.pow(flyObject.getX() - bomb.getX(), 2) +
+                        Math.pow(flyObject.getY() - bomb.getY(), 2));
+
+                if (bomb.getActivated()) {
+
+                    bombAngle = -calculateDirect.getAngle(
+                            (float) bomb.getX(), (float) bomb.getY(),
+                            (float) flyObject.getX(), (float) flyObject.getY());
+
+                    bomb.setAngleDirectXY((float) bombAngle);
+                    calculateDirect.calculateDirection(bomb, 0, bombAngle, 0);
+                    calculateCoordinate.calculate(massObjects, bomb, STEP);
+                }
+
+                if (radius <= 150) {
+
+                    bomb.setActivated(true);
+                }
+                if (radius <= 50) {
+
+                    flyObject.setHealthPoints(flyObject.getHealthPoints() - 110);
+
+                    bomb.setX(10000);
+                    bomb.setY(10000);
+                }
+            }
+
     }
 
     private boolean inBounds(Input.TouchEvent event, int x, int y, int width, int height) {

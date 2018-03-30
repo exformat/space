@@ -12,6 +12,8 @@ public class Models {
     //==========================
 
     //game models
+    public static Vertices bombVertices;
+    public static Vertices bombBackgroundVertices;
     public static Vertices starVertices;
     public static Vertices rocketVertices;
     public static Vertices starCoinVertices;

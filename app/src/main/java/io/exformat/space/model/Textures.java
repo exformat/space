@@ -13,6 +13,9 @@ public class Textures {
 
     //game textures
     public static Texture gameBackgroundTexture;
+    public static Texture bombTexture;
+    public static Texture bombActivateTexture;
+    public static Texture bombNotActivateTexture;
     public static Texture crashTexture;
     public static Texture starCoinTexture;
     public static Texture starTexture;

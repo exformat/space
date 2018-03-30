@@ -84,6 +84,7 @@ public class LoadingScreenOpenGL extends Screen {
     private void loadGameModels(){
 
 
+        /*
         //load fuel out signal============================================
         Models.fueloutSignalVertices = new Vertices(glGraphics,
                 4,12,false,true);
@@ -93,6 +94,7 @@ public class LoadingScreenOpenGL extends Screen {
                  25 + SettingsModels.fuelOutSignalX,  25 + SettingsModels.fuelOutSignalY, 1, 0,
                 -25 + SettingsModels.fuelOutSignalX,  25 + SettingsModels.fuelOutSignalY, 0, 0}, 0, 16);
         Models.fueloutSignalVertices.setIndices(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
+        */
 
         //load star coin=================================================
         Models.starCoinVertices = new Vertices(glGraphics, 4,12,false,true);
@@ -124,13 +126,27 @@ public class LoadingScreenOpenGL extends Screen {
         Models.finishModel.setVertices(GameModels.finishVertices,0,16);
         Models.finishModel.setIndices(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
 
+        //load bomb model===============================================
+        Models.bombVertices = new Vertices(glGraphics, 4,12, false,true);
+        Models.bombVertices.setVertices(GameModels.bombVertices,0,16);
+        Models.bombVertices.setIndices(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
+
+        //load bomb model===============================================
+        Models.bombBackgroundVertices = new Vertices(glGraphics, 4,12, false,true);
+        Models.bombBackgroundVertices.setVertices(GameModels.bombBackgroundVertices,0,16);
+        Models.bombBackgroundVertices.setIndices(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
 
         //==============================================
     }
     private void loadGameTextures(){
 
         Textures.gameBackgroundTexture = new Texture((GLGame) game, "background.png");
+
         Textures.crashTexture = new Texture((GLGame) game, "crash.png");
+
+        Textures.bombTexture = new Texture((GLGame) game, "gameScreen/bombTextures/bomb.png");
+        Textures.bombActivateTexture = new Texture((GLGame) game, "gameScreen/bombTextures/bomb_activated.png");
+        Textures.bombNotActivateTexture = new Texture((GLGame) game, "gameScreen/bombTextures/bomb_not_activated.png");
 
         Textures.starCoinTexture = new Texture((GLGame) game, "star_coin.png");
 

@@ -4,6 +4,10 @@ package io.exformat.space.model;
 public class FlyObject
 {
 
+	private boolean activated = false;
+
+	private double healthPoints = 100;
+
 	private double mass = 110;
 
 	private double radius = 50;
@@ -11,7 +15,7 @@ public class FlyObject
 	private double dryMass = 10;
 	private float fuelMass = 100;
 	private float fuelOut = 0.1f;
-	private float powerTrust = 100;
+	private double powerTrust = 100;
 
 	private double x = 0;
 	private double y = 0;
@@ -24,7 +28,7 @@ public class FlyObject
 	private float angleDirectXY = 0;
 	private float angleDirectYZ = 0;
 
-	private float angleSpeedXY = 10f;
+	private float angleSpeedXY = 0;
 	private float angleSpeedYZ = 0;
 
 	private String name = "";
@@ -34,21 +38,34 @@ public class FlyObject
 	public FlyObject(double x,
 					 double y,
 					 double z,
-					 double mass,
 					 double Vx,
 					 double Vy,
 					 double Vz,
-					 String name
-				   )
+					 double powerTrust)
 	{
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		this.mass = mass;
 		this.Vx = Vx;
 		this.Vy = Vy;
 		this.Vz = Vz;
-		this.name = name;
+		this.powerTrust = powerTrust;
+	}
+
+	public double getHealthPoints() {
+		return healthPoints;
+	}
+
+	public void setHealthPoints(double healthPoints) {
+		this.healthPoints = healthPoints;
+	}
+
+	public boolean getActivated() {
+		return activated;
+	}
+
+	public void setActivated(boolean activated) {
+		this.activated = activated;
 	}
 
 	public float getAngleSpeedXY() {
@@ -108,7 +125,7 @@ public class FlyObject
 		this.powerTrust = powerTrust;
 	}
 
-	public float getPowerTrust()
+	public double getPowerTrust()
 	{
 		return powerTrust;
 	}
