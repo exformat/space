@@ -29,8 +29,6 @@ public class SpaceOpenGL extends Screen {
     private GLGraphics glGraphics;
     private FPSCounter fps = new FPSCounter();
 
-    private FuelCountModel fuelCountModel = new FuelCountModel();
-
     private double STEP = 0.01;
 
     private int touchDownX;
@@ -41,11 +39,9 @@ public class SpaceOpenGL extends Screen {
 
     private boolean trust = false;
     private boolean fuelOut = false;
-    private boolean fuelOutSignal = false;
 
     private boolean crash = false;
     private boolean finish = false;
-    private boolean bombPursuit = false;
 
     private int tick = 0;
 
@@ -60,15 +56,15 @@ public class SpaceOpenGL extends Screen {
 
 
 
-    private FlyObject flyObject = Levels.getFlyObject();
 
     private CalculateCoordinate calculateCoordinate = new CalculateCoordinate();
     private CalculateDirect calculateDirect = new CalculateDirect();
 
-    //инициализируем массивные объекты, звёзды и бомбы
-    private ArrayList<MassObject> massObjects = Levels.getMassObjects();
-    private ArrayList<StarCoin> starCoins = Levels.getStarCoins();
-    private ArrayList<FlyObject> bombs = Levels.getBombs();
+    //инициализируем ракету, массивные объекты, звёзды и бомбы
+    private FlyObject               flyObject = Levels.level.getFlyObject();
+    private ArrayList<MassObject> massObjects = Levels.level.getMassObjects();
+    private ArrayList<StarCoin>     starCoins = Levels.level.getStarCoins();
+    private ArrayList<FlyObject>        bombs = Levels.level.getBombs();
 
     public SpaceOpenGL(Game game) {
 
@@ -78,6 +74,9 @@ public class SpaceOpenGL extends Screen {
 
     @Override
     public void update(float deltaTime) {
+
+        //Log.d("level number: ", Levels.level.getLevelNumber() + "");
+
 
         if (flyObject.getHealthPoints() <= 0){
 
@@ -270,19 +269,13 @@ public class SpaceOpenGL extends Screen {
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
         gl.glTranslatef((float) flyObject.getX(), (float) flyObject.getY(), 0);
-
-        /*
-        if (trust) {
-            gl.glRotatef(angle, 0, 0, 1);
-        }
-        */
         gl.glRotatef(angleRotate, 0,0,1);
         gl.glScalef(SettingsModels.scaleX, SettingsModels.scaleX, 0);
         Models.rocketVertices.draw(GL10.GL_TRIANGLES, 0, 6);
 
 
         //==================================================
-        update(deltaTime);
+        //update(deltaTime);
     }
 
     @Override
@@ -446,7 +439,5 @@ public class SpaceOpenGL extends Screen {
             return false;
         }
     }
-
-
 }
 

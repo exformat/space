@@ -30,6 +30,8 @@ public class Models {
 
     //main menu models
     public static Vertices rocketLevelsVertices;
+    public static Vertices choiceNumberLevelFrameVertices;
+
     //================================================
 
 

@@ -22,7 +22,7 @@ public class LevelClearScreen extends Screen {
 
     private LevelClearRocket rocket = new LevelClearRocket();
 
-    //private int thisLevel = Levels.getThisLevel();
+    //private int thisLevel = Levels.getLevelNumber();
 
     private Levels levels = new Levels();
 

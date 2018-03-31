@@ -30,6 +30,8 @@ public class LoadingScreenOpenGL extends Screen {
     @Override
     public void update(float deltaTime) {
 
+        Levels levels = new Levels();
+
         Assets.displayWidth = glGraphics.getWidth();
         Assets.displayHeight = glGraphics.getHeight();
 
@@ -47,6 +49,8 @@ public class LoadingScreenOpenGL extends Screen {
         Log.d("scale x: ", "" + SettingsModels.scaleX);
 
 
+        //инициализируем все уровни
+        levels.initialisationLevels();
 
         loadLevelClearModels();
         loadGameModels();
@@ -172,8 +176,13 @@ public class LoadingScreenOpenGL extends Screen {
 
         //load rocket levels=================================================
         Models.rocketLevelsVertices = new Vertices(glGraphics, 4,12,false,true);
-        Models.rocketLevelsVertices.setVertices(MainMenuModels.rocketLevelsVertices, 0, 16);
+        Models.rocketLevelsVertices.setVertices(MainMenuModels.vertices512x512, 0, 16);
         Models.rocketLevelsVertices.setIndices(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
+
+        //load choice number level frame=================================================
+        Models.choiceNumberLevelFrameVertices = new Vertices(glGraphics, 4,12,false,true);
+        Models.choiceNumberLevelFrameVertices.setVertices(MainMenuModels.vertices512x512, 0, 16);
+        Models.choiceNumberLevelFrameVertices.setIndices(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
 
         //load button sound=================================================
         Models.buttonSoundVertices = new Vertices(glGraphics, 4,12,false,true);
@@ -183,12 +192,15 @@ public class LoadingScreenOpenGL extends Screen {
     }
     private void loadMainMenuTextures(){
 
-        Textures.mainMenuBackroundTexture = new Texture((GLGame) game, "mainMenuScreen/background.png");
+        Textures.mainMenuBackgroundTexture = new Texture((GLGame) game, "mainMenuScreen/background.png");
         Textures.rocketLevelsTexture = new Texture((GLGame) game, "mainMenuScreen/rocket_levels.png");
         Textures.soundOnTexture = new Texture((GLGame) game, "sound_on.png");
         Textures.soundOffTexture = new Texture((GLGame) game, "sound_off.png");
-    }
 
+        Textures.choiceLevelBackgroundTexture = new Texture((GLGame) game, "mainMenuScreen/choiceLevelScreen/choice_level_background.png");
+        Textures.choiceLevelNumberTexture = new Texture((GLGame) game, "mainMenuScreen/choiceLevelScreen/choice_number_level_frame.png");
+
+    }
 
     //=============================================
     private void loadLevelClearModels(){

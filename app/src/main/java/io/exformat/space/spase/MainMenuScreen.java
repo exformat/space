@@ -56,7 +56,7 @@ public class MainMenuScreen extends Screen {
         gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 
         //draw background===========================================================================
-        Textures.mainMenuBackroundTexture.bind();
+        Textures.mainMenuBackgroundTexture.bind();
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
         gl.glTranslatef(SettingsModels.displayWidth_05,SettingsModels.displayHeight_05,0);
@@ -148,9 +148,9 @@ public class MainMenuScreen extends Screen {
                 if (touchUpX > 704 * SettingsModels.scaleX && touchUpX < 1216 * SettingsModels.scaleX &&
                     touchUpY > 248 * SettingsModels.scaleX && touchUpY < 796 * SettingsModels.scaleX){
 
-                    //TODO организовать экран выбора уровней
                     new Levels().choiceLevel(0);
-                    game.setScreen(new SpaceOpenGL(game));
+                    //game.setScreen(new SpaceOpenGL(game));
+                    game.setScreen(new ChoiceLevelScreen(game));
                 }
             }
         }

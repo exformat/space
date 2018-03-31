@@ -36,8 +36,11 @@ public class Textures {
     //=======================================================
 
     //main menu textures
-    public static Texture mainMenuBackroundTexture;
+    public static Texture mainMenuBackgroundTexture;
     public static Texture rocketLevelsTexture;
+
+    public static Texture choiceLevelNumberTexture;
+    public static Texture choiceLevelBackgroundTexture;
     //=======================================================
 
     //pause textures

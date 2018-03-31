@@ -10,11 +10,10 @@ public class MainMenuModels {
             -100,  100, 0, 0
     };
 
-    public static float[] rocketLevelsVertices = {
+    public static float[] vertices512x512 = {
             -256, -256, 0, 1,
              256, -256, 1, 1,
              256,  256, 1, 0,
             -256,  256, 0, 0
     };
-
 }
