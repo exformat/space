@@ -77,10 +77,17 @@ public class ChoiceLevelScreen extends Screen {
             gl.glMatrixMode(GL10.GL_MODELVIEW);
             gl.glLoadIdentity();
 
-            if (level.getLevelNumber() == 4){
+            /*
+            if (level.getTranslateY() == 255){
 
-                Log.d("level translate x: ","" + level.getTranslateX());
+                level.setTranslateX(level.getTranslateX() - 10);
+
+                if (level.getTranslateX() == 520){
+
+                }
+                //Log.d("level translate x: ","" + level.getTranslateX());
             }
+            */
 
             gl.glTranslatef(level.getTranslateX(), level.getTranslateY(), 0);
 
@@ -89,7 +96,16 @@ public class ChoiceLevelScreen extends Screen {
 
             drawNumeralVertices(level, gl);
 
+
+            Log.d("level translate x: ","" + level.getTranslateX());
+
             translateNumberLevelFrame();
+            Log.d("level translate x: ","" + level.getTranslateX());
+
+            if (level.getTranslateX() == 520){
+                level.getTranslateX();
+                break;
+            }
         }
 
         //draw choice level frame===========================================================================
