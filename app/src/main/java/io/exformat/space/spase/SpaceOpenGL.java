@@ -29,6 +29,8 @@ public class SpaceOpenGL extends Screen {
     private GLGraphics glGraphics;
     private FPSCounter fps = new FPSCounter();
 
+    private LoadingModelsAndTextures reloadTextures = new LoadingModelsAndTextures();
+
     private double STEP = 0.01;
 
     private int touchDownX;
@@ -286,6 +288,7 @@ public class SpaceOpenGL extends Screen {
     @Override
     public void resume() {
 
+        reloadTextures.loadGameTextures(game);
     }
 
     @Override

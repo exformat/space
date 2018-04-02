@@ -20,6 +20,8 @@ public class LevelClearScreen extends Screen {
 
     private GLGraphics glGraphics;
 
+    private LoadingModelsAndTextures reloadTextures = new LoadingModelsAndTextures();
+
     private LevelClearRocket rocket = new LevelClearRocket();
 
     //private int thisLevel = Levels.getLevelNumber();
@@ -95,6 +97,7 @@ public class LevelClearScreen extends Screen {
     @Override
     public void resume() {
 
+        reloadTextures.loadLevelClearTextures(game);
     }
 
     @Override

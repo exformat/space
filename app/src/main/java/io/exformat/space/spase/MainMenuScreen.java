@@ -20,6 +20,9 @@ public class MainMenuScreen extends Screen {
 
     private GLGraphics glGraphics;
 
+    private LoadingModelsAndTextures reloadTextures = new LoadingModelsAndTextures();
+
+
     private boolean sound = false;//TODO прикрутить запись настроек
 
     private int touchDownX;
@@ -95,6 +98,7 @@ public class MainMenuScreen extends Screen {
     @Override
     public void resume() {
 
+        reloadTextures.loadMainMenuTextures(game);
     }
 
     @Override

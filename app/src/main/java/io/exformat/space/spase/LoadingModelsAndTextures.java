@@ -1,10 +1,7 @@
 package io.exformat.space.spase;
 
 
-import android.util.Log;
-
 import io.exformat.space.framework.Game;
-import io.exformat.space.framework.Screen;
 import io.exformat.space.framework.impl.GLGame;
 import io.exformat.space.framework.impl.GLGraphics;
 import io.exformat.space.framework.openGL.Texture;
@@ -14,82 +11,23 @@ import io.exformat.space.model.Textures;
 import io.exformat.space.model.models.modelsFHD.ChoiceLevelModels;
 import io.exformat.space.model.models.modelsFHD.GameModels;
 import io.exformat.space.model.models.modelsFHD.MainMenuModels;
-import io.exformat.space.spase.settings.SettingsModels;
 
-public class LoadingScreenOpenGL extends Screen {
+public class LoadingModelsAndTextures {
 
+    public void loadModelsAndTextures(GLGraphics glGraphics,Game game){
 
-    private GLGraphics glGraphics;
+        loadGameModels(glGraphics);
+        loadGameTextures(game);
 
-    private LoadingModelsAndTextures loadingModelsAndTextures = new LoadingModelsAndTextures();
+        loadLevelClearModels(glGraphics);
+        loadLevelClearTextures(game);
 
-
-    public LoadingScreenOpenGL(Game game) {
-        super(game);
-
-        glGraphics = ((GLGame)game).getGLGraphics();
+        loadMainMenuModels(glGraphics);
+        loadMainMenuTextures(game);
     }
-
-    @Override
-    public void update(float deltaTime) {
-
-        Levels levels = new Levels();
-
-
-
-        Assets.displayWidth = glGraphics.getWidth();
-        Assets.displayHeight = glGraphics.getHeight();
-
-        Log.d("height: ", "" + Assets.displayHeight);
-        Log.d("width:  ", "" + Assets.displayWidth);
-
-
-        Settings settings = new Settings();
-
-        settings.calculateModels();
-
-        //инициализируем все уровни
-        levels.initialisationLevels();
-
-        loadingModelsAndTextures.loadModelsAndTextures(glGraphics, game);
-        /*
-        loadLevelClearModels();
-        loadGameModels();
-        loadMainMenuModels();
-
-        loadLevelClearTextures();
-        loadGameTextures();
-        loadMainMenuTextures();
-        */
-
-        game.setScreen(new MainMenuScreen(game));
-    }
-
-    @Override
-    public void present(float deltaTime) {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void dispose() {
-
-    }
-
-
-
 
     //=============================================
-    private void loadGameModels(){
+    private void loadGameModels(GLGraphics glGraphics){
 
 
         /*
@@ -146,7 +84,7 @@ public class LoadingScreenOpenGL extends Screen {
 
         //==============================================
     }
-    public void loadGameTextures(){
+    public void loadGameTextures(Game game){
 
         Textures.gameBackgroundTexture = new Texture((GLGame) game, "background.png");
 
@@ -176,7 +114,7 @@ public class LoadingScreenOpenGL extends Screen {
     }
 
     //=============================================
-    private void loadMainMenuModels(){
+    private void loadMainMenuModels(GLGraphics glGraphics){
 
         //load rocket levels=================================================
         Models.rocketLevelsVertices = new Vertices(glGraphics, 4,12,false,true);
@@ -203,7 +141,7 @@ public class LoadingScreenOpenGL extends Screen {
         Models.buttonSoundVertices.setIndices(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
 
     }
-    public void loadMainMenuTextures(){
+    public void loadMainMenuTextures(Game game){
 
         Textures.mainMenuBackgroundTexture = new Texture((GLGame) game, "mainMenuScreen/background.png");
         Textures.rocketLevelsTexture = new Texture((GLGame) game, "mainMenuScreen/rocket_levels.png");
@@ -217,7 +155,7 @@ public class LoadingScreenOpenGL extends Screen {
     }
 
     //=============================================
-    private void loadLevelClearModels(){
+    private void loadLevelClearModels(GLGraphics glGraphics){
 
         //load level clear background model=================================================
         Models.backgroundVertices = new Vertices(glGraphics, 4,12,false,true);
@@ -230,7 +168,7 @@ public class LoadingScreenOpenGL extends Screen {
         Models.levelClearRocketVertices.setIndices(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
 
     }
-    public void loadLevelClearTextures(){
+    public void loadLevelClearTextures(Game game){
 
         Textures.levelClearBackgroundTexture = new Texture((GLGame) game, "level_clear_background.png");
         Textures.levelClearRocketTexture = new Texture((GLGame) game, "level_clear_rocket.png");

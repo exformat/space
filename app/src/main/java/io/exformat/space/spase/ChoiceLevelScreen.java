@@ -23,21 +23,10 @@ import io.exformat.space.spase.settings.SettingsModels;
 
 public class ChoiceLevelScreen extends Screen {
 
-    private FPSCounter fps = new FPSCounter();
 
     private GLGraphics glGraphics;
-    //Levels levels;\
-    Texture texture;
-    Vertices vertices;
+    private LoadingModelsAndTextures reloadTextures = new LoadingModelsAndTextures();
 
-    private int touchDownX;
-    private int touchDownY;
-
-    private int touchDraggedX;
-    private int touchDraggedY;
-
-    private int touchUpX;
-    private int touchUpY;
 
     private int levelFrameTranslateX = 510;
     private int levelFrameTranslateY = 590;
@@ -49,9 +38,6 @@ public class ChoiceLevelScreen extends Screen {
     public ChoiceLevelScreen(Game game) {
         super(game);
         glGraphics = ((GLGame) game).getGLGraphics();
-
-        vertices = new Vertices(glGraphics, 4, 6, false, true);
-        vertices.setIndices(new short[] {0, 1, 2, 2, 3, 0}, 0, 6);
     }
 
     @Override
@@ -118,7 +104,7 @@ public class ChoiceLevelScreen extends Screen {
     @Override
     public void resume() {
 
-        texture = new Texture(((GLGame)game), "font/numeral_font.png");
+        reloadTextures.loadMainMenuTextures(game);
     }
 
     @Override
@@ -128,18 +114,18 @@ public class ChoiceLevelScreen extends Screen {
 
     private void drawNumeralVertices(Level level, GL10 gl){
 
-        texture.bind();
+        Textures.numeralFontTexture.bind();
 
         if (level.getLevelNumber() < 10) {
 
-            vertices.setVertices(ChoiceLevelModels.arrayNumeralFontVertices.get(level.getLevelNumber() + 1), 0, 16);
+            Models.numeralFontVertices.setVertices(ChoiceLevelModels.arrayNumeralFontVertices.get(level.getLevelNumber() + 1), 0, 16);
 
-            vertices.bind();
+            Models.numeralFontVertices.bind();
             gl.glLoadIdentity();
             gl.glTranslatef(level.getTranslateX(), level.getTranslateY() - 55, 0);
             //gl.glScalef(SettingsModels.scaleX,SettingsModels.scaleX,0);
-            vertices.draw2(GL10.GL_TRIANGLES, 0, 6);
-            vertices.unbind();
+            Models.numeralFontVertices.draw2(GL10.GL_TRIANGLES, 0, 6);
+            Models.numeralFontVertices.unbind();
         }
         else {
 
@@ -147,9 +133,9 @@ public class ChoiceLevelScreen extends Screen {
 
             for (int i = 0; i < num.length(); i++){
 
-                vertices.setVertices(ChoiceLevelModels.arrayNumeralFontVertices.get(Character.getNumericValue(num.charAt(i))), 0, 16);
+                Models.numeralFontVertices.setVertices(ChoiceLevelModels.arrayNumeralFontVertices.get(Character.getNumericValue(num.charAt(i))), 0, 16);
 
-                vertices.bind();
+                Models.numeralFontVertices.bind();
 
                 gl.glLoadIdentity();
 
@@ -160,8 +146,8 @@ public class ChoiceLevelScreen extends Screen {
                 else {
                     gl.glTranslatef(level.getTranslateX() + 50, level.getTranslateY() - 55, 0);
                 }
-                vertices.draw2(GL10.GL_TRIANGLES, 0, 6);
-                vertices.unbind();
+                Models.numeralFontVertices.draw2(GL10.GL_TRIANGLES, 0, 6);
+                Models.numeralFontVertices.unbind();
             }
         }
     }
@@ -207,20 +193,20 @@ public class ChoiceLevelScreen extends Screen {
             //первое касание записываем координаты
             if (event.type == Input.TouchEvent.TOUCH_DOWN) {
 
-                touchDownX = event.x;
-                touchDownY = event.y;
+                int touchDownX = event.x;
+                int touchDownY = event.y;
             }
 
             if (event.type == Input.TouchEvent.TOUCH_DRAGGED) {
 
-                touchDraggedX = event.x;
-                touchDraggedY = event.y;
+                int touchDraggedX = event.x;
+                int touchDraggedY = event.y;
             }
 
             if (event.type == Input.TouchEvent.TOUCH_UP) {
 
-                touchUpX = event.x;
-                touchUpY = event.y;
+                int touchUpX = event.x;
+                int touchUpY = event.y;
 
                 choiceListLevels(event);
                 choiceLevel(event);
