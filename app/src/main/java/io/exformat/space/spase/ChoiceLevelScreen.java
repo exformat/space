@@ -77,6 +77,11 @@ public class ChoiceLevelScreen extends Screen {
             gl.glMatrixMode(GL10.GL_MODELVIEW);
             gl.glLoadIdentity();
 
+            if (level.getLevelNumber() == 4){
+
+                Log.d("level translate x: ","" + level.getTranslateX());
+            }
+
             gl.glTranslatef(level.getTranslateX(), level.getTranslateY(), 0);
 
             gl.glScalef(SettingsModels.scaleX, SettingsModels.scaleX, 0);

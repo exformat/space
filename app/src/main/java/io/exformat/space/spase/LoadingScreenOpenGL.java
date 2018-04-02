@@ -52,15 +52,6 @@ public class LoadingScreenOpenGL extends Screen {
         levels.initialisationLevels();
 
         loadingModelsAndTextures.loadModelsAndTextures(glGraphics, game);
-        /*
-        loadLevelClearModels();
-        loadGameModels();
-        loadMainMenuModels();
-
-        loadLevelClearTextures();
-        loadGameTextures();
-        loadMainMenuTextures();
-        */
 
         game.setScreen(new MainMenuScreen(game));
     }
