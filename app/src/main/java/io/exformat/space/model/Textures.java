@@ -7,6 +7,7 @@ public class Textures {
 
     //общие текстуры
     public static Texture buttonMainMenuTexture;
+    public static Texture numeralFontTexture;
     public static Texture soundOnTexture;
     public static Texture soundOffTexture;
     //======================================================
@@ -40,6 +41,7 @@ public class Textures {
     public static Texture rocketLevelsTexture;
 
     public static Texture choiceLevelNumberTexture;
+    public static Texture choiceLevelFrameTexture;
     public static Texture choiceLevelBackgroundTexture;
     //=======================================================
 

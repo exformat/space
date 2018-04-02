@@ -9,6 +9,8 @@ public class Models {
     public static Vertices buttonSoundVertices;
     public static Vertices buttonMainMenuVertices;
     public static Vertices backgroundVertices;
+    public static Vertices numeralFontVertices;
+
     //==========================
 
     //game models

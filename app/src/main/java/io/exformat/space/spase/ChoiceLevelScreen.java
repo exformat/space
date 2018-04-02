@@ -13,9 +13,12 @@ import io.exformat.space.framework.Screen;
 import io.exformat.space.framework.impl.GLGame;
 import io.exformat.space.framework.impl.GLGraphics;
 import io.exformat.space.framework.openGL.FPSCounter;
+import io.exformat.space.framework.openGL.Texture;
+import io.exformat.space.framework.openGL.Vertices;
 import io.exformat.space.model.Level;
 import io.exformat.space.model.Models;
 import io.exformat.space.model.Textures;
+import io.exformat.space.model.models.modelsFHD.ChoiceLevelModels;
 import io.exformat.space.spase.settings.SettingsModels;
 
 public class ChoiceLevelScreen extends Screen {
@@ -23,7 +26,9 @@ public class ChoiceLevelScreen extends Screen {
     private FPSCounter fps = new FPSCounter();
 
     private GLGraphics glGraphics;
-    Levels levels;
+    //Levels levels;\
+    Texture texture;
+    Vertices vertices;
 
     private int touchDownX;
     private int touchDownY;
@@ -45,6 +50,8 @@ public class ChoiceLevelScreen extends Screen {
         super(game);
         glGraphics = ((GLGame) game).getGLGraphics();
 
+        vertices = new Vertices(glGraphics, 4, 6, false, true);
+        vertices.setIndices(new short[] {0, 1, 2, 2, 3, 0}, 0, 6);
     }
 
     @Override
@@ -89,10 +96,18 @@ public class ChoiceLevelScreen extends Screen {
             gl.glScalef(SettingsModels.scaleX, SettingsModels.scaleX, 0);
             Models.choiceNumberLevelFrameVertices.draw(GL10.GL_TRIANGLES, 0, 6);
 
+            drawNumeralVertices(level, gl);
+
             translateNumberLevelFrame();
         }
 
-
+        //draw choice level frame===========================================================================
+        Textures.choiceLevelFrameTexture.bind();
+        gl.glMatrixMode(GL10.GL_MODELVIEW);
+        gl.glLoadIdentity();
+        gl.glTranslatef(SettingsModels.displayWidth_05,SettingsModels.displayHeight_05,0);
+        gl.glScalef(SettingsModels.scaleX,SettingsModels.scaleX,0);
+        Models.backgroundVertices.draw(GL10.GL_TRIANGLES, 0, 6);
     }
 
     @Override
@@ -103,6 +118,7 @@ public class ChoiceLevelScreen extends Screen {
     @Override
     public void resume() {
 
+        texture = new Texture(((GLGame)game), "font/numeral_font.png");
     }
 
     @Override
@@ -110,6 +126,47 @@ public class ChoiceLevelScreen extends Screen {
 
     }
 
+    private void drawNumeralVertices(Level level, GL10 gl){
+
+        texture.bind();
+
+        if (level.getLevelNumber() < 10) {
+
+            vertices.setVertices(ChoiceLevelModels.arrayNumeralFontVertices.get(level.getLevelNumber() + 1), 0, 16);
+
+            vertices.bind();
+            gl.glLoadIdentity();
+            gl.glTranslatef(level.getTranslateX(), level.getTranslateY() - 55, 0);
+            //gl.glScalef(SettingsModels.scaleX,SettingsModels.scaleX,0);
+            vertices.draw2(GL10.GL_TRIANGLES, 0, 6);
+            vertices.unbind();
+        }
+        else {
+
+            String num = level.getLevelNumber() + "";
+
+            for (int i = 0; i < num.length(); i++){
+
+                vertices.setVertices(ChoiceLevelModels.arrayNumeralFontVertices.get(Character.getNumericValue(num.charAt(i))), 0, 16);
+
+                vertices.bind();
+
+                gl.glLoadIdentity();
+
+                if (i == 0) {
+
+                    gl.glTranslatef(level.getTranslateX() - 50, level.getTranslateY() - 55, 0);
+                }
+                else {
+                    gl.glTranslatef(level.getTranslateX() + 50, level.getTranslateY() - 55, 0);
+                }
+                vertices.draw2(GL10.GL_TRIANGLES, 0, 6);
+                vertices.unbind();
+            }
+        }
+    }
+
+    //TODO есть баг в отображении нижнего ряда иконок уровней, смещены вправо пикселей на 10
     private void translateNumberLevelFrame(){
 
         if (levelCount <= 7) {
@@ -173,9 +230,11 @@ public class ChoiceLevelScreen extends Screen {
 
     private void choiceListLevels(Input.TouchEvent event){
 
+        //левая кнопка выбора списка уровней
+        //смещает список уровней влево
         if (listLevels < Levels.levels.size() / 8) {
 
-            if (inBounds(event, 0,0,300,680)){
+            if (inBounds(event, 0,0,300,700)){
 
                 listLevels++;
                 for (Level level : Levels.levels) {
@@ -184,9 +243,12 @@ public class ChoiceLevelScreen extends Screen {
                 }
             }
         }
+
+        //правая кнопка выбора списка уровней
+        //смещает список уровней вправо
         if (listLevels > 0) {
 
-            if (inBounds(event, 1920,0,1600,680)){
+            if (inBounds(event, 1600,0,300,700)){
 
                 listLevels--;
                 for (Level level : Levels.levels) {
@@ -219,6 +281,11 @@ public class ChoiceLevelScreen extends Screen {
                     Levels.level = level;
                     Log.d("level number: ", level.getLevelNumber() + "");
                     game.setScreen(new SpaceOpenGL(game));
+
+                    //TODO magic
+                    //ниибу почему но если насильно не остановить цикл
+                    //то пытаются загрузиться еще несколько уровней
+                    break;
                 }
             }
         }

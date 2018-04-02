@@ -11,6 +11,7 @@ import io.exformat.space.framework.openGL.Texture;
 import io.exformat.space.framework.openGL.Vertices;
 import io.exformat.space.model.Models;
 import io.exformat.space.model.Textures;
+import io.exformat.space.model.models.modelsFHD.ChoiceLevelModels;
 import io.exformat.space.model.models.modelsFHD.GameModels;
 import io.exformat.space.model.models.modelsFHD.MainMenuModels;
 import io.exformat.space.spase.settings.SettingsModels;
@@ -31,6 +32,10 @@ public class LoadingScreenOpenGL extends Screen {
     public void update(float deltaTime) {
 
         Levels levels = new Levels();
+
+        //записываем в массив вершины цифр шрифта
+        ChoiceLevelModels choiceLevelModels = new ChoiceLevelModels();
+        choiceLevelModels.addInArrayNumeralFontVertices();
 
         Assets.displayWidth = glGraphics.getWidth();
         Assets.displayHeight = glGraphics.getHeight();
@@ -83,6 +88,16 @@ public class LoadingScreenOpenGL extends Screen {
     public void dispose() {
 
     }
+
+    private void loadFontModels(){
+
+
+    }
+    private void loadFontTextures(){
+
+
+    }
+
 
     //=============================================
     private void loadGameModels(){
@@ -198,6 +213,7 @@ public class LoadingScreenOpenGL extends Screen {
         Textures.soundOffTexture = new Texture((GLGame) game, "sound_off.png");
 
         Textures.choiceLevelBackgroundTexture = new Texture((GLGame) game, "mainMenuScreen/choiceLevelScreen/choice_level_background.png");
+        Textures.choiceLevelFrameTexture = new Texture((GLGame) game, "mainMenuScreen/choiceLevelScreen/choice_level_frame.png");
         Textures.choiceLevelNumberTexture = new Texture((GLGame) game, "mainMenuScreen/choiceLevelScreen/choice_number_level_frame.png");
 
     }

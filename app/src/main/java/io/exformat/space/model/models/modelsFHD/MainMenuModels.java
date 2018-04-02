@@ -16,4 +16,12 @@ public class MainMenuModels {
              256,  256, 1, 0,
             -256,  256, 0, 0
     };
+
+    public static float[] numeralFontVertices = {
+
+            -50, -128, 0, 1,
+             50, -128, 1, 1,
+             50,  128, 1, 0,
+            -50,  128, 0, 0
+    };
 }

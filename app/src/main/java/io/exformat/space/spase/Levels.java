@@ -84,6 +84,12 @@ public class Levels {
         levels.add(addLevel2());
         levels.add(addLevel3());
         levels.add(addLevel4());
+        levels.add(addLevel4());
+        levels.add(addLevel4());
+        levels.add(addLevel4());
+        levels.add(addLevel4());
+        levels.add(addLevel4());
+        levels.add(addLevel4());
 
         calculateTranslateNumberLevelFrame();
     }
