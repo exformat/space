@@ -77,22 +77,7 @@ public class SpaceOpenGL extends Screen {
     @Override
     public void update(float deltaTime) {
 
-        //Log.d("level number: ", Levels.level.getLevelNumber() + "");
-
-
-        if (flyObject.getHealthPoints() <= 0){
-
-            Levels.crash = true;
-            game.setScreen(new LevelClearScreen(game));
-        }
-
         angleRotate += flyObject.getAngleSpeedXY() * STEP;
-
-
-        //Log.d("rocket X: ", flyObject.getX() + "");
-        //Log.d("rocket Y: ", flyObject.getY() + "");
-        //Log.d("scale X: ", SettingsModels.scaleX + "");
-        //Log.d("scale Y: ", SettingsModels.scaleY + "");
 
         //rotate finish image
         angleFinish += -0.1f;
@@ -126,13 +111,6 @@ public class SpaceOpenGL extends Screen {
         isCrash();
         control();
 
-        //если вылетели далеко за пределы экрана перезагружаем уровень
-        if (flyObject.getX() > SettingsModels.displayHeight * 2 || flyObject.getY() > SettingsModels.displayWidth * 2 ||
-            flyObject.getX() < -SettingsModels.displayHeight || flyObject.getY() < -SettingsModels.displayWidth){
-
-            Levels.crash = true;
-            game.setScreen(new LevelClearScreen(game));
-        }
 
         //если натикало больше 500 в финишном поле
         //то загружаем экран со статистикой и выбором уровня
@@ -140,7 +118,24 @@ public class SpaceOpenGL extends Screen {
 
             Levels.starCoinUpCount = starCoinsUp;
             Levels.crash = false;
+            Levels.fuelOut = false;
+            Levels.inInfinity = false;
 
+            game.setScreen(new LevelClearScreen(game));
+        }
+
+        //крушение или взрыв бомбы
+        if (flyObject.getHealthPoints() <= 0){
+
+            Levels.crash = true;
+            game.setScreen(new LevelClearScreen(game));
+        }
+
+        //если вылетели далеко за пределы экрана перезагружаем уровень
+        if (flyObject.getX() > SettingsModels.displayHeight * 2 || flyObject.getY() > SettingsModels.displayWidth * 2 ||
+            flyObject.getX() < -SettingsModels.displayHeight || flyObject.getY() < -SettingsModels.displayWidth){
+
+            Levels.inInfinity = true;
             game.setScreen(new LevelClearScreen(game));
         }
 
@@ -148,9 +143,11 @@ public class SpaceOpenGL extends Screen {
         //то загружаем экран со статистикой и выбором уровня
         if (tick > 1000){
 
-            Levels.crash = true;
+            Levels.fuelOut = true;
             game.setScreen(new LevelClearScreen(game));
         }
+
+
     }
 
     @Override
@@ -387,7 +384,7 @@ public class SpaceOpenGL extends Screen {
 
     private void isFinish() {
 
-        double radius = Math.sqrt(Math.pow(flyObject.getX() - Levels.level.getFinishY(), 2) +
+        double radius = Math.sqrt(Math.pow(flyObject.getX() - Levels.level.getFinishX(), 2) +
                                   Math.pow(flyObject.getY() - Levels.level.getFinishY(), 2));
 
         if (radius <= 100) {

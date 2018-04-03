@@ -13,8 +13,8 @@ import io.exformat.space.model.Models;
 import io.exformat.space.model.Textures;
 import io.exformat.space.model.models.modelsFHD.ChoiceLevelModels;
 import io.exformat.space.model.models.modelsFHD.GameModels;
+import io.exformat.space.model.models.modelsFHD.LevelClearModels;
 import io.exformat.space.model.models.modelsFHD.MainMenuModels;
-import io.exformat.space.spase.settings.SettingsModels;
 
 public class LoadingScreenOpenGL extends Screen {
 
@@ -210,6 +210,8 @@ public class LoadingScreenOpenGL extends Screen {
     //=============================================
     private void loadLevelClearModels(){
 
+
+
         //load level clear background model=================================================
         Models.backgroundVertices = new Vertices(glGraphics, 4,12,false,true);
         Models.backgroundVertices.setVertices(GameModels.levelClearBackgroundVertices, 0, 16);
@@ -222,6 +224,8 @@ public class LoadingScreenOpenGL extends Screen {
 
     }
     public void loadLevelClearTextures(){
+
+
 
         Textures.levelClearBackgroundTexture = new Texture((GLGame) game, "level_clear_background.png");
         Textures.levelClearRocketTexture = new Texture((GLGame) game, "level_clear_rocket.png");

@@ -13,6 +13,8 @@ public class Levels {
 
     public static int starCoinUpCount = 0;
     public static boolean crash;
+    public static boolean fuelOut;
+    public static boolean inInfinity;
 
     public static Level level;
     public static ArrayList<Level> levels = new ArrayList<>();

@@ -28,6 +28,8 @@ public class Models {
 
     //level clear models
     public static Vertices levelClearRocketVertices;
+    public static Vertices levelClearStarVertices;
+    public static Vertices levelClearCrashMessageVertices;
     //===============================================
 
     //main menu models

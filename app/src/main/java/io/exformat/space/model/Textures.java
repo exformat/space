@@ -34,6 +34,10 @@ public class Textures {
     public static Texture levelClearTexture;
     public static Texture levelClearBackgroundTexture;
     public static Texture levelClearRocketTexture;
+    public static Texture levelClearCrashTexture;
+    public static Texture levelClearFlyInInfinityTexture;
+    public static Texture levelClearFuelOutTexture;
+    public static Texture levelClearStarTexture;
     //=======================================================
 
     //main menu textures

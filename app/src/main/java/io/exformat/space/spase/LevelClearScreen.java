@@ -1,6 +1,7 @@
 package io.exformat.space.spase;
 
 
+
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -13,24 +14,22 @@ import io.exformat.space.framework.Input;
 import io.exformat.space.framework.Screen;
 import io.exformat.space.framework.impl.GLGame;
 import io.exformat.space.framework.impl.GLGraphics;
-import io.exformat.space.model.Level;
+
 import io.exformat.space.model.LevelClearRocket;
 import io.exformat.space.model.Models;
 import io.exformat.space.model.Textures;
 import io.exformat.space.model.models.modelsFHD.GameModels;
+
 import io.exformat.space.spase.settings.SettingsModels;
 
 public class LevelClearScreen extends Screen {
 
     private GLGraphics glGraphics;
-
     private LoadingModelsAndTextures reloadTextures = new LoadingModelsAndTextures();
-
     private LevelClearRocket rocket = new LevelClearRocket();
-
-    //private int thisLevel = Levels.getLevelNumber();
-
     private Levels levels = new Levels();
+
+
 
     private int touchDownX;
     private int touchDownY;
@@ -62,7 +61,6 @@ public class LevelClearScreen extends Screen {
 
         GL10 gl = glGraphics.getGL();
 
-        //gl.glClearColor(0, 0, 0, 0);
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
         gl.glMatrixMode(GL10.GL_PROJECTION);
         gl.glLoadIdentity();
@@ -70,8 +68,6 @@ public class LevelClearScreen extends Screen {
         gl.glEnable(GL10.GL_TEXTURE_2D);
         gl.glEnable(GL10.GL_BLEND);
         gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-
-
 
         //draw background===========================================================================
         Textures.levelClearBackgroundTexture.bind();
@@ -89,6 +85,7 @@ public class LevelClearScreen extends Screen {
         gl.glScalef(SettingsModels.scaleX,SettingsModels.scaleX,0);
         Models.levelClearRocketVertices.draw(GL10.GL_TRIANGLES, 0, 6);
 
+        drawStarsOrCrashMessages(gl);
         //==========================================================================================
     }
 
@@ -108,6 +105,47 @@ public class LevelClearScreen extends Screen {
 
     }
 
+    //==============================================================================================
+
+    private void drawStarsOrCrashMessages(GL10 gl){
+
+        int inc = 760;
+
+
+        if (!Levels.crash && !Levels.inInfinity && !Levels.fuelOut && Levels.starCoinUpCount > 0) {
+
+            Textures.levelClearStarTexture.bind();
+
+            for (int i = 0; i < Levels.starCoinUpCount; i++) {
+
+                inc += 100;
+
+                gl.glMatrixMode(GL10.GL_MODELVIEW);
+                gl.glLoadIdentity();
+                gl.glTranslatef(inc, 900, 0);
+                Models.levelClearStarVertices.draw(GL10.GL_TRIANGLES, 0, 6);
+            }
+        }
+        else {
+
+            if (Levels.crash){
+
+                Textures.levelClearCrashTexture.bind();
+            }
+            if (Levels.fuelOut){
+
+                Textures.levelClearFuelOutTexture.bind();
+            }
+            if (Levels.inInfinity){
+
+                Textures.levelClearFlyInInfinityTexture.bind();
+            }
+            gl.glMatrixMode(GL10.GL_MODELVIEW);
+            gl.glLoadIdentity();
+            gl.glTranslatef((float)rocket.getX() + 100, (float)rocket.getY(), 0);
+            Models.levelClearCrashMessageVertices.draw(GL10.GL_TRIANGLES, 0, 6);
+        }
+    }
     //==============================================================================================
     private void controlRocket(){
 

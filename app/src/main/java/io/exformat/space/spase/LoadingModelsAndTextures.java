@@ -10,6 +10,7 @@ import io.exformat.space.model.Models;
 import io.exformat.space.model.Textures;
 import io.exformat.space.model.models.modelsFHD.ChoiceLevelModels;
 import io.exformat.space.model.models.modelsFHD.GameModels;
+import io.exformat.space.model.models.modelsFHD.LevelClearModels;
 import io.exformat.space.model.models.modelsFHD.MainMenuModels;
 
 public class LoadingModelsAndTextures {
@@ -157,6 +158,16 @@ public class LoadingModelsAndTextures {
     //=============================================
     private void loadLevelClearModels(GLGraphics glGraphics){
 
+        //load level clear star model=================================================
+        Models.levelClearStarVertices = new Vertices(glGraphics, 4,12,false,true);
+        Models.levelClearStarVertices.setVertices(LevelClearModels.levelClearStarVertices, 0, 16);
+        Models.levelClearStarVertices.setIndices(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
+
+        //load level clear crash message model=================================================
+        Models.levelClearCrashMessageVertices = new Vertices(glGraphics, 4,12,false,true);
+        Models.levelClearCrashMessageVertices.setVertices(LevelClearModels.levelClearCrashMessageVertices, 0, 16);
+        Models.levelClearCrashMessageVertices.setIndices(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
+
         //load level clear background model=================================================
         Models.backgroundVertices = new Vertices(glGraphics, 4,12,false,true);
         Models.backgroundVertices.setVertices(GameModels.levelClearBackgroundVertices, 0, 16);
@@ -169,6 +180,12 @@ public class LoadingModelsAndTextures {
 
     }
     public void loadLevelClearTextures(Game game){
+
+        Textures.levelClearCrashTexture = new Texture((GLGame) game, "level clear screen/crash.png");
+        Textures.levelClearStarTexture = new Texture((GLGame) game, "level clear screen/star.png");
+        Textures.levelClearFlyInInfinityTexture = new Texture((GLGame) game, "level clear screen/fly_in_infinity.png");
+        Textures.levelClearFuelOutTexture = new Texture((GLGame) game, "level clear screen/fuel_out.png");
+
 
         Textures.levelClearBackgroundTexture = new Texture((GLGame) game, "level_clear_background.png");
         Textures.levelClearRocketTexture = new Texture((GLGame) game, "level_clear_rocket.png");
