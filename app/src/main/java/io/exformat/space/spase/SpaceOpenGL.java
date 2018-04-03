@@ -82,6 +82,7 @@ public class SpaceOpenGL extends Screen {
 
         if (flyObject.getHealthPoints() <= 0){
 
+            Levels.crash = true;
             game.setScreen(new LevelClearScreen(game));
         }
 
@@ -129,6 +130,7 @@ public class SpaceOpenGL extends Screen {
         if (flyObject.getX() > SettingsModels.displayHeight * 2 || flyObject.getY() > SettingsModels.displayWidth * 2 ||
             flyObject.getX() < -SettingsModels.displayHeight || flyObject.getY() < -SettingsModels.displayWidth){
 
+            Levels.crash = true;
             game.setScreen(new LevelClearScreen(game));
         }
 
@@ -137,6 +139,8 @@ public class SpaceOpenGL extends Screen {
         if (finishDate >= 500){
 
             Levels.starCoinUpCount = starCoinsUp;
+            Levels.crash = false;
+
             game.setScreen(new LevelClearScreen(game));
         }
 
@@ -144,6 +148,7 @@ public class SpaceOpenGL extends Screen {
         //то загружаем экран со статистикой и выбором уровня
         if (tick > 1000){
 
+            Levels.crash = true;
             game.setScreen(new LevelClearScreen(game));
         }
     }
@@ -225,7 +230,7 @@ public class SpaceOpenGL extends Screen {
         Textures.finishTexture.bind();
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
-        gl.glTranslatef(Levels.getFinishX(), Levels.getFinishY(), 0);
+        gl.glTranslatef(Levels.level.getFinishX(), Levels.level.getFinishY(), 0);
         gl.glScalef(SettingsModels.scaleX, SettingsModels.scaleX, 0);
         gl.glRotatef(angleFinish,0,0,1);
         Models.finishModel.draw(GL10.GL_TRIANGLES, 0, 6);
@@ -382,8 +387,8 @@ public class SpaceOpenGL extends Screen {
 
     private void isFinish() {
 
-        double radius = Math.sqrt(Math.pow(flyObject.getX() - Levels.getFinishX(), 2) +
-                                  Math.pow(flyObject.getY() - Levels.getFinishY(), 2));
+        double radius = Math.sqrt(Math.pow(flyObject.getX() - Levels.level.getFinishY(), 2) +
+                                  Math.pow(flyObject.getY() - Levels.level.getFinishY(), 2));
 
         if (radius <= 100) {
 

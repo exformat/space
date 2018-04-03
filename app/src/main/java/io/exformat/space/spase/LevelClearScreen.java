@@ -143,11 +143,18 @@ public class LevelClearScreen extends Screen {
                 touchDraggedX = event.x;
                 touchDraggedY = event.y;
 
+                //йоббаный пиздуц... самому глаза ломает эта ветвистость волосатая
                 //высчитываем новое направление
                 if (touchDraggedX > touchDownX){
 
-                    rocket.setX(touchDraggedX);
-                    nextLevel = true;
+                    if (!Levels.crash) {
+                        rocket.setX(touchDraggedX);
+                        nextLevel = true;
+                    }
+                    else {
+                        rocket.setvX(0);
+                        rocket.setX(SettingsModels.displayWidth_05);
+                    }
                 }else {
 
                     rocket.setX(touchDraggedX);
@@ -158,7 +165,13 @@ public class LevelClearScreen extends Screen {
             if (event.type == Input.TouchEvent.TOUCH_UP){
 
                 if (touchDraggedX > touchDownX){
-                    rocket.setvX(24);
+
+                    if (!Levels.crash) {
+                        rocket.setvX(24);
+                    }
+                    else {
+                        rocket.setvX(0);
+                    }
                 }else {
                     rocket.setvX(-24);
                 }
@@ -180,18 +193,14 @@ public class LevelClearScreen extends Screen {
             if (rocket.getX() < -SettingsModels.displayWidth){
 
                 Levels.starCoinUpCount = 0;
-                //levels.choiceLevel(Levels.getThisLevel());
 
                 //reload levels
                 //нужно для восстановления объектов, бомбы, звёзды и т.д.
-                Log.d("level number: ", Levels.level.getLevelNumber() + "");
-
                 levelNumber = Levels.level.getLevelNumber();
 
                 Levels.levels = new ArrayList<>();
                 levels.initialisationLevels();
                 Levels.level = levels.getLevel(levelNumber);
-                Log.d("level number: ", Levels.level.getLevelNumber() + "");
 
                 //reload fuel count
                 GameModels.fuelCountVertices = GameModels.fuelCountReloadVertices;
@@ -206,12 +215,9 @@ public class LevelClearScreen extends Screen {
 
             if (rocket.getX() > SettingsModels.displayWidth * 2){
 
-                if (Levels.getThisLevel() < Levels.levels.size()) {
+                if (Levels.level.getLevelNumber() < Levels.levels.size() - 1) {
 
                     levelNumber = Levels.level.getLevelNumber();
-
-
-                    Log.d("level number: ", Levels.level.getLevelNumber() + "");
 
                     //reload levels
                     Levels.levels = new ArrayList<>();
@@ -223,9 +229,6 @@ public class LevelClearScreen extends Screen {
                     //reload fuel count
                     GameModels.fuelCountVertices = GameModels.fuelCountReloadVertices;
                     SettingsModels.fuelCountTranslateX = 390 * SettingsModels.scaleX;
-
-                    Log.d("level number: ", Levels.level.getLevelNumber() + "");
-
 
                     game.setScreen(new SpaceOpenGL(game));
                 }

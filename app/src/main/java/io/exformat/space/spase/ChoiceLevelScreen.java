@@ -264,17 +264,8 @@ public class ChoiceLevelScreen extends Screen {
                 if (inBounds(event,x,y,width,height)){
 
                     Levels.level = level;
-                    Log.d("level number: ", level.getLevelNumber() + "");
-
-                    Log.d("level x: ", level.getTranslateX() + "");
-                    Log.d("level y: ", level.getTranslateY() + "");
 
                     game.setScreen(new SpaceOpenGL(game));
-
-                    //TODO magic
-                    //ниибу почему но если насильно не остановить цикл
-                    //то пытаются загрузиться еще несколько уровней
-                    //break;
                 }
             }
         }
