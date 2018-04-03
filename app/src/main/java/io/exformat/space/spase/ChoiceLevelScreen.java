@@ -12,9 +12,6 @@ import io.exformat.space.framework.Input;
 import io.exformat.space.framework.Screen;
 import io.exformat.space.framework.impl.GLGame;
 import io.exformat.space.framework.impl.GLGraphics;
-import io.exformat.space.framework.openGL.FPSCounter;
-import io.exformat.space.framework.openGL.Texture;
-import io.exformat.space.framework.openGL.Vertices;
 import io.exformat.space.model.Level;
 import io.exformat.space.model.Models;
 import io.exformat.space.model.Textures;
@@ -77,35 +74,13 @@ public class ChoiceLevelScreen extends Screen {
             gl.glMatrixMode(GL10.GL_MODELVIEW);
             gl.glLoadIdentity();
 
-            /*
-            if (level.getTranslateY() == 255){
-
-                level.setTranslateX(level.getTranslateX() - 10);
-
-                if (level.getTranslateX() == 520){
-
-                }
-                //Log.d("level translate x: ","" + level.getTranslateX());
-            }
-            */
-
             gl.glTranslatef(level.getTranslateX(), level.getTranslateY(), 0);
 
             gl.glScalef(SettingsModels.scaleX, SettingsModels.scaleX, 0);
             Models.choiceNumberLevelFrameVertices.draw(GL10.GL_TRIANGLES, 0, 6);
 
             drawNumeralVertices(level, gl);
-
-
-            Log.d("level translate x: ","" + level.getTranslateX());
-
             translateNumberLevelFrame();
-            Log.d("level translate x: ","" + level.getTranslateX());
-
-            if (level.getTranslateX() == 520){
-                level.getTranslateX();
-                break;
-            }
         }
 
         //draw choice level frame===========================================================================
@@ -133,6 +108,7 @@ public class ChoiceLevelScreen extends Screen {
 
     }
 
+    //рисует цифры на иконке уровня, не больше 99 уровней..
     private void drawNumeralVertices(Level level, GL10 gl){
 
         Textures.numeralFontTexture.bind();
@@ -173,7 +149,6 @@ public class ChoiceLevelScreen extends Screen {
         }
     }
 
-    //TODO есть баг в отображении нижнего ряда иконок уровней, смещены вправо пикселей на 10
     private void translateNumberLevelFrame(){
 
         if (levelCount <= 7) {
@@ -229,6 +204,9 @@ public class ChoiceLevelScreen extends Screen {
                 int touchUpX = event.x;
                 int touchUpY = event.y;
 
+                Log.d("touch x: ", event.x + "");
+                Log.d("touch y: ", event.y + "");
+
                 choiceListLevels(event);
                 choiceLevel(event);
             }
@@ -274,7 +252,7 @@ public class ChoiceLevelScreen extends Screen {
         int height;
 
         //если нажатие в поле отображения списка уровней
-        if (inBounds(event, 350,70,1240,710)){
+        if (inBounds(event, 350,70,1240,700)){
 
             for(Level level: Levels.levels){
 
@@ -287,12 +265,16 @@ public class ChoiceLevelScreen extends Screen {
 
                     Levels.level = level;
                     Log.d("level number: ", level.getLevelNumber() + "");
+
+                    Log.d("level x: ", level.getTranslateX() + "");
+                    Log.d("level y: ", level.getTranslateY() + "");
+
                     game.setScreen(new SpaceOpenGL(game));
 
                     //TODO magic
                     //ниибу почему но если насильно не остановить цикл
                     //то пытаются загрузиться еще несколько уровней
-                    break;
+                    //break;
                 }
             }
         }
@@ -301,7 +283,7 @@ public class ChoiceLevelScreen extends Screen {
     private boolean inBounds(Input.TouchEvent event, int x, int y, int width, int height) {
 
         if (event.x > x && event.x < x + width - 1 &&
-            event.y > y && event.y < y + height - 1) {
+            1080 - event.y > y && 1080 - event.y < y + height - 1) {
             return true;
         } else {
             return false;

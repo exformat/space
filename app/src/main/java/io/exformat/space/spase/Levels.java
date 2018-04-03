@@ -84,12 +84,6 @@ public class Levels {
         levels.add(addLevel2());
         levels.add(addLevel3());
         levels.add(addLevel4());
-        levels.add(addLevel4());
-        levels.add(addLevel4());
-        levels.add(addLevel4());
-        levels.add(addLevel4());
-        levels.add(addLevel4());
-        levels.add(addLevel4());
 
         calculateTranslateNumberLevelFrame();
     }
@@ -123,7 +117,7 @@ public class Levels {
             } else {
 
                 if (levelCount == 4){
-                    levelFrameTranslateX -= 1190;
+                    levelFrameTranslateX -= 1200;
                 }
                 levelFrameTranslateX += 300;
                 levelFrameTranslateY = 255;

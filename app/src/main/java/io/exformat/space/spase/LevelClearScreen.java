@@ -1,6 +1,9 @@
 package io.exformat.space.spase;
 
 
+import android.util.Log;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -10,6 +13,7 @@ import io.exformat.space.framework.Input;
 import io.exformat.space.framework.Screen;
 import io.exformat.space.framework.impl.GLGame;
 import io.exformat.space.framework.impl.GLGraphics;
+import io.exformat.space.model.Level;
 import io.exformat.space.model.LevelClearRocket;
 import io.exformat.space.model.Models;
 import io.exformat.space.model.Textures;
@@ -86,7 +90,6 @@ public class LevelClearScreen extends Screen {
         Models.levelClearRocketVertices.draw(GL10.GL_TRIANGLES, 0, 6);
 
         //==========================================================================================
-        update(deltaTime);
     }
 
     @Override
@@ -155,9 +158,9 @@ public class LevelClearScreen extends Screen {
             if (event.type == Input.TouchEvent.TOUCH_UP){
 
                 if (touchDraggedX > touchDownX){
-                    rocket.setvX(12);
+                    rocket.setvX(24);
                 }else {
-                    rocket.setvX(-12);
+                    rocket.setvX(-24);
                 }
             }
         }
@@ -168,13 +171,27 @@ public class LevelClearScreen extends Screen {
 
     private void choiceLevel(){
 
+        int levelNumber;
+
+
         //load restart level==========================================
         if (restart){
 
             if (rocket.getX() < -SettingsModels.displayWidth){
 
                 Levels.starCoinUpCount = 0;
-                levels.choiceLevel(Levels.getThisLevel());
+                //levels.choiceLevel(Levels.getThisLevel());
+
+                //reload levels
+                //нужно для восстановления объектов, бомбы, звёзды и т.д.
+                Log.d("level number: ", Levels.level.getLevelNumber() + "");
+
+                levelNumber = Levels.level.getLevelNumber();
+
+                Levels.levels = new ArrayList<>();
+                levels.initialisationLevels();
+                Levels.level = levels.getLevel(levelNumber);
+                Log.d("level number: ", Levels.level.getLevelNumber() + "");
 
                 //reload fuel count
                 GameModels.fuelCountVertices = GameModels.fuelCountReloadVertices;
@@ -189,14 +206,26 @@ public class LevelClearScreen extends Screen {
 
             if (rocket.getX() > SettingsModels.displayWidth * 2){
 
-                if (Levels.getThisLevel() != Levels.MAX_LEVEL) {
+                if (Levels.getThisLevel() < Levels.levels.size()) {
+
+                    levelNumber = Levels.level.getLevelNumber();
+
+
+                    Log.d("level number: ", Levels.level.getLevelNumber() + "");
+
+                    //reload levels
+                    Levels.levels = new ArrayList<>();
+                    levels.initialisationLevels();
 
                     Levels.starCoinUpCount = 0;
-                    levels.choiceLevel(Levels.getThisLevel() + 1);
+                    Levels.level = levels.getLevel(levelNumber + 1);
 
                     //reload fuel count
                     GameModels.fuelCountVertices = GameModels.fuelCountReloadVertices;
                     SettingsModels.fuelCountTranslateX = 390 * SettingsModels.scaleX;
+
+                    Log.d("level number: ", Levels.level.getLevelNumber() + "");
+
 
                     game.setScreen(new SpaceOpenGL(game));
                 }

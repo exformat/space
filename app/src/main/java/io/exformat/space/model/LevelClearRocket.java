@@ -8,7 +8,7 @@ public class LevelClearRocket {
     private double x = -SettingsModels.displayHeight;
     private double y = SettingsModels.displayHeight / 3;
 
-    private double vX = 10;
+    private double vX = 20;
 
     public LevelClearRocket(){
 
