@@ -63,7 +63,6 @@ public class MainMenuScreen extends Screen {
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
         gl.glTranslatef(SettingsModels.displayWidth_05,SettingsModels.displayHeight_05,0);
-        gl.glScalef(SettingsModels.scaleX,SettingsModels.scaleX,0);
         Models.backgroundVertices.draw(GL10.GL_TRIANGLES, 0, 6);
 
         //draw levels===========================================================================
@@ -71,7 +70,6 @@ public class MainMenuScreen extends Screen {
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
         gl.glTranslatef(SettingsModels.displayWidth_05,SettingsModels.displayHeight_05,0);
-        gl.glScalef(SettingsModels.scaleX,SettingsModels.scaleX,0);
         Models.rocketLevelsVertices.draw(GL10.GL_TRIANGLES, 0, 6);
 
         //draw sound===========================================================================
@@ -83,8 +81,7 @@ public class MainMenuScreen extends Screen {
         }
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
-        gl.glTranslatef(1820 * SettingsModels.scaleX,980 * SettingsModels.scaleX,0);
-        gl.glScalef(SettingsModels.scaleX,SettingsModels.scaleX,0);
+        gl.glTranslatef(1820,980,0);
         Models.buttonSoundVertices.draw(GL10.GL_TRIANGLES, 0, 6);
 
         update(deltaTime);
@@ -121,17 +118,12 @@ public class MainMenuScreen extends Screen {
 
                 touchDownX = event.x;
                 touchDownY = event.y;
-
-                Log.d("touch down x: ", "" + touchDownX);
-                Log.d("touch down y: ", "" + touchDownY);
-
             }
 
             if (event.type == Input.TouchEvent.TOUCH_DRAGGED) {
 
                 touchDraggedX = event.x;
                 touchDraggedY = event.y;
-
             }
 
             if (event.type == Input.TouchEvent.TOUCH_UP) {
@@ -142,18 +134,16 @@ public class MainMenuScreen extends Screen {
                 Log.d("touch up x: ", "" + touchUpX);
                 Log.d("touch up y: ", "" + touchUpY);
 
-                if (touchUpX > 1800 * SettingsModels.scaleX && touchUpY < 250 * SettingsModels.scaleX){
+                if (touchUpX > 1800 && touchUpY < 250){
 
                     sound = !sound;
                     Log.d("sound: ", "" + sound);
 
                 }
 
-                if (touchUpX > 704 * SettingsModels.scaleX && touchUpX < 1216 * SettingsModels.scaleX &&
-                    touchUpY > 248 * SettingsModels.scaleX && touchUpY < 796 * SettingsModels.scaleX){
+                if (touchUpX > 704 && touchUpX < 1216 &&
+                    touchUpY > 248 && touchUpY < 796){
 
-                    //new Levels().choiceLevel(0);
-                    //game.setScreen(new SpaceOpenGL(game));
                     game.setScreen(new ChoiceLevelScreen(game));
                 }
             }

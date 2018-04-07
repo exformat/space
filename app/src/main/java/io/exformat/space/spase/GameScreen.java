@@ -1,8 +1,7 @@
 package io.exformat.space.spase;
 
-import android.util.Log;
-
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -16,7 +15,6 @@ import io.exformat.space.framework.impl.GLGame;
 import io.exformat.space.framework.impl.GLGraphics;
 import io.exformat.space.framework.openGL.FPSCounter;
 import io.exformat.space.model.FlyObject;
-import io.exformat.space.model.FuelCountModel;
 import io.exformat.space.model.MassObject;
 import io.exformat.space.model.Models;
 import io.exformat.space.model.StarCoin;
@@ -24,7 +22,7 @@ import io.exformat.space.model.Textures;
 import io.exformat.space.spase.settings.SettingsModels;
 
 
-public class SpaceOpenGL extends Screen {
+public class GameScreen extends Screen {
 
     private GLGraphics glGraphics;
     private FPSCounter fps = new FPSCounter();
@@ -56,6 +54,9 @@ public class SpaceOpenGL extends Screen {
 
     private int starCoinsUp = 0;
 
+    private boolean drawExplosive = false;
+    private int explosiveTick = 0;
+
 
 
 
@@ -68,7 +69,7 @@ public class SpaceOpenGL extends Screen {
     private ArrayList<StarCoin>     starCoins = Levels.level.getStarCoins();
     private ArrayList<FlyObject>        bombs = Levels.level.getBombs();
 
-    public SpaceOpenGL(Game game) {
+    public GameScreen(io.exformat.space.framework.Game game) {
 
         super(game);
         glGraphics = ((GLGame) game).getGLGraphics();
@@ -94,8 +95,7 @@ public class SpaceOpenGL extends Screen {
                 flyObject.setAngleSpeedXY(0);
                 angleRotate = angle;
 
-                SettingsModels.fuelCountTranslateX -= (flyObject.getFuelOut() * (7.15f * SettingsModels.scaleX));
-                //fuelCountModel.reloadModel(fuelCountModel.getHeightFuelCountModel() - (flyObject.getFuelOut() * (7.55f * SettingsModels.scaleX) / 2));
+                SettingsModels.fuelCountTranslateX -= (flyObject.getFuelOut() * (7.15f));
             }
         } else {
             trust = false;
@@ -111,6 +111,16 @@ public class SpaceOpenGL extends Screen {
         isCrash();
         control();
 
+        if (drawExplosive){
+
+            explosiveTick++;
+
+            if (explosiveTick == 100){
+
+                drawExplosive = false;
+                explosiveTick = 0;
+            }
+        }
 
         //если натикало больше 500 в финишном поле
         //то загружаем экран со статистикой и выбором уровня
@@ -170,7 +180,6 @@ public class SpaceOpenGL extends Screen {
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
         gl.glTranslatef(SettingsModels.displayWidth_05,SettingsModels.displayHeight_05,0);
-        gl.glScalef(SettingsModels.scaleX,SettingsModels.scaleX,0);
         Models.backgroundVertices.draw(GL10.GL_TRIANGLES, 0, 6);
 
         //draw star coins============================================================
@@ -180,7 +189,6 @@ public class SpaceOpenGL extends Screen {
             gl.glMatrixMode(GL10.GL_MODELVIEW);
             gl.glLoadIdentity();
             gl.glTranslatef(starCoin.getStarCoinX(), starCoin.getStarCoinY(), 0);
-            gl.glScalef(SettingsModels.scaleX, SettingsModels.scaleX, 0);
             gl.glRotatef(angleFinish,0,0,1);
             Models.starCoinVertices.draw(GL10.GL_TRIANGLES, 0, 6);
         }
@@ -190,6 +198,15 @@ public class SpaceOpenGL extends Screen {
 
             for (FlyObject bomb : bombs) {
 
+                if (drawExplosive){
+
+                    Textures.bombExplosiveTexture.bind();
+                    gl.glMatrixMode(GL10.GL_MODELVIEW);
+                    gl.glLoadIdentity();
+                    gl.glTranslatef((float) bomb.getX(), (float) bomb.getY(), 0);
+                    Models.bombExplosiveVertices.draw(GL10.GL_TRIANGLES,0,6);
+                }
+
                 if (bomb.getActivated()) {
                     Textures.bombActivateTexture.bind();
                 } else {
@@ -197,16 +214,14 @@ public class SpaceOpenGL extends Screen {
                 }
                 gl.glMatrixMode(GL10.GL_MODELVIEW);
                 gl.glLoadIdentity();
-                gl.glTranslatef((float) bomb.getX(), (float) bomb.getY(), 0);
-                gl.glScalef(SettingsModels.scaleX, SettingsModels.scaleX, 0);
+                gl.glTranslatef((float) bomb.getX(), (float) bomb.getY(), (float) bomb.getZ());
                 gl.glRotatef(bomb.getAngleDirectXY(), 0, 0, 1);
                 Models.bombBackgroundVertices.draw(GL10.GL_TRIANGLES, 0, 6);
 
                 Textures.bombTexture.bind();
                 gl.glMatrixMode(GL10.GL_MODELVIEW);
                 gl.glLoadIdentity();
-                gl.glTranslatef((float) bomb.getX(), (float) bomb.getY(), 0);
-                gl.glScalef(SettingsModels.scaleX, SettingsModels.scaleX, 0);
+                gl.glTranslatef((float) bomb.getX(), (float) bomb.getY(), (float) bomb.getZ());
                 gl.glRotatef(bomb.getAngleDirectXY(), 0, 0, 1);
                 Models.bombVertices.draw(GL10.GL_TRIANGLES, 0, 6);
             }
@@ -219,7 +234,6 @@ public class SpaceOpenGL extends Screen {
             gl.glMatrixMode(GL10.GL_MODELVIEW);
             gl.glLoadIdentity();
             gl.glTranslatef(SettingsModels.displayWidth_05,SettingsModels.displayHeight_05,0);
-            gl.glScalef(SettingsModels.scaleX,SettingsModels.scaleX,0);
             Models.backgroundVertices.draw(GL10.GL_TRIANGLES, 0, 6);
         }
 
@@ -228,7 +242,6 @@ public class SpaceOpenGL extends Screen {
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
         gl.glTranslatef(Levels.level.getFinishX(), Levels.level.getFinishY(), 0);
-        gl.glScalef(SettingsModels.scaleX, SettingsModels.scaleX, 0);
         gl.glRotatef(angleFinish,0,0,1);
         Models.finishModel.draw(GL10.GL_TRIANGLES, 0, 6);
 
@@ -239,7 +252,6 @@ public class SpaceOpenGL extends Screen {
             gl.glMatrixMode(GL10.GL_MODELVIEW);
             gl.glLoadIdentity();
             gl.glTranslatef((float)massObject.getX(), (float)massObject.getY(), 0);
-            gl.glScalef(SettingsModels.scaleX, SettingsModels.scaleX, 0);
             Models.starVertices.draw(GL10.GL_TRIANGLES, 0, 6);
         }
 
@@ -248,7 +260,6 @@ public class SpaceOpenGL extends Screen {
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
         gl.glTranslatef(SettingsModels.fuelCountTranslateX, SettingsModels.fuelCountTranslateY, 0);
-        gl.glScalef(SettingsModels.scaleX, SettingsModels.scaleX, 0);
         Models.fuelCountVertices.draw(GL10.GL_TRIANGLES, 0, 6);
 
         //==================================================
@@ -256,7 +267,6 @@ public class SpaceOpenGL extends Screen {
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
         gl.glTranslatef(SettingsModels.fuelBagTranslateX, SettingsModels.fuelBagTranslateY, 0);
-        gl.glScalef(SettingsModels.scaleX, SettingsModels.scaleX, 0);
         Models.fuelBagVertices.draw(GL10.GL_TRIANGLES, 0, 6);
 
 
@@ -274,12 +284,7 @@ public class SpaceOpenGL extends Screen {
         gl.glLoadIdentity();
         gl.glTranslatef((float) flyObject.getX(), (float) flyObject.getY(), 0);
         gl.glRotatef(angleRotate, 0,0,1);
-        gl.glScalef(SettingsModels.scaleX, SettingsModels.scaleX, 0);
         Models.rocketVertices.draw(GL10.GL_TRIANGLES, 0, 6);
-
-
-        //==================================================
-        //update(deltaTime);
     }
 
     @Override
@@ -299,6 +304,11 @@ public class SpaceOpenGL extends Screen {
     }
 
     //=========================================================================
+    private void drawBombFragment(GL10 gl){
+
+
+    }
+
     private void control() {
 
         calculateCoordinate.calculate(massObjects, flyObject, STEP);
@@ -402,10 +412,11 @@ public class SpaceOpenGL extends Screen {
     private void isBombActivated(){
 
 
-            double bombAngle;
+        double bombAngle;
 
-            for (FlyObject bomb : bombs) {
+        for (FlyObject bomb : bombs) {
 
+            if (bomb.getZ() == 0) {
                 double radius = Math.sqrt(Math.pow(flyObject.getX() - bomb.getX(), 2) +
                         Math.pow(flyObject.getY() - bomb.getY(), 2));
 
@@ -426,13 +437,14 @@ public class SpaceOpenGL extends Screen {
                 }
                 if (radius <= 50) {
 
-                    flyObject.setHealthPoints(flyObject.getHealthPoints() - 110);
+                    bomb.setZ(10000);
 
-                    bomb.setX(10000);
-                    bomb.setY(10000);
+                    drawExplosive = true;
+
+                    flyObject.setHealthPoints(flyObject.getHealthPoints() - 10);
                 }
             }
-
+        }
     }
 
     private boolean inBounds(Input.TouchEvent event, int x, int y, int width, int height) {

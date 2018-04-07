@@ -2,14 +2,12 @@ package io.exformat.space.spase;
 
 
 
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import io.exformat.space.framework.Game;
 import io.exformat.space.framework.Input;
 import io.exformat.space.framework.Screen;
 import io.exformat.space.framework.impl.GLGame;
@@ -43,7 +41,7 @@ public class LevelClearScreen extends Screen {
     private boolean restart = false;
 
 
-    public LevelClearScreen(Game game) {
+    public LevelClearScreen(io.exformat.space.framework.Game game) {
         super(game);
         glGraphics = ((GLGame) game).getGLGraphics();
 
@@ -74,7 +72,6 @@ public class LevelClearScreen extends Screen {
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
         gl.glTranslatef(SettingsModels.displayWidth_05,SettingsModels.displayHeight_05,0);
-        gl.glScalef(SettingsModels.scaleX,SettingsModels.scaleX,0);
         Models.backgroundVertices.draw(GL10.GL_TRIANGLES, 0, 6);
 
         //draw rocket===============================================================================
@@ -82,7 +79,6 @@ public class LevelClearScreen extends Screen {
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
         gl.glTranslatef((float)rocket.getX(), (float)rocket.getY(),0);
-        gl.glScalef(SettingsModels.scaleX,SettingsModels.scaleX,0);
         Models.levelClearRocketVertices.draw(GL10.GL_TRIANGLES, 0, 6);
 
         drawStarsOrCrashMessages(gl);
@@ -242,9 +238,9 @@ public class LevelClearScreen extends Screen {
 
                 //reload fuel count
                 GameModels.fuelCountVertices = GameModels.fuelCountReloadVertices;
-                SettingsModels.fuelCountTranslateX = 390 * SettingsModels.scaleX;
+                SettingsModels.fuelCountTranslateX = 390;
 
-                game.setScreen(new SpaceOpenGL(game));
+                game.setScreen(new GameScreen(game));
             }
         }
 
@@ -266,9 +262,9 @@ public class LevelClearScreen extends Screen {
 
                     //reload fuel count
                     GameModels.fuelCountVertices = GameModels.fuelCountReloadVertices;
-                    SettingsModels.fuelCountTranslateX = 390 * SettingsModels.scaleX;
+                    SettingsModels.fuelCountTranslateX = 390;
 
-                    game.setScreen(new SpaceOpenGL(game));
+                    game.setScreen(new GameScreen(game));
                 }
             }
         }

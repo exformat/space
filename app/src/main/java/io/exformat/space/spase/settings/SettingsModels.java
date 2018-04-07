@@ -7,10 +7,6 @@ public class SettingsModels {
     public static float displayHeight;
 
 
-    public static float scaleX;
-    public static float scaleY;
-
-
     public static float displayWidth_05;
     public static float displayHeight_05;
 
@@ -24,8 +20,4 @@ public class SettingsModels {
 
     public static float fuelBagTranslateX;
     public static float fuelBagTranslateY;
-
-
-    public static float fuelOutSignalX = 96;
-    public static float fuelOutSignalY = 96;
 }

@@ -12,6 +12,7 @@ import io.exformat.space.model.models.modelsFHD.ChoiceLevelModels;
 import io.exformat.space.model.models.modelsFHD.GameModels;
 import io.exformat.space.model.models.modelsFHD.LevelClearModels;
 import io.exformat.space.model.models.modelsFHD.MainMenuModels;
+import io.exformat.space.model.models.modelsFHD.gameModels.BombModels;
 
 public class LoadingModelsAndTextures {
 
@@ -29,19 +30,6 @@ public class LoadingModelsAndTextures {
 
     //=============================================
     private void loadGameModels(GLGraphics glGraphics){
-
-
-        /*
-        //load fuel out signal============================================
-        Models.fueloutSignalVertices = new Vertices(glGraphics,
-                4,12,false,true);
-        Models.fueloutSignalVertices.setVertices(new float[]{
-                -25 + SettingsModels.fuelOutSignalX, -25 + SettingsModels.fuelOutSignalY, 0, 1,
-                 25 + SettingsModels.fuelOutSignalX, -25 + SettingsModels.fuelOutSignalY, 1, 1,
-                 25 + SettingsModels.fuelOutSignalX,  25 + SettingsModels.fuelOutSignalY, 1, 0,
-                -25 + SettingsModels.fuelOutSignalX,  25 + SettingsModels.fuelOutSignalY, 0, 0}, 0, 16);
-        Models.fueloutSignalVertices.setIndices(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
-        */
 
         //load star coin=================================================
         Models.starCoinVertices = new Vertices(glGraphics, 4,12,false,true);
@@ -78,11 +66,20 @@ public class LoadingModelsAndTextures {
         Models.bombVertices.setVertices(GameModels.bombVertices,0,16);
         Models.bombVertices.setIndices(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
 
-        //load bomb model===============================================
+        //load bomb background model===============================================
         Models.bombBackgroundVertices = new Vertices(glGraphics, 4,12, false,true);
         Models.bombBackgroundVertices.setVertices(GameModels.bombBackgroundVertices,0,16);
         Models.bombBackgroundVertices.setIndices(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
 
+        //load bomb explosive model===============================================
+        Models.bombExplosiveVertices = new Vertices(glGraphics, 4,12, false,true);
+        Models.bombExplosiveVertices.setVertices(GameModels.bombExplosiveVertices,0,16);
+        Models.bombExplosiveVertices.setIndices(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
+
+        Models.bombFragmentsAtlasVertices = new Vertices(glGraphics,4,12,false,true);
+        BombModels bombModels = new BombModels();
+        bombModels.addInArrayBombFragmentVertices();
+        Models.bombFragmentsAtlasVertices.setIndices(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
         //==============================================
     }
     public void loadGameTextures(Game game){
@@ -94,6 +91,8 @@ public class LoadingModelsAndTextures {
         Textures.bombTexture = new Texture((GLGame) game, "gameScreen/bombTextures/bomb.png");
         Textures.bombActivateTexture = new Texture((GLGame) game, "gameScreen/bombTextures/bomb_activated.png");
         Textures.bombNotActivateTexture = new Texture((GLGame) game, "gameScreen/bombTextures/bomb_not_activated.png");
+        Textures.bombExplosiveTexture = new Texture((GLGame) game, "gameScreen/bombTextures/bomb_explosive.png");
+        Textures.bombFragmentsAtlasTexture = new Texture((GLGame) game, "gameScreen/bombTextures/bomb_fragments_atlas.png");
 
         Textures.starCoinTexture = new Texture((GLGame) game, "star_coin.png");
 

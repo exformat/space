@@ -7,7 +7,6 @@ import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import io.exformat.space.framework.Game;
 import io.exformat.space.framework.Input;
 import io.exformat.space.framework.Screen;
 import io.exformat.space.framework.impl.GLGame;
@@ -32,7 +31,7 @@ public class ChoiceLevelScreen extends Screen {
     private int listLevels = 0;
 
 
-    public ChoiceLevelScreen(Game game) {
+    public ChoiceLevelScreen(io.exformat.space.framework.Game game) {
         super(game);
         glGraphics = ((GLGame) game).getGLGraphics();
     }
@@ -46,7 +45,6 @@ public class ChoiceLevelScreen extends Screen {
     @Override
     public void present(float deltaTime) {
 
-        //fps.logFrame();
 
         GL10 gl = glGraphics.getGL();
 
@@ -64,7 +62,6 @@ public class ChoiceLevelScreen extends Screen {
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
         gl.glTranslatef(SettingsModels.displayWidth_05,SettingsModels.displayHeight_05,0);
-        gl.glScalef(SettingsModels.scaleX,SettingsModels.scaleX,0);
         Models.backgroundVertices.draw(GL10.GL_TRIANGLES, 0, 6);
 
 
@@ -76,7 +73,6 @@ public class ChoiceLevelScreen extends Screen {
 
             gl.glTranslatef(level.getTranslateX(), level.getTranslateY(), 0);
 
-            gl.glScalef(SettingsModels.scaleX, SettingsModels.scaleX, 0);
             Models.choiceNumberLevelFrameVertices.draw(GL10.GL_TRIANGLES, 0, 6);
 
             drawNumeralVertices(level, gl);
@@ -88,7 +84,6 @@ public class ChoiceLevelScreen extends Screen {
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
         gl.glTranslatef(SettingsModels.displayWidth_05,SettingsModels.displayHeight_05,0);
-        gl.glScalef(SettingsModels.scaleX,SettingsModels.scaleX,0);
         Models.backgroundVertices.draw(GL10.GL_TRIANGLES, 0, 6);
     }
 
@@ -120,7 +115,6 @@ public class ChoiceLevelScreen extends Screen {
             Models.numeralFontVertices.bind();
             gl.glLoadIdentity();
             gl.glTranslatef(level.getTranslateX(), level.getTranslateY() - 55, 0);
-            //gl.glScalef(SettingsModels.scaleX,SettingsModels.scaleX,0);
             Models.numeralFontVertices.draw2(GL10.GL_TRIANGLES, 0, 6);
             Models.numeralFontVertices.unbind();
         }
@@ -265,7 +259,7 @@ public class ChoiceLevelScreen extends Screen {
 
                     Levels.level = level;
 
-                    game.setScreen(new SpaceOpenGL(game));
+                    game.setScreen(new GameScreen(game));
                 }
             }
         }

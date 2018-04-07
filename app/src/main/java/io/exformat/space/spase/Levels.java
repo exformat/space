@@ -88,10 +88,10 @@ public class Levels {
         starCoins = new ArrayList<>();
 
         massObjects.add(new MassObject(
-                10000 * SettingsModels.scaleX,
-                10000 * SettingsModels.scaleX,
+                10000,
+                10000,
                 0,
-                Math.round(20 * SettingsModels.scaleX),
+                Math.round(20),
                 30));
 
         //расставляем звёзды
@@ -119,10 +119,10 @@ public class Levels {
         bombs = new ArrayList<>();
 
         massObjects.add(new MassObject(
-                10000 * SettingsModels.scaleX,
-                10000 * SettingsModels.scaleX,
+                10000,
+                10000,
                 0,
-                Math.round(20 * SettingsModels.scaleX),
+                Math.round(20),
                 30));
 
         //расставляем звёзды
@@ -152,10 +152,10 @@ public class Levels {
         bombs = new ArrayList<>();
 
         massObjects.add(new MassObject(
-                10000 * SettingsModels.scaleX,
-                10000 * SettingsModels.scaleX,
+                10000,
+                10000,
                 0,
-                Math.round(20 * SettingsModels.scaleX),
+                Math.round(20),
                 30));
 
         //расставляем звёзды
@@ -186,10 +186,10 @@ public class Levels {
         bombs = new ArrayList<>();
 
         massObjects.add(new MassObject(
-                10000 * SettingsModels.scaleX,
-                10000 * SettingsModels.scaleX,
+                10000,
+                10000,
                 0,
-                Math.round(20 * SettingsModels.scaleX),
+                Math.round(20),
                 30));
 
         //расставляем звёзды
@@ -224,10 +224,10 @@ public class Levels {
         bombs = new ArrayList<>();
 
         massObjects.add(new MassObject(
-                10000 * SettingsModels.scaleX,
-                10000 * SettingsModels.scaleX,
+                10000,
+                10000,
                 0,
-                Math.round(20 * SettingsModels.scaleX),
+                Math.round(20),
                 30));
 
         bombs.add(new FlyObject(1160, 540, 0, 0, 0, 0, 50));

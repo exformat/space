@@ -1,14 +1,11 @@
 package io.exformat.space.model;
 
-
-import io.exformat.space.spase.settings.SettingsModels;
-
 public class StarCoin {
 
     private float starCoinX;
     private float starCoinY;
 
-    private double radius = 25 * SettingsModels.scaleX;
+    private double radius = 25;
 
     public StarCoin(float starCoinX, float starCoinY) {
         this.starCoinX = starCoinX;
