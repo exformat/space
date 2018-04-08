@@ -40,6 +40,7 @@ public class Levels {
         levels.add(addLevel2());
         levels.add(addLevel3());
         levels.add(addLevel4());
+        levels.add(addLevel5());
 
         calculateTranslateNumberLevelFrame();
     }
@@ -248,6 +249,43 @@ public class Levels {
         level.setBombs(bombs);
 
         level.setLevelNumber(4);
+
+        return level;
+    }
+
+    private Level addLevel5() {
+
+        level = new Level();
+
+        massObjects = new ArrayList<>();
+        starCoins = new ArrayList<>();
+        bombs = new ArrayList<>();
+
+        massObjects.add(new MassObject(
+                960,
+                -173700000,
+                0,
+                Math.round(7.3477 * 10E22),
+                30));
+
+        bombs.add(new FlyObject(1160, 540, 0, 0, 0, 0, 50));
+        bombs.add(new FlyObject(100, 340, 0, 0, 0, 0, 50));
+        bombs.add(new FlyObject(450, 340, 0, 0, 0, 0, 50));
+        bombs.add(new FlyObject(800, 340, 0, 0, 0, 0, 50));
+
+        //расставляем звёзды
+        starCoins.add(new StarCoin(225, 170));
+        starCoins.add(new StarCoin(575, 170));
+        starCoins.add(new StarCoin(1520, 540));
+
+        level.setFlyObject(new FlyObject(200, 540, 0, 0, 0, 0, 500));
+        level.setMassObjects(massObjects);
+        level.setFinishX(1720);
+        level.setFinishY(540);
+        level.setStarCoins(starCoins);
+        level.setBombs(bombs);
+
+        level.setLevelNumber(5);
 
         return level;
     }

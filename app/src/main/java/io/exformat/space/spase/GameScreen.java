@@ -1,5 +1,7 @@
 package io.exformat.space.spase;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,6 +70,7 @@ public class GameScreen extends Screen {
     private ArrayList<MassObject> massObjects = Levels.level.getMassObjects();
     private ArrayList<StarCoin>     starCoins = Levels.level.getStarCoins();
     private ArrayList<FlyObject>        bombs = Levels.level.getBombs();
+
     private ArrayList<Vector3> bombFragments = new ArrayList<>();
 
 
@@ -80,7 +83,11 @@ public class GameScreen extends Screen {
     @Override
     public void update(float deltaTime) {
 
+
         angleRotate += flyObject.getAngleSpeedXY() * STEP;
+        flyObject.setAngleDirectXY(angleRotate);
+
+
 
         //rotate finish image
         angleFinish += -0.1f;
@@ -274,6 +281,7 @@ public class GameScreen extends Screen {
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
         gl.glTranslatef((float) flyObject.getX(), (float) flyObject.getY(), 0);
+        //gl.glRotatef(flyObject.getAngleDirectXY(), 0,0,1);
         gl.glRotatef(angleRotate, 0,0,1);
         Models.rocketVertices.draw(GL10.GL_TRIANGLES, 0, 6);
 
@@ -297,28 +305,93 @@ public class GameScreen extends Screen {
     }
 
     //=========================================================================
+    //TODO ну его нафик, потом доделаю...
+    private void azazaz(){
+        Log.d("rocket angle", "" + flyObject.getAngleDirectXY());
+
+        if (flyObject.getY() <= 100){
+
+            if (Math.round(flyObject.getVx()) != 0){
+
+                if (flyObject.getVx() > 0) {
+
+                    flyObject.setVx(flyObject.getVx() - 3);
+                }
+                else {
+
+                    flyObject.setVx(flyObject.getVx() + 3);
+                }
+            }
+
+
+            if (flyObject.getAngleDirectXY() < 375 && flyObject.getAngleDirectXY() > 345){
+
+                Log.d("rocket angle", "" + flyObject.getAngleDirectXY());
+
+                flyObject.setAngleDirectXY(0);
+            }
+            else {
+
+                if (flyObject.getAngleDirectXY() > 375){
+
+                    if (Math.round(flyObject.getAngleDirectXY()) != 450) {
+                        flyObject.setAngleSpeedXY(160);
+                    }
+                    else{
+                        flyObject.setAngleSpeedXY(0);
+                    }
+                }
+                else {
+
+                    if (Math.round(flyObject.getAngleDirectXY()) != 270) {
+
+                        flyObject.setAngleSpeedXY(-160);
+                    }
+                    else{
+                        flyObject.setAngleSpeedXY(0);
+                    }
+                }
+            }
+
+            flyObject.setVy(0);
+            flyObject.setY(100);
+        }
+
+    }
     private void drawBombFragment(FlyObject bomb, GL10 gl){
 
-        bombFragments.add(new Vector3(bomb.getX(), bomb.getY(), bomb.getZ(),5, 5, 0));
-        bombFragments.add(new Vector3(bomb.getX(), bomb.getY(), bomb.getZ(),5, 5, 0));
-        bombFragments.add(new Vector3(bomb.getX(), bomb.getY(), bomb.getZ(),5, 5, 0));
-        bombFragments.add(new Vector3(bomb.getX(), bomb.getY(), bomb.getZ(),5, 5, 0));
+        if (bomb.getDrawBombExplosiveTick() == 1) {
 
+            bombFragments.add(new Vector3(bomb.getX(), bomb.getY(), bomb.getZ(), 5, 5, 0));
+            bombFragments.add(new Vector3(bomb.getX(), bomb.getY(), bomb.getZ(), 5, 5, 0));
+            bombFragments.add(new Vector3(bomb.getX(), bomb.getY(), bomb.getZ(), 5, 5, 0));
+            bombFragments.add(new Vector3(bomb.getX(), bomb.getY(), bomb.getZ(), 5, 5, 0));
+
+            bomb.setBombFragments(bombFragments);
+            bombFragments = new ArrayList<>();
+        }
 
 
         Textures.bombFragmentsAtlasTexture.bind();
-        int i = 100;
+        int a = 100;
+
+        for (int i = 0; i < 4; i++){
+
+
+        }
+
         for (float[] floats: BombModels.arrayBombFragmentVertices){
 
-            i += 100;
+            a += 100;
             Models.bombFragmentVertices.setVertices(floats, 0, 16);
 
             Models.bombFragmentVertices.bind();
             gl.glLoadIdentity();
-            gl.glTranslatef(i + 400,500,0);
+            gl.glTranslatef(a + 400,500,0);
             Models.bombFragmentVertices.modelDraw(GL10.GL_TRIANGLES, 0, 6);
             Models.bombFragmentVertices.unbind();
         }
+
     }
 
     private void control() {
