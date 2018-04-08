@@ -1,10 +1,15 @@
 package io.exformat.space.model;
 
 
+import java.util.ArrayList;
+
 public class FlyObject
 {
 
-	private boolean activated = false;
+	private boolean bombActivated = false;
+	private boolean bombExplosive = false;
+	private int drawBombExplosiveTick;
+	private ArrayList<Vector3> bombFragments = new ArrayList<>();
 
 	private double healthPoints = 100;
 
@@ -52,6 +57,34 @@ public class FlyObject
 		this.powerTrust = powerTrust;
 	}
 
+	public int getDrawBombExplosiveTick() {
+		return drawBombExplosiveTick;
+	}
+
+	public void setDrawBombExplosiveTick(int drawBombExplosiveTick) {
+		this.drawBombExplosiveTick = drawBombExplosiveTick;
+	}
+
+	public ArrayList<Vector3> getBombFragments() {
+		return bombFragments;
+	}
+
+	public void setBombFragments(ArrayList<Vector3> bombFragments) {
+		this.bombFragments = bombFragments;
+	}
+
+	public boolean getBombExplosive() {
+		return bombExplosive;
+	}
+
+	public void setBombExplosive(boolean bombExplosive) {
+		this.bombExplosive = bombExplosive;
+	}
+
+	public void setPowerTrust(double powerTrust) {
+		this.powerTrust = powerTrust;
+	}
+
 	public double getHealthPoints() {
 		return healthPoints;
 	}
@@ -60,12 +93,12 @@ public class FlyObject
 		this.healthPoints = healthPoints;
 	}
 
-	public boolean getActivated() {
-		return activated;
+	public boolean getBombActivated() {
+		return bombActivated;
 	}
 
-	public void setActivated(boolean activated) {
-		this.activated = activated;
+	public void setBombActivated(boolean bombActivated) {
+		this.bombActivated = bombActivated;
 	}
 
 	public float getAngleSpeedXY() {

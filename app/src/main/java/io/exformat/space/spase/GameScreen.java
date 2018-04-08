@@ -1,14 +1,12 @@
 package io.exformat.space.spase;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
 
 import io.exformat.space.calculate.CalculateCoordinate;
 import io.exformat.space.calculate.CalculateDirect;
-import io.exformat.space.framework.Game;
 import io.exformat.space.framework.Input;
 import io.exformat.space.framework.Screen;
 import io.exformat.space.framework.impl.GLGame;
@@ -70,6 +68,8 @@ public class GameScreen extends Screen {
     private ArrayList<MassObject> massObjects = Levels.level.getMassObjects();
     private ArrayList<StarCoin>     starCoins = Levels.level.getStarCoins();
     private ArrayList<FlyObject>        bombs = Levels.level.getBombs();
+    private ArrayList<Vector3> bombFragments = new ArrayList<>();
+
 
     public GameScreen(io.exformat.space.framework.Game game) {
 
@@ -112,17 +112,6 @@ public class GameScreen extends Screen {
         isFinish();
         isCrash();
         control();
-
-        if (drawExplosive){
-
-            explosiveTick++;
-
-            if (explosiveTick == 100){
-
-                drawExplosive = false;
-                explosiveTick = 0;
-            }
-        }
 
         //если натикало больше 500 в финишном поле
         //то загружаем экран со статистикой и выбором уровня
@@ -200,7 +189,7 @@ public class GameScreen extends Screen {
 
             for (FlyObject bomb : bombs) {
 
-                if (drawExplosive){
+                if (bomb.getBombExplosive()){
 
                     Textures.bombExplosiveTexture.bind();
                     gl.glMatrixMode(GL10.GL_MODELVIEW);
@@ -209,7 +198,7 @@ public class GameScreen extends Screen {
                     Models.bombExplosiveVertices.draw(GL10.GL_TRIANGLES,0,6);
                 }
 
-                if (bomb.getActivated()) {
+                if (bomb.getBombActivated()) {
                     Textures.bombActivateTexture.bind();
                 } else {
                     Textures.bombNotActivateTexture.bind();
@@ -310,12 +299,12 @@ public class GameScreen extends Screen {
     //=========================================================================
     private void drawBombFragment(FlyObject bomb, GL10 gl){
 
-        ArrayList<Vector3> vectors = new ArrayList<>();
+        bombFragments.add(new Vector3(bomb.getX(), bomb.getY(), bomb.getZ(),5, 5, 0));
+        bombFragments.add(new Vector3(bomb.getX(), bomb.getY(), bomb.getZ(),5, 5, 0));
+        bombFragments.add(new Vector3(bomb.getX(), bomb.getY(), bomb.getZ(),5, 5, 0));
+        bombFragments.add(new Vector3(bomb.getX(), bomb.getY(), bomb.getZ(),5, 5, 0));
 
-        vectors.add(new Vector3(bomb.getX(), bomb.getY(), bomb.getZ(),5, 5, 0));
-        vectors.add(new Vector3(bomb.getX(), bomb.getY(), bomb.getZ(),5, 5, 0));
-        vectors.add(new Vector3(bomb.getX(), bomb.getY(), bomb.getZ(),5, 5, 0));
-        vectors.add(new Vector3(bomb.getX(), bomb.getY(), bomb.getZ(),5, 5, 0));
+
 
         Textures.bombFragmentsAtlasTexture.bind();
         int i = 100;
@@ -443,7 +432,7 @@ public class GameScreen extends Screen {
                 double radius = Math.sqrt(Math.pow(flyObject.getX() - bomb.getX(), 2) +
                         Math.pow(flyObject.getY() - bomb.getY(), 2));
 
-                if (bomb.getActivated()) {
+                if (bomb.getBombActivated()) {
 
                     bombAngle = -calculateDirect.getAngle(
                             (float) bomb.getX(), (float) bomb.getY(),
@@ -456,12 +445,13 @@ public class GameScreen extends Screen {
 
                 if (radius <= 150) {
 
-                    bomb.setActivated(true);
+                    bomb.setBombActivated(true);
                 }
                 if (radius <= 50) {
 
                     bomb.setZ(10000);
 
+                    bomb.setBombExplosive(true);
                     drawExplosive = true;
 
                     //при взрыве бомбы придаём ускорение ракете от взрыва
@@ -470,6 +460,21 @@ public class GameScreen extends Screen {
                                                      (float)flyObject.getX(),(float)flyObject.getY()) ,0);
 
                     flyObject.setHealthPoints(flyObject.getHealthPoints() - 10);
+                }
+            }
+
+            if (bomb.getBombExplosive()){
+
+                explosiveTick++;
+                bomb.setDrawBombExplosiveTick(bomb.getDrawBombExplosiveTick() + 1);
+
+                if (bomb.getDrawBombExplosiveTick() == 100){
+
+                    bomb.setDrawBombExplosiveTick(0);
+                    bomb.setBombExplosive(false);
+
+                    drawExplosive = false;
+                    explosiveTick = 0;
                 }
             }
         }
