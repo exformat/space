@@ -18,6 +18,7 @@ public class Models {
     public static Vertices bombBackgroundVertices;
     public static Vertices bombExplosiveVertices;
     public static Vertices bombFragmentsAtlasVertices;
+    public static Vertices bombFragmentVertices;
     public static Vertices starVertices;
     public static Vertices rocketVertices;
     public static Vertices starCoinVertices;

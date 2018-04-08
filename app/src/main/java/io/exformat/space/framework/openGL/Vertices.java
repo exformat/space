@@ -105,7 +105,7 @@ public class Vertices {
             gl.glDisableClientState(GL10.GL_COLOR_ARRAY);
     }
 
-    public void draw2(int primitiveType, int offset, int numVertices) {
+    public void modelDraw(int primitiveType, int offset, int numVertices) {
         GL10 gl = glGraphics.getGL();
 
         if(indices!=null) {

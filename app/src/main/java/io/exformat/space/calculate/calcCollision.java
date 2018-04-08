@@ -5,6 +5,8 @@ import io.exformat.space.model.FlyObject;
 
 public class calcCollision {
 
+    //TODO !!!!!!! не смотреть сюда!! тут всё через одно место =) и пока вообще не работает
+
     private double centerMassX;
     private double centerMassY;
     private double centerMassZ;

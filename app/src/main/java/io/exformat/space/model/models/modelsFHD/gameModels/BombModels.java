@@ -38,7 +38,7 @@ public class BombModels {
         arrayBombFragmentVertices.add(fourBombFragmentVertices);
     }
 
-    private float[] oneBombFragmentVertices = {
+    public static float[] oneBombFragmentVertices = {
 
             -64, -64, 0f, 0.5f,
              64, -64, 0.5f, 0.5f,
@@ -46,7 +46,7 @@ public class BombModels {
             -64,  64, 0, 0
     };
 
-    private float[] twoBombFragmentVertices = {
+    public static float[] twoBombFragmentVertices = {
 
             -64, -64, 0.5f, 0.5f,
              64, -64, 1,    0.5f,
@@ -54,7 +54,7 @@ public class BombModels {
             -64,  64, 0.5f, 0
     };
 
-    private float[] threeBombFragmentVertices = {
+    public static float[] threeBombFragmentVertices = {
 
             -64, -64, 0,    1,
              64, -64, 0.5f, 1,
@@ -62,7 +62,7 @@ public class BombModels {
             -64,  64, 0,    0.5f
     };
 
-    private float[] fourBombFragmentVertices = {
+    public static float[] fourBombFragmentVertices = {
 
             -64, -64, 0.5f, 1,
              64, -64, 1,    1,

@@ -19,6 +19,8 @@ import io.exformat.space.model.MassObject;
 import io.exformat.space.model.Models;
 import io.exformat.space.model.StarCoin;
 import io.exformat.space.model.Textures;
+import io.exformat.space.model.Vector3;
+import io.exformat.space.model.models.modelsFHD.gameModels.BombModels;
 import io.exformat.space.spase.settings.SettingsModels;
 
 
@@ -285,6 +287,8 @@ public class GameScreen extends Screen {
         gl.glTranslatef((float) flyObject.getX(), (float) flyObject.getY(), 0);
         gl.glRotatef(angleRotate, 0,0,1);
         Models.rocketVertices.draw(GL10.GL_TRIANGLES, 0, 6);
+
+        //drawBombFragment(gl);
     }
 
     @Override
@@ -304,9 +308,28 @@ public class GameScreen extends Screen {
     }
 
     //=========================================================================
-    private void drawBombFragment(GL10 gl){
+    private void drawBombFragment(FlyObject bomb, GL10 gl){
 
+        ArrayList<Vector3> vectors = new ArrayList<>();
 
+        vectors.add(new Vector3(bomb.getX(), bomb.getY(), bomb.getZ(),5, 5, 0));
+        vectors.add(new Vector3(bomb.getX(), bomb.getY(), bomb.getZ(),5, 5, 0));
+        vectors.add(new Vector3(bomb.getX(), bomb.getY(), bomb.getZ(),5, 5, 0));
+        vectors.add(new Vector3(bomb.getX(), bomb.getY(), bomb.getZ(),5, 5, 0));
+
+        Textures.bombFragmentsAtlasTexture.bind();
+        int i = 100;
+        for (float[] floats: BombModels.arrayBombFragmentVertices){
+
+            i += 100;
+            Models.bombFragmentVertices.setVertices(floats, 0, 16);
+
+            Models.bombFragmentVertices.bind();
+            gl.glLoadIdentity();
+            gl.glTranslatef(i + 400,500,0);
+            Models.bombFragmentVertices.modelDraw(GL10.GL_TRIANGLES, 0, 6);
+            Models.bombFragmentVertices.unbind();
+        }
     }
 
     private void control() {
@@ -440,6 +463,11 @@ public class GameScreen extends Screen {
                     bomb.setZ(10000);
 
                     drawExplosive = true;
+
+                    //при взрыве бомбы придаём ускорение ракете от взрыва
+                    calculateDirect.calculateDirection(flyObject, 300,
+                            180 + calculateDirect.getAngle((float)bomb.getX(),(float)bomb.getY(),
+                                                     (float)flyObject.getX(),(float)flyObject.getY()) ,0);
 
                     flyObject.setHealthPoints(flyObject.getHealthPoints() - 10);
                 }

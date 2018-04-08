@@ -115,7 +115,7 @@ public class ChoiceLevelScreen extends Screen {
             Models.numeralFontVertices.bind();
             gl.glLoadIdentity();
             gl.glTranslatef(level.getTranslateX(), level.getTranslateY() - 55, 0);
-            Models.numeralFontVertices.draw2(GL10.GL_TRIANGLES, 0, 6);
+            Models.numeralFontVertices.modelDraw(GL10.GL_TRIANGLES, 0, 6);
             Models.numeralFontVertices.unbind();
         }
         else {
@@ -137,7 +137,7 @@ public class ChoiceLevelScreen extends Screen {
                 else {
                     gl.glTranslatef(level.getTranslateX() + 50, level.getTranslateY() - 55, 0);
                 }
-                Models.numeralFontVertices.draw2(GL10.GL_TRIANGLES, 0, 6);
+                Models.numeralFontVertices.modelDraw(GL10.GL_TRIANGLES, 0, 6);
                 Models.numeralFontVertices.unbind();
             }
         }
