@@ -44,7 +44,8 @@ public class Textures {
 
     //main menu textures
     public static Texture mainMenuBackgroundTexture;
-    public static Texture rocketLevelsTexture;
+    public static Texture openSpaceLevelsTexture;
+    public static Texture moonLevelsTexture;
 
     public static Texture choiceLevelNumberTexture;
     public static Texture choiceLevelFrameTexture;

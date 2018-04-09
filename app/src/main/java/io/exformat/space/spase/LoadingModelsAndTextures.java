@@ -116,10 +116,15 @@ public class LoadingModelsAndTextures {
     //=============================================
     private void loadMainMenuModels(GLGraphics glGraphics){
 
-        //load rocket levels=================================================
-        Models.rocketLevelsVertices = new Vertices(glGraphics, 4,12,false,true);
-        Models.rocketLevelsVertices.setVertices(MainMenuModels.vertices512x512, 0, 16);
-        Models.rocketLevelsVertices.setIndices(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
+        //load open space package levels=================================================
+        Models.openSpaceLevelsVertices = new Vertices(glGraphics, 4,12,false,true);
+        Models.openSpaceLevelsVertices.setVertices(MainMenuModels.vertices512x512, 0, 16);
+        Models.openSpaceLevelsVertices.setIndices(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
+
+        //load open space package levels=================================================
+        Models.moonLevelsVertices = new Vertices(glGraphics, 4,12,false,true);
+        Models.moonLevelsVertices.setVertices(MainMenuModels.vertices512x512, 0, 16);
+        Models.moonLevelsVertices.setIndices(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
 
         //load choice number level frame=================================================
         Models.choiceNumberLevelFrameVertices = new Vertices(glGraphics, 4,12,false,true);
@@ -144,7 +149,10 @@ public class LoadingModelsAndTextures {
     public void loadMainMenuTextures(Game game){
 
         Textures.mainMenuBackgroundTexture = new Texture((GLGame) game, "mainMenuScreen/background.png");
-        Textures.rocketLevelsTexture = new Texture((GLGame) game, "mainMenuScreen/rocket_levels.png");
+
+        Textures.openSpaceLevelsTexture = new Texture((GLGame) game, "mainMenuScreen/rocket_levels.png");
+        Textures.moonLevelsTexture = new Texture((GLGame) game, "mainMenuScreen/rocket_levels.png");
+
         Textures.soundOnTexture = new Texture((GLGame) game, "sound_on.png");
         Textures.soundOffTexture = new Texture((GLGame) game, "sound_off.png");
 

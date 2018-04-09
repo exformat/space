@@ -4,10 +4,12 @@ package io.exformat.space.spase;
 import java.util.ArrayList;
 
 import io.exformat.space.model.FlyObject;
+import io.exformat.space.model.PackageLevel;
 import io.exformat.space.model.Level;
 import io.exformat.space.model.MassObject;
 import io.exformat.space.model.StarCoin;
-import io.exformat.space.spase.settings.SettingsModels;
+import io.exformat.space.model.Textures;
+import io.exformat.space.model.Vector3;
 
 public class Levels {
 
@@ -19,9 +21,6 @@ public class Levels {
     public static Level level;
     public static ArrayList<Level> levels = new ArrayList<>();
 
-    private int levelFrameTranslateX = 510;
-    private int levelFrameTranslateY = 590;
-
     private int levelCount = 0;
 
 
@@ -31,28 +30,69 @@ public class Levels {
     private static ArrayList<StarCoin> starCoins;
     private static FlyObject flyObject;
 
+    //===========================================================================
+    private ArrayList<PackageLevel> packageLevels = new ArrayList<>();
+
+    public void initialPackageLevels(){
+
+        packageLevels.add(new PackageLevel(initialisationOpenSpaceLevels(), Textures.openSpaceLevelsTexture));
+        packageLevels.add(new PackageLevel(initialisationMoonLevels(),Textures.moonLevelsTexture));
+    }
+
 
     //============================================================================
-    public void initialisationLevels() {
+    public void oldInitialisationOpenSpaceLevels() {
 
-        levels.add(addLevel0());
-        levels.add(addLevel1());
-        levels.add(addLevel2());
-        levels.add(addLevel3());
-        levels.add(addLevel4());
-        levels.add(addLevel5());
+        levels.add(addOpenSpaceLevel0());
+        levels.add(addOpenSpaceLevel1());
+        levels.add(addOpenSpaceLevel2());
+        levels.add(addOpenSpaceLevel3());
+        levels.add(addOpenSpaceLevel4());
 
         calculateTranslateNumberLevelFrame();
     }
+
+    private ArrayList<Level> initialisationOpenSpaceLevels() {
+
+        levels = new ArrayList<>();
+
+        levels.add(addOpenSpaceLevel0());
+        levels.add(addOpenSpaceLevel1());
+        levels.add(addOpenSpaceLevel2());
+        levels.add(addOpenSpaceLevel3());
+        levels.add(addOpenSpaceLevel4());
+
+        return levels;
+    }
+    private ArrayList<Level> initialisationMoonLevels() {
+
+        levels = new ArrayList<>();
+
+        levels.add(addMoonLevel0());
+        levels.add(addMoonLevel1());
+
+        return levels;
+    }
+
+
 
     public Level getLevel(int indexLevel) {
 
         return levels.get(indexLevel);
     }
 
+    public ArrayList<PackageLevel> getPackageLevels() {
+        return packageLevels;
+    }
+
     private void calculateTranslateNumberLevelFrame() {
 
+        int levelFrameTranslateX = 510;
+        int levelFrameTranslateY = 590;
+
         for (Level level : levels) {
+
+            level.setVector(new Vector3((double)levelFrameTranslateX, (double)levelFrameTranslateY));
 
             level.setTranslateX(levelFrameTranslateX);
             level.setTranslateY(levelFrameTranslateY);
@@ -81,7 +121,7 @@ public class Levels {
     }
 
 
-    private Level addLevel0() {
+    private Level addOpenSpaceLevel0() {
 
         level = new Level();
 
@@ -111,7 +151,7 @@ public class Levels {
 
         return level;
     }
-    private Level addLevel1() {
+    private Level addOpenSpaceLevel1() {
 
         level = new Level();
 
@@ -144,7 +184,7 @@ public class Levels {
 
         return level;
     }
-    private Level addLevel2() {
+    private Level addOpenSpaceLevel2() {
 
         level = new Level();
 
@@ -178,7 +218,7 @@ public class Levels {
 
         return level;
     }
-    private Level addLevel3() {
+    private Level addOpenSpaceLevel3() {
 
         level = new Level();
 
@@ -216,7 +256,7 @@ public class Levels {
 
         return level;
     }
-    private Level addLevel4() {
+    private Level addOpenSpaceLevel4() {
 
         level = new Level();
 
@@ -253,7 +293,38 @@ public class Levels {
         return level;
     }
 
-    private Level addLevel5() {
+    private Level addMoonLevel0() {
+
+        level = new Level();
+
+        massObjects = new ArrayList<>();
+        starCoins = new ArrayList<>();
+        bombs = new ArrayList<>();
+
+        massObjects.add(new MassObject(
+                960,
+                -173700000,
+                0,
+                Math.round(7.3477 * 10E22),
+                173700000));
+
+        //расставляем звёзды
+        starCoins.add(new StarCoin(225, 170));
+        starCoins.add(new StarCoin(575, 170));
+        starCoins.add(new StarCoin(1520, 540));
+
+        level.setFlyObject(new FlyObject(200, 540, 0, 0, 0, 0, 500));
+        level.setMassObjects(massObjects);
+        level.setFinishX(1720);
+        level.setFinishY(540);
+        level.setStarCoins(starCoins);
+        //level.setBombs(bombs);
+
+        level.setLevelNumber(0);
+
+        return level;
+    }
+    private Level addMoonLevel1() {
 
         level = new Level();
 
@@ -268,11 +339,6 @@ public class Levels {
                 Math.round(7.3477 * 10E22),
                 30));
 
-        bombs.add(new FlyObject(1160, 540, 0, 0, 0, 0, 50));
-        bombs.add(new FlyObject(100, 340, 0, 0, 0, 0, 50));
-        bombs.add(new FlyObject(450, 340, 0, 0, 0, 0, 50));
-        bombs.add(new FlyObject(800, 340, 0, 0, 0, 0, 50));
-
         //расставляем звёзды
         starCoins.add(new StarCoin(225, 170));
         starCoins.add(new StarCoin(575, 170));
@@ -283,11 +349,10 @@ public class Levels {
         level.setFinishX(1720);
         level.setFinishY(540);
         level.setStarCoins(starCoins);
-        level.setBombs(bombs);
+        //level.setBombs(bombs);
 
-        level.setLevelNumber(5);
+        level.setLevelNumber(1);
 
         return level;
     }
-
 }

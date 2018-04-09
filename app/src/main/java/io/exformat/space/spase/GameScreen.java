@@ -306,6 +306,7 @@ public class GameScreen extends Screen {
 
     //=========================================================================
     //TODO ну его нафик, потом доделаю...
+    /*
     private void azazaza(){
         Log.d("rocket angle", "" + flyObject.getAngleDirectXY());
 
@@ -393,6 +394,7 @@ public class GameScreen extends Screen {
         }
 
     }
+    */
 
     private void control() {
 

@@ -13,7 +13,6 @@ import io.exformat.space.model.Models;
 import io.exformat.space.model.Textures;
 import io.exformat.space.model.models.modelsFHD.ChoiceLevelModels;
 import io.exformat.space.model.models.modelsFHD.GameModels;
-import io.exformat.space.model.models.modelsFHD.LevelClearModels;
 import io.exformat.space.model.models.modelsFHD.MainMenuModels;
 
 public class LoadingScreenOpenGL extends Screen {
@@ -33,10 +32,6 @@ public class LoadingScreenOpenGL extends Screen {
     @Override
     public void update(float deltaTime) {
 
-        Levels levels = new Levels();
-
-
-
         Assets.displayWidth = glGraphics.getWidth();
         Assets.displayHeight = glGraphics.getHeight();
 
@@ -47,9 +42,6 @@ public class LoadingScreenOpenGL extends Screen {
         Settings settings = new Settings();
 
         settings.calculateModels();
-
-        //инициализируем все уровни
-        levels.initialisationLevels();
 
         loadingModelsAndTextures.loadModelsAndTextures(glGraphics, game);
 
@@ -170,9 +162,9 @@ public class LoadingScreenOpenGL extends Screen {
     private void loadMainMenuModels(){
 
         //load rocket levels=================================================
-        Models.rocketLevelsVertices = new Vertices(glGraphics, 4,12,false,true);
-        Models.rocketLevelsVertices.setVertices(MainMenuModels.vertices512x512, 0, 16);
-        Models.rocketLevelsVertices.setIndices(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
+        Models.openSpaceLevelsVertices = new Vertices(glGraphics, 4,12,false,true);
+        Models.openSpaceLevelsVertices.setVertices(MainMenuModels.vertices512x512, 0, 16);
+        Models.openSpaceLevelsVertices.setIndices(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
 
         //load choice number level frame=================================================
         Models.choiceNumberLevelFrameVertices = new Vertices(glGraphics, 4,12,false,true);
@@ -197,7 +189,7 @@ public class LoadingScreenOpenGL extends Screen {
     public void loadMainMenuTextures(){
 
         Textures.mainMenuBackgroundTexture = new Texture((GLGame) game, "mainMenuScreen/background.png");
-        Textures.rocketLevelsTexture = new Texture((GLGame) game, "mainMenuScreen/rocket_levels.png");
+        Textures.openSpaceLevelsTexture = new Texture((GLGame) game, "mainMenuScreen/rocket_levels.png");
         Textures.soundOnTexture = new Texture((GLGame) game, "sound_on.png");
         Textures.soundOffTexture = new Texture((GLGame) game, "sound_off.png");
 

@@ -36,7 +36,8 @@ public class Models {
     //===============================================
 
     //main menu models
-    public static Vertices rocketLevelsVertices;
+    public static Vertices openSpaceLevelsVertices;
+    public static Vertices moonLevelsVertices;
     public static Vertices choiceNumberLevelFrameVertices;
 
     //================================================

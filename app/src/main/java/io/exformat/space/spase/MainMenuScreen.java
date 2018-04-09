@@ -2,6 +2,7 @@ package io.exformat.space.spase;
 
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -12,7 +13,9 @@ import io.exformat.space.framework.Screen;
 import io.exformat.space.framework.impl.GLGame;
 import io.exformat.space.framework.impl.GLGraphics;
 import io.exformat.space.model.Models;
+import io.exformat.space.model.PackageLevel;
 import io.exformat.space.model.Textures;
+import io.exformat.space.model.Vector3;
 import io.exformat.space.spase.settings.SettingsModels;
 
 
@@ -22,6 +25,8 @@ public class MainMenuScreen extends Screen {
 
     private LoadingModelsAndTextures reloadTextures = new LoadingModelsAndTextures();
 
+
+    private Levels levels = new Levels();
 
     private boolean sound = false;//TODO прикрутить запись настроек
 
@@ -37,6 +42,9 @@ public class MainMenuScreen extends Screen {
     public MainMenuScreen(Game game) {
         super(game);
         glGraphics = ((GLGame) game).getGLGraphics();
+
+        levels.initialPackageLevels();
+        calcTranslateIconsLevelPackages(levels.getPackageLevels());
     }
 
     @Override
@@ -66,12 +74,18 @@ public class MainMenuScreen extends Screen {
         Models.backgroundVertices.draw(GL10.GL_TRIANGLES, 0, 6);
 
         //draw levels===========================================================================
-        Textures.rocketLevelsTexture.bind();
-        gl.glMatrixMode(GL10.GL_MODELVIEW);
-        gl.glLoadIdentity();
-        gl.glTranslatef(SettingsModels.displayWidth_05,SettingsModels.displayHeight_05,0);
-        Models.rocketLevelsVertices.draw(GL10.GL_TRIANGLES, 0, 6);
 
+        for (PackageLevel packageLevel: levels.getPackageLevels()) {
+
+            packageLevel.getIconPackageLevelsTexture().bind();
+
+            //Textures.openSpaceLevelsTexture.bind();
+
+            gl.glMatrixMode(GL10.GL_MODELVIEW);
+            gl.glLoadIdentity();
+            gl.glTranslatef((float)packageLevel.getVector().getX(), (float)packageLevel.getVector().getY(), 0);
+            Models.openSpaceLevelsVertices.draw(GL10.GL_TRIANGLES, 0, 6);
+        }
         //draw sound===========================================================================
         if (sound){
             Textures.soundOnTexture.bind();
@@ -144,9 +158,25 @@ public class MainMenuScreen extends Screen {
                 if (touchUpX > 704 && touchUpX < 1216 &&
                     touchUpY > 248 && touchUpY < 796){
 
+                    //инициализируем уровни открытого космоса
+                    //levels.oldInitialisationOpenSpaceLevels();
+
                     game.setScreen(new ChoiceLevelScreen(game));
                 }
             }
+        }
+    }
+
+    private void calcTranslateIconsLevelPackages(ArrayList<PackageLevel> packageLevels){
+
+        float x = 200;
+        float y = 500;
+
+        for (PackageLevel packageLevel: levels.getPackageLevels()){
+
+            x += 300;
+
+            packageLevel.setVector(new Vector3((double)x,(double)y));
         }
     }
 

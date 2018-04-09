@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 public class Level {
 
+    private Vector3 vector = new Vector3();
+
     private float translateX;
     private float translateY;
 
@@ -20,7 +22,18 @@ public class Level {
 
     private int levelNumber = 0;
 
+
     public Level() {
+    }
+
+
+//======================================================================================
+    public Vector3 getVector() {
+        return vector;
+    }
+
+    public void setVector(Vector3 vector) {
+        this.vector = vector;
     }
 
     public float getTranslateX() {

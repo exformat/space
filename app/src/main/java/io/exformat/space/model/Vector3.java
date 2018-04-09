@@ -11,6 +11,7 @@ public class Vector3 {
     private double yV;
     private double zV;
 
+
     public Vector3() {
     }
 
@@ -21,6 +22,11 @@ public class Vector3 {
         this.xV = xV;
         this.yV = yV;
         this.zV = zV;
+    }
+
+    public Vector3(double x, double y) {
+        this.x = x;
+        this.y = y;
     }
 
     public double getX() {

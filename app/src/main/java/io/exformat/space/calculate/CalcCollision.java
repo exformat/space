@@ -3,7 +3,7 @@ package io.exformat.space.calculate;
 
 import io.exformat.space.model.FlyObject;
 
-public class calcCollision {
+public class CalcCollision {
 
     //TODO !!!!!!! не смотреть сюда!! тут всё через одно место =) и пока вообще не работает
 

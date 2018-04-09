@@ -233,7 +233,7 @@ public class LevelClearScreen extends Screen {
                 levelNumber = Levels.level.getLevelNumber();
 
                 Levels.levels = new ArrayList<>();
-                levels.initialisationLevels();
+                levels.oldInitialisationOpenSpaceLevels();
                 Levels.level = levels.getLevel(levelNumber);
 
                 //reload fuel count
@@ -255,7 +255,7 @@ public class LevelClearScreen extends Screen {
 
                     //reload levels
                     Levels.levels = new ArrayList<>();
-                    levels.initialisationLevels();
+                    levels.oldInitialisationOpenSpaceLevels();
 
                     Levels.starCoinUpCount = 0;
                     Levels.level = levels.getLevel(levelNumber + 1);
