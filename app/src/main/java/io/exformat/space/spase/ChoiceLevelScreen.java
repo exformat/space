@@ -13,6 +13,7 @@ import io.exformat.space.framework.impl.GLGame;
 import io.exformat.space.framework.impl.GLGraphics;
 import io.exformat.space.model.Level;
 import io.exformat.space.model.Models;
+import io.exformat.space.model.PackageLevel;
 import io.exformat.space.model.Textures;
 import io.exformat.space.model.models.modelsFHD.ChoiceLevelModels;
 import io.exformat.space.spase.settings.SettingsModels;
@@ -65,7 +66,7 @@ public class ChoiceLevelScreen extends Screen {
         Models.backgroundVertices.draw(GL10.GL_TRIANGLES, 0, 6);
 
 
-        for (Level level: Levels.levels) {
+        for (Level level: Levels.packageLevel.getLevels()) {
 
             Textures.choiceLevelNumberTexture.bind();
             gl.glMatrixMode(GL10.GL_MODELVIEW);
@@ -211,12 +212,12 @@ public class ChoiceLevelScreen extends Screen {
 
         //левая кнопка выбора списка уровней
         //смещает список уровней влево
-        if (listLevels < Levels.levels.size() / 8) {
+        if (listLevels < Levels.packageLevel.getLevels().size() / 8) {
 
             if (inBounds(event, 0,0,300,700)){
 
                 listLevels++;
-                for (Level level : Levels.levels) {
+                for (Level level : Levels.packageLevel.getLevels()) {
 
                     level.setTranslateX(level.getTranslateX() - 1210);
                 }
@@ -230,7 +231,7 @@ public class ChoiceLevelScreen extends Screen {
             if (inBounds(event, 1600,0,300,700)){
 
                 listLevels--;
-                for (Level level : Levels.levels) {
+                for (Level level : Levels.packageLevel.getLevels()) {
 
                     level.setTranslateX(level.getTranslateX() + 1210);
                 }
@@ -248,7 +249,7 @@ public class ChoiceLevelScreen extends Screen {
         //если нажатие в поле отображения списка уровней
         if (inBounds(event, 350,70,1240,700)){
 
-            for(Level level: Levels.levels){
+            for(Level level: Levels.packageLevel.getLevels()){
 
                 x = (int)level.getTranslateX() - 130;
                 y = (int)level.getTranslateY() - 150;

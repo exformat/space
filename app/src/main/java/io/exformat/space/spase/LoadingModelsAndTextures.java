@@ -151,7 +151,7 @@ public class LoadingModelsAndTextures {
         Textures.mainMenuBackgroundTexture = new Texture((GLGame) game, "mainMenuScreen/background.png");
 
         Textures.openSpaceLevelsTexture = new Texture((GLGame) game, "mainMenuScreen/rocket_levels.png");
-        Textures.moonLevelsTexture = new Texture((GLGame) game, "mainMenuScreen/rocket_levels.png");
+        Textures.moonLevelsTexture = new Texture((GLGame) game, "mainMenuScreen/moon_levels.png");
 
         Textures.soundOnTexture = new Texture((GLGame) game, "sound_on.png");
         Textures.soundOffTexture = new Texture((GLGame) game, "sound_off.png");

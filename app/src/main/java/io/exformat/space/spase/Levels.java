@@ -1,6 +1,7 @@
 package io.exformat.space.spase;
 
 
+
 import java.util.ArrayList;
 
 import io.exformat.space.model.FlyObject;
@@ -32,24 +33,12 @@ public class Levels {
 
     //===========================================================================
     private ArrayList<PackageLevel> packageLevels = new ArrayList<>();
+    public static PackageLevel packageLevel;
 
     public void initialPackageLevels(){
 
         packageLevels.add(new PackageLevel(initialisationOpenSpaceLevels(), Textures.openSpaceLevelsTexture));
         packageLevels.add(new PackageLevel(initialisationMoonLevels(),Textures.moonLevelsTexture));
-    }
-
-
-    //============================================================================
-    public void oldInitialisationOpenSpaceLevels() {
-
-        levels.add(addOpenSpaceLevel0());
-        levels.add(addOpenSpaceLevel1());
-        levels.add(addOpenSpaceLevel2());
-        levels.add(addOpenSpaceLevel3());
-        levels.add(addOpenSpaceLevel4());
-
-        calculateTranslateNumberLevelFrame();
     }
 
     private ArrayList<Level> initialisationOpenSpaceLevels() {
@@ -74,52 +63,11 @@ public class Levels {
         return levels;
     }
 
-
-
-    public Level getLevel(int indexLevel) {
-
-        return levels.get(indexLevel);
-    }
-
     public ArrayList<PackageLevel> getPackageLevels() {
         return packageLevels;
     }
 
-    private void calculateTranslateNumberLevelFrame() {
-
-        int levelFrameTranslateX = 510;
-        int levelFrameTranslateY = 590;
-
-        for (Level level : levels) {
-
-            level.setVector(new Vector3((double)levelFrameTranslateX, (double)levelFrameTranslateY));
-
-            level.setTranslateX(levelFrameTranslateX);
-            level.setTranslateY(levelFrameTranslateY);
-
-            if (levelCount < 7) {
-
-                levelCount++;
-            } else {
-
-                levelCount = 0;
-            }
-
-            if (levelCount < 4) {
-
-                levelFrameTranslateX += 300;
-                levelFrameTranslateY = 590;
-            } else {
-
-                if (levelCount == 4) {
-                    levelFrameTranslateX -= 1200;
-                }
-                levelFrameTranslateX += 300;
-                levelFrameTranslateY = 255;
-            }
-        }
-    }
-
+    //============================================================================
 
     private Level addOpenSpaceLevel0() {
 
@@ -355,4 +303,63 @@ public class Levels {
 
         return level;
     }
+
+
+
+
+
+
+    public void oldInitialisationOpenSpaceLevels() {
+
+        levels.add(addOpenSpaceLevel0());
+        levels.add(addOpenSpaceLevel1());
+        levels.add(addOpenSpaceLevel2());
+        levels.add(addOpenSpaceLevel3());
+        levels.add(addOpenSpaceLevel4());
+
+        calculateTranslateNumberLevelFrame();
+    }
+
+    public Level getLevel(int indexLevel) {
+
+        return levels.get(indexLevel);
+    }
+
+    private void calculateTranslateNumberLevelFrame() {
+
+        int levelFrameTranslateX = 510;
+        int levelFrameTranslateY = 590;
+
+        for (Level level : levels) {
+
+            level.setVector(new Vector3((double)levelFrameTranslateX, (double)levelFrameTranslateY));
+
+            level.setTranslateX(levelFrameTranslateX);
+            level.setTranslateY(levelFrameTranslateY);
+
+            if (levelCount < 7) {
+
+                levelCount++;
+            } else {
+
+                levelCount = 0;
+            }
+
+            if (levelCount < 4) {
+
+                levelFrameTranslateX += 300;
+                levelFrameTranslateY = 590;
+            } else {
+
+                if (levelCount == 4) {
+                    levelFrameTranslateX -= 1200;
+                }
+                levelFrameTranslateX += 300;
+                levelFrameTranslateY = 255;
+            }
+        }
+    }
+
+
+
 }

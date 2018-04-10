@@ -12,6 +12,7 @@ import io.exformat.space.framework.Input;
 import io.exformat.space.framework.Screen;
 import io.exformat.space.framework.impl.GLGame;
 import io.exformat.space.framework.impl.GLGraphics;
+import io.exformat.space.model.Level;
 import io.exformat.space.model.Models;
 import io.exformat.space.model.PackageLevel;
 import io.exformat.space.model.Textures;
@@ -40,11 +41,13 @@ public class MainMenuScreen extends Screen {
     private int touchDraggedY;
 
     public MainMenuScreen(Game game) {
+
         super(game);
         glGraphics = ((GLGame) game).getGLGraphics();
 
         levels.initialPackageLevels();
         calcTranslateIconsLevelPackages(levels.getPackageLevels());
+
     }
 
     @Override
@@ -155,6 +158,22 @@ public class MainMenuScreen extends Screen {
 
                 }
 
+                for (PackageLevel packageLevel: levels.getPackageLevels()){
+
+                    int x = (int)packageLevel.getVector().getX() - 256;
+                    int y = (int)packageLevel.getVector().getY() - 256;
+                    int width = (int)packageLevel.getVector().getX() + 256;
+                    int height = (int)packageLevel.getVector().getY() + 256;
+
+                    if (inBounds(event,x,y,width,height)){
+
+                        Levels.packageLevel = packageLevel;
+
+                        game.setScreen(new ChoiceLevelScreen(game));
+                    }
+                }
+
+                /*
                 if (touchUpX > 704 && touchUpX < 1216 &&
                     touchUpY > 248 && touchUpY < 796){
 
@@ -163,18 +182,19 @@ public class MainMenuScreen extends Screen {
 
                     game.setScreen(new ChoiceLevelScreen(game));
                 }
+                */
             }
         }
     }
 
     private void calcTranslateIconsLevelPackages(ArrayList<PackageLevel> packageLevels){
 
-        float x = 200;
+        float x = 500;
         float y = 500;
 
         for (PackageLevel packageLevel: levels.getPackageLevels()){
 
-            x += 300;
+            x += 500;
 
             packageLevel.setVector(new Vector3((double)x,(double)y));
         }

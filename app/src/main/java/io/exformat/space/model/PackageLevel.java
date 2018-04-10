@@ -1,6 +1,8 @@
 package io.exformat.space.model;
 
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 import io.exformat.space.framework.openGL.Texture;
@@ -31,6 +33,7 @@ public class PackageLevel {
     public PackageLevel(ArrayList<Level> levels, Texture texture) {
 
         this.levels = levels;
+        this.iconPackageLevelsTexture = texture;
 
         initialisationLevels(levels);
     }
@@ -52,6 +55,7 @@ public class PackageLevel {
 
         for (Level level : levels) {
 
+            Log.d("level", "" + level.getTranslateX());
             level.setVector(new Vector3((double)levelIconTranslateX,(double)levelIconTranslateY));
 
             if (levelCount < 7) {
