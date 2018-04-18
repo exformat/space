@@ -36,6 +36,13 @@ public class CalcCollision {
     private CalculateDirect calculateDirect = new CalculateDirect();
 
 
+    private boolean radiusCollision(){
+
+
+
+        return true;
+    }
+
     private void calcAngleCollision(){
 
         angleCollisionXY = flyObject.getAngleDirectXY() - rocketFlyObject.getAngleDirectXY();

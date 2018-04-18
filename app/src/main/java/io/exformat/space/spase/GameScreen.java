@@ -451,7 +451,10 @@ public class GameScreen extends Screen {
 
             distance = distance - massObject.getRadius() - flyObject.getRadius();
 
-            if (distance < 0) {
+            if (Math.round(distance) <= 0) {
+
+                flyObject.setVx(0);
+                flyObject.setVy(0);
 
                 crash = true;
                 break;
