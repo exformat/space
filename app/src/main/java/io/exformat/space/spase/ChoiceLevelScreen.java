@@ -11,9 +11,10 @@ import io.exformat.space.framework.Input;
 import io.exformat.space.framework.Screen;
 import io.exformat.space.framework.impl.GLGame;
 import io.exformat.space.framework.impl.GLGraphics;
+import io.exformat.space.framework.openGL.Texture;
+import io.exformat.space.framework.openGL.Vertices;
 import io.exformat.space.model.Level;
 import io.exformat.space.model.Models;
-import io.exformat.space.model.PackageLevel;
 import io.exformat.space.model.Textures;
 import io.exformat.space.model.models.modelsFHD.ChoiceLevelModels;
 import io.exformat.space.spase.settings.SettingsModels;
@@ -24,11 +25,6 @@ public class ChoiceLevelScreen extends Screen {
     private GLGraphics glGraphics;
     private LoadingModelsAndTextures reloadTextures = new LoadingModelsAndTextures();
 
-
-    private int levelFrameTranslateX = 510;
-    private int levelFrameTranslateY = 590;
-
-    private int levelCount = 0;
     private int listLevels = 0;
 
 
@@ -68,24 +64,21 @@ public class ChoiceLevelScreen extends Screen {
 
         for (Level level: Levels.packageLevel.getLevels()) {
 
-            Textures.choiceLevelNumberTexture.bind();
-            gl.glMatrixMode(GL10.GL_MODELVIEW);
-            gl.glLoadIdentity();
+            draw(gl, Textures.choiceLevelNumberTexture,
+                     Models.choiceNumberLevelFrameVertices,
+                    (float) level.getVector().getX(),
+                    (float) level.getVector().getY(), 0);
 
-            gl.glTranslatef(level.getTranslateX(), level.getTranslateY(), 0);
-
-            Models.choiceNumberLevelFrameVertices.draw(GL10.GL_TRIANGLES, 0, 6);
-
-            drawNumeralVertices(level, gl);
-            translateNumberLevelFrame();
+            drawNumeralVertices(level,gl);
         }
 
-        //draw choice level frame===========================================================================
+        /*/draw choice level frame===========================================================================
         Textures.choiceLevelFrameTexture.bind();
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
         gl.glTranslatef(SettingsModels.displayWidth_05,SettingsModels.displayHeight_05,0);
         Models.backgroundVertices.draw(GL10.GL_TRIANGLES, 0, 6);
+        */
     }
 
     @Override
@@ -102,73 +95,6 @@ public class ChoiceLevelScreen extends Screen {
     @Override
     public void dispose() {
 
-    }
-
-    //рисует цифры на иконке уровня, не больше 99 уровней..
-    private void drawNumeralVertices(Level level, GL10 gl){
-
-        Textures.numeralFontTexture.bind();
-
-        if (level.getLevelNumber() < 10) {
-
-            Models.numeralFontVertices.setVertices(ChoiceLevelModels.arrayNumeralFontVertices.get(level.getLevelNumber() + 1), 0, 16);
-
-            Models.numeralFontVertices.bind();
-            gl.glLoadIdentity();
-            gl.glTranslatef(level.getTranslateX(), level.getTranslateY() - 55, 0);
-            Models.numeralFontVertices.modelDraw(GL10.GL_TRIANGLES, 0, 6);
-            Models.numeralFontVertices.unbind();
-        }
-        else {
-
-            String num = level.getLevelNumber() + "";
-
-            for (int i = 0; i < num.length(); i++){
-
-                Models.numeralFontVertices.setVertices(ChoiceLevelModels.arrayNumeralFontVertices.get(Character.getNumericValue(num.charAt(i))), 0, 16);
-
-                Models.numeralFontVertices.bind();
-
-                gl.glLoadIdentity();
-
-                if (i == 0) {
-
-                    gl.glTranslatef(level.getTranslateX() - 50, level.getTranslateY() - 55, 0);
-                }
-                else {
-                    gl.glTranslatef(level.getTranslateX() + 50, level.getTranslateY() - 55, 0);
-                }
-                Models.numeralFontVertices.modelDraw(GL10.GL_TRIANGLES, 0, 6);
-                Models.numeralFontVertices.unbind();
-            }
-        }
-    }
-
-    private void translateNumberLevelFrame(){
-
-        if (levelCount <= 7) {
-
-            levelCount++;
-        }else {
-
-            levelCount = 0;
-        }
-
-        if (levelFrameTranslateX <= 1400){
-
-            levelFrameTranslateX += 300;
-        }else {
-
-            levelFrameTranslateX = 510;
-        }
-
-        if (levelCount < 3){
-
-            levelFrameTranslateY = 590;
-        }else {
-
-            levelFrameTranslateY = 255;
-        }
     }
 
     private void control(){
@@ -217,9 +143,10 @@ public class ChoiceLevelScreen extends Screen {
             if (inBounds(event, 0,0,300,700)){
 
                 listLevels++;
+
                 for (Level level : Levels.packageLevel.getLevels()) {
 
-                    level.setTranslateX(level.getTranslateX() - 1210);
+                    level.getVector().setX((float) level.getVector().getX() - 1210);
                 }
             }
         }
@@ -231,9 +158,10 @@ public class ChoiceLevelScreen extends Screen {
             if (inBounds(event, 1600,0,300,700)){
 
                 listLevels--;
+
                 for (Level level : Levels.packageLevel.getLevels()) {
 
-                    level.setTranslateX(level.getTranslateX() + 1210);
+                    level.getVector().setX((float) level.getVector().getX() + 1210);
                 }
             }
         }
@@ -251,10 +179,10 @@ public class ChoiceLevelScreen extends Screen {
 
             for(Level level: Levels.packageLevel.getLevels()){
 
-                x = (int)level.getTranslateX() - 130;
-                y = (int)level.getTranslateY() - 150;
-                width = (int)level.getTranslateX() + 130;
-                height = (int)level.getTranslateY() + 150;
+                x = (int)level.getVector().getX() - 130;
+                y = (int)level.getVector().getY() - 150;
+                width  = (int)level.getVector().getX() + 130;
+                height = (int)level.getVector().getY() + 150;
 
                 if (inBounds(event,x,y,width,height)){
 
@@ -276,4 +204,61 @@ public class ChoiceLevelScreen extends Screen {
         }
     }
 
+    //рисует цифры на иконке уровня, не больше 99 уровней..
+    private void drawNumeralVertices(Level level, GL10 gl){
+
+        Textures.numeralFontTexture.bind();
+
+        if (level.getLevelNumber() < 10) {
+
+            Models.numeralFontVertices.setVertices(ChoiceLevelModels.arrayNumeralFontVertices.get(level.getLevelNumber() + 1), 0, 16);
+
+            Models.numeralFontVertices.bind();
+            gl.glLoadIdentity();
+            gl.glTranslatef((float) level.getVector().getX(),
+                    (float) level.getVector().getY() - 55, 0);
+            Models.numeralFontVertices.modelDraw(GL10.GL_TRIANGLES, 0, 6);
+            Models.numeralFontVertices.unbind();
+        }
+        else {
+
+            String num = level.getLevelNumber() + "";
+
+            for (int i = 0; i < num.length(); i++){
+
+                Models.numeralFontVertices.setVertices(ChoiceLevelModels.arrayNumeralFontVertices.get(Character.getNumericValue(num.charAt(i))), 0, 16);
+
+                Models.numeralFontVertices.bind();
+
+                gl.glLoadIdentity();
+
+                if (i == 0) {
+
+                    gl.glTranslatef((float) level.getVector().getX() - 50,
+                            (float) level.getVector().getY() - 55, 0);
+                }
+                else {
+                    gl.glTranslatef((float) level.getVector().getX() + 50,
+                            (float) level.getVector().getY() - 55, 0);
+                }
+                Models.numeralFontVertices.modelDraw(GL10.GL_TRIANGLES, 0, 6);
+                Models.numeralFontVertices.unbind();
+            }
+        }
+    }
+
+    private void draw(GL10 gl,
+                      Texture texture,
+                      Vertices model,
+                      float translateX,
+                      float translateY,
+                      float rotateAngle){
+
+        texture.bind();
+        gl.glMatrixMode(GL10.GL_MODELVIEW);
+        gl.glLoadIdentity();
+        gl.glTranslatef(translateX,translateY,0);
+        gl.glRotatef(rotateAngle,0,0,1);
+        model.draw(GL10.GL_TRIANGLES, 0, 6);
+    }
 }

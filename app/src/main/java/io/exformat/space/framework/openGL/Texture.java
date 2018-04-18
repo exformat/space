@@ -15,18 +15,31 @@ import io.exformat.space.framework.impl.GLGraphics;
 
 public class Texture {
 
-    GLGraphics glGraphics;
-    FileIO fileIO;
-    String fileName;
-    int textureId;
-    int minFilter;
-    int magFilter;
+    private GLGraphics glGraphics;
+    private FileIO fileIO;
+    private String fileName;
+    private int textureId;
+    private int minFilter;
+    private int magFilter;
+    private int textureWidth;
+    private int textureHeight;
 
     public Texture(GLGame glGame, String fileName) {
 
         this.glGraphics = glGame.getGLGraphics();
         this.fileIO = glGame.getFileIO();
         this.fileName = fileName;
+        load();
+    }
+
+    public Texture(GLGame glGame, String fileName, int width, int height) {
+
+        this.glGraphics = glGame.getGLGraphics();
+        this.fileIO = glGame.getFileIO();
+        this.fileName = fileName;
+        this.textureWidth = width;
+        this.textureHeight = height;
+
         load();
     }
 
@@ -87,5 +100,13 @@ public class Texture {
         gl.glBindTexture(GL10.GL_TEXTURE_2D, textureId);
         int[] textureIds = { textureId };
         gl.glDeleteTextures(1, textureIds, 0);
+    }
+
+    public int getTextureWidth() {
+        return textureWidth;
+    }
+
+    public int getTextureHeight() {
+        return textureHeight;
     }
 }

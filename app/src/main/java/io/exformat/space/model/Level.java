@@ -7,9 +7,6 @@ public class Level {
 
     private Vector3 vector = new Vector3();
 
-    private float translateX;
-    private float translateY;
-
     private ArrayList<MassObject> massObjects = new ArrayList<>();
     private ArrayList<FlyObject>  bombs = new ArrayList<>();
     private ArrayList<FlyObject>  asteroids = new ArrayList<>();
@@ -22,7 +19,6 @@ public class Level {
 
     private int levelNumber = 0;
 
-
     public Level() {
     }
 
@@ -34,22 +30,6 @@ public class Level {
 
     public void setVector(Vector3 vector) {
         this.vector = vector;
-    }
-
-    public float getTranslateX() {
-        return translateX;
-    }
-
-    public void setTranslateX(float translateX) {
-        this.translateX = translateX;
-    }
-
-    public float getTranslateY() {
-        return translateY;
-    }
-
-    public void setTranslateY(float translateY) {
-        this.translateY = translateY;
     }
 
     public int getLevelNumber() {

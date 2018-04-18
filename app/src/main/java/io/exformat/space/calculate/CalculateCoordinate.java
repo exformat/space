@@ -7,7 +7,8 @@ import java.util.*;
 
 public class CalculateCoordinate{
 	
-	private double k1,k2,k3,k4,q1,q2,q3,q4;
+	private double k1,k2,k3,k4,
+				   q1,q2,q3,q4;
 
     private double velocityX   = 0;
 	private double velocityY   = 0;

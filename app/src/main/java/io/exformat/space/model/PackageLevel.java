@@ -55,7 +55,6 @@ public class PackageLevel {
 
         for (Level level : levels) {
 
-            Log.d("level", "" + level.getTranslateX());
             level.setVector(new Vector3((double)levelIconTranslateX,(double)levelIconTranslateY));
 
             if (levelCount < 7) {

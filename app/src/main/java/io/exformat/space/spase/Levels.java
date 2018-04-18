@@ -317,7 +317,7 @@ public class Levels {
         levels.add(addOpenSpaceLevel3());
         levels.add(addOpenSpaceLevel4());
 
-        calculateTranslateNumberLevelFrame();
+        //calculateTranslateNumberLevelFrame();
     }
 
     public Level getLevel(int indexLevel) {
@@ -325,6 +325,7 @@ public class Levels {
         return levels.get(indexLevel);
     }
 
+    /*
     private void calculateTranslateNumberLevelFrame() {
 
         int levelFrameTranslateX = 510;
@@ -359,6 +360,7 @@ public class Levels {
             }
         }
     }
+    */
 
 
 
