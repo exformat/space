@@ -66,8 +66,8 @@ public class ChoiceLevelScreen extends Screen {
 
             draw(gl, Textures.choiceLevelNumberTexture,
                      Models.choiceNumberLevelFrameVertices,
-                    (float) level.getVector().getX(),
-                    (float) level.getVector().getY(), 0);
+                     level.getVector().getX(),
+                     level.getVector().getY(), 0);
 
             drawNumeralVertices(level,gl);
         }
@@ -215,8 +215,8 @@ public class ChoiceLevelScreen extends Screen {
 
             Models.numeralFontVertices.bind();
             gl.glLoadIdentity();
-            gl.glTranslatef((float) level.getVector().getX(),
-                    (float) level.getVector().getY() - 55, 0);
+            gl.glTranslatef(level.getVector().getX(),
+                    level.getVector().getY() - 55, 0);
             Models.numeralFontVertices.modelDraw(GL10.GL_TRIANGLES, 0, 6);
             Models.numeralFontVertices.unbind();
         }
@@ -234,12 +234,12 @@ public class ChoiceLevelScreen extends Screen {
 
                 if (i == 0) {
 
-                    gl.glTranslatef((float) level.getVector().getX() - 50,
-                            (float) level.getVector().getY() - 55, 0);
+                    gl.glTranslatef(level.getVector().getX() - 50,
+                                   level.getVector().getY() - 55, 0);
                 }
                 else {
-                    gl.glTranslatef((float) level.getVector().getX() + 50,
-                            (float) level.getVector().getY() - 55, 0);
+                    gl.glTranslatef(level.getVector().getX() + 50,
+                                   level.getVector().getY() - 55, 0);
                 }
                 Models.numeralFontVertices.modelDraw(GL10.GL_TRIANGLES, 0, 6);
                 Models.numeralFontVertices.unbind();

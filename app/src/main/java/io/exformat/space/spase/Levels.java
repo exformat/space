@@ -4,13 +4,13 @@ package io.exformat.space.spase;
 
 import java.util.ArrayList;
 
-import io.exformat.space.model.FlyObject;
+import io.exformat.space.framework.game.objects.FlyObject;
+import io.exformat.space.framework.game.objects.VectorXYZ;
+import io.exformat.space.model.Bomb;
 import io.exformat.space.model.PackageLevel;
 import io.exformat.space.model.Level;
-import io.exformat.space.model.MassObject;
-import io.exformat.space.model.StarCoin;
+import io.exformat.space.model.Rocket;
 import io.exformat.space.model.Textures;
-import io.exformat.space.model.Vector3;
 
 public class Levels {
 
@@ -21,15 +21,6 @@ public class Levels {
 
     public static Level level;
     public static ArrayList<Level> levels = new ArrayList<>();
-
-    private int levelCount = 0;
-
-
-    private static ArrayList<MassObject> massObjects;
-    private static ArrayList<FlyObject> bombs;
-    private static ArrayList<FlyObject> asteroids;
-    private static ArrayList<StarCoin> starCoins;
-    private static FlyObject flyObject;
 
     //===========================================================================
     private ArrayList<PackageLevel> packageLevels = new ArrayList<>();
@@ -45,11 +36,11 @@ public class Levels {
 
         levels = new ArrayList<>();
 
-        levels.add(addOpenSpaceLevel0());
-        levels.add(addOpenSpaceLevel1());
-        levels.add(addOpenSpaceLevel2());
-        levels.add(addOpenSpaceLevel3());
-        levels.add(addOpenSpaceLevel4());
+        levels.add(constructorOpenSpaceLevel0());
+        levels.add(constructorOpenSpaceLevel1());
+        levels.add(constructorOpenSpaceLevel2());
+        levels.add(constructorOpenSpaceLevel3());
+        levels.add(constructorOpenSpaceLevel4());
 
         return levels;
     }
@@ -57,8 +48,8 @@ public class Levels {
 
         levels = new ArrayList<>();
 
-        levels.add(addMoonLevel0());
-        levels.add(addMoonLevel1());
+        levels.add(constructorMoonLevel0());
+        levels.add(constructorMoonLevel1());
 
         return levels;
     }
@@ -69,62 +60,42 @@ public class Levels {
 
     //============================================================================
 
-    private Level addOpenSpaceLevel0() {
+    private Level constructorOpenSpaceLevel0() {
 
-        level = new Level();
+        Level level = new Level();
 
-        massObjects = new ArrayList<>();
-        starCoins = new ArrayList<>();
-
-        massObjects.add(new MassObject(
-                10000,
-                10000,
-                0,
-                Math.round(20),
-                30));
+        ArrayList<VectorXYZ> starCoins = new ArrayList<>();
 
         //расставляем звёзды
-        starCoins.add(new StarCoin(650, 540));
-        starCoins.add(new StarCoin(950, 540));
-        starCoins.add(new StarCoin(1250, 540));
+        starCoins.add(new VectorXYZ(650, 540));
+        starCoins.add(new VectorXYZ(950, 540));
+        starCoins.add(new VectorXYZ(1250,540));
 
-        level.setFlyObject(new FlyObject(300, 540, 0, 0, 0, 0, 100));
-        level.setMassObjects(massObjects);
-        level.setFinishX(1720);
-        level.setFinishY(540);
+        level.setBombs(new ArrayList<Bomb>());
+        level.setRocket(new Rocket(300,540));
+        level.setFinish(new VectorXYZ(1720,540));
         level.setStarCoins(starCoins);
-        //level.setBombs(bombs);
 
         level.setLevelNumber(0);
 
         return level;
     }
-    private Level addOpenSpaceLevel1() {
+    private Level constructorOpenSpaceLevel1() {
 
-        level = new Level();
+        Level level = new Level();
 
-        massObjects = new ArrayList<>();
-        starCoins = new ArrayList<>();
-        bombs = new ArrayList<>();
-
-        massObjects.add(new MassObject(
-                10000,
-                10000,
-                0,
-                Math.round(20),
-                30));
+        ArrayList<VectorXYZ> starCoins = new ArrayList<>();
+        ArrayList<Bomb> bombs = new ArrayList<>();
 
         //расставляем звёзды
-        starCoins.add(new StarCoin(650, 540));
-        starCoins.add(new StarCoin(950, 850));
-        starCoins.add(new StarCoin(1250, 540));
+        starCoins.add(new VectorXYZ(650, 540));
+        starCoins.add(new VectorXYZ(950, 850));
+        starCoins.add(new VectorXYZ(1250, 540));
 
-        bombs.add(new FlyObject(960, 540, 0, 0, 0, 0, 50));
+        bombs.add(new Bomb(960,540,50));
 
-        level.setFlyObject(new FlyObject(300, 540, 0, 0, 0, 0, 100));
-        level.setMassObjects(massObjects);
-        level.setFinishX(1720);
-        level.setFinishY(540);
+        level.setRocket(new Rocket(300,540));
+        level.setFinish(new VectorXYZ(1720,540));
         level.setStarCoins(starCoins);
         level.setBombs(bombs);
 
@@ -132,33 +103,23 @@ public class Levels {
 
         return level;
     }
-    private Level addOpenSpaceLevel2() {
+    private Level constructorOpenSpaceLevel2() {
 
-        level = new Level();
+        Level level = new Level();
 
-        massObjects = new ArrayList<>();
-        starCoins = new ArrayList<>();
-        bombs = new ArrayList<>();
-
-        massObjects.add(new MassObject(
-                10000,
-                10000,
-                0,
-                Math.round(20),
-                30));
+        ArrayList<VectorXYZ> starCoins = new ArrayList<>();
+        ArrayList<Bomb> bombs = new ArrayList<>();
 
         //расставляем звёзды
-        starCoins.add(new StarCoin(500, 540));
-        starCoins.add(new StarCoin(960, 540));
-        starCoins.add(new StarCoin(1420, 540));
+        starCoins.add(new VectorXYZ(500, 540));
+        starCoins.add(new VectorXYZ(960, 540));
+        starCoins.add(new VectorXYZ(1420,540));
 
-        bombs.add(new FlyObject(730, 540, 0, 0, 0, 0, 50));
-        bombs.add(new FlyObject(1190, 540, 0, 0, 0, 0, 50));
+        bombs.add(new Bomb(730,540,50));
+        bombs.add(new Bomb(1190,540,50));
 
-        level.setFlyObject(new FlyObject(300, 540, 0, 0, 0, 0, 100));
-        level.setMassObjects(massObjects);
-        level.setFinishX(1720);
-        level.setFinishY(540);
+        level.setRocket(new Rocket(300,540));
+        level.setFinish(new VectorXYZ(1720,540));
         level.setStarCoins(starCoins);
         level.setBombs(bombs);
 
@@ -166,73 +127,53 @@ public class Levels {
 
         return level;
     }
-    private Level addOpenSpaceLevel3() {
+    private Level constructorOpenSpaceLevel3() {
 
-        level = new Level();
+        Level level = new Level();
 
-        massObjects = new ArrayList<>();
-        starCoins = new ArrayList<>();
-        bombs = new ArrayList<>();
-
-        massObjects.add(new MassObject(
-                10000,
-                10000,
-                0,
-                Math.round(20),
-                30));
+        ArrayList<VectorXYZ> starCoins = new ArrayList<>();
+        ArrayList<Bomb> bombs = new ArrayList<>();
 
         //расставляем звёзды
-        starCoins.add(new StarCoin(500, 540));
-        starCoins.add(new StarCoin(960, 540));
-        starCoins.add(new StarCoin(1720, 540));
+        starCoins.add(new VectorXYZ(500, 540));
+        starCoins.add(new VectorXYZ(960, 540));
+        starCoins.add(new VectorXYZ(1720,540));
 
-        bombs.add(new FlyObject(680, 740, 0, 0, 0, 0, 50));
-        bombs.add(new FlyObject(680, 340, 0, 0, 0, 0, 50));
-        bombs.add(new FlyObject(1140, 740, 0, 0, 0, 0, 50));
-        bombs.add(new FlyObject(1140, 340, 0, 0, 0, 0, 50));
-        bombs.add(new FlyObject(1500, 540, 0, 0, 0, 0, 50));
+        bombs.add(new Bomb(680, 740, 50));
+        bombs.add(new Bomb(680, 340, 50));
+        bombs.add(new Bomb(1140, 740, 50));
+        bombs.add(new Bomb(1140, 340, 50));
+        bombs.add(new Bomb(1500, 540, 50));
 
-        level.setFlyObject(new FlyObject(200, 540, 0, 0, 0, 0, 100));
-        level.setMassObjects(massObjects);
-        level.setFinishX(1720);
-        level.setFinishY(200);
+        level.setRocket(new Rocket(200,540));
+        level.setFinish(new VectorXYZ(1720,200));
         level.setStarCoins(starCoins);
         level.setBombs(bombs);
-
+        level = new Level();
 
         level.setLevelNumber(3);
 
         return level;
     }
-    private Level addOpenSpaceLevel4() {
+    private Level constructorOpenSpaceLevel4() {
 
-        level = new Level();
+        Level level = new Level();
 
-        massObjects = new ArrayList<>();
-        starCoins = new ArrayList<>();
-        bombs = new ArrayList<>();
-
-        massObjects.add(new MassObject(
-                10000,
-                10000,
-                0,
-                Math.round(20),
-                30));
-
-        bombs.add(new FlyObject(1160, 540, 0, 0, 0, 0, 50));
-        bombs.add(new FlyObject(100, 340, 0, 0, 0, 0, 50));
-        bombs.add(new FlyObject(450, 340, 0, 0, 0, 0, 50));
-        bombs.add(new FlyObject(800, 340, 0, 0, 0, 0, 50));
+        ArrayList<VectorXYZ> starCoins = new ArrayList<>();
+        ArrayList<Bomb> bombs = new ArrayList<>();
 
         //расставляем звёзды
-        starCoins.add(new StarCoin(225, 170));
-        starCoins.add(new StarCoin(575, 170));
-        starCoins.add(new StarCoin(1520, 540));
+        starCoins.add(new VectorXYZ(255, 170));
+        starCoins.add(new VectorXYZ(575, 170));
+        starCoins.add(new VectorXYZ(1520,540));
 
-        level.setFlyObject(new FlyObject(200, 540, 0, 0, 0, 0, 100));
-        level.setMassObjects(massObjects);
-        level.setFinishX(1720);
-        level.setFinishY(540);
+        bombs.add(new Bomb(1160, 540, 50));
+        bombs.add(new Bomb(100, 340, 50));
+        bombs.add(new Bomb(450, 340, 50));
+        bombs.add(new Bomb(800, 340, 50));
+
+        level.setRocket(new Rocket(200,540));
+        level.setFinish(new VectorXYZ(1720,540));
         level.setStarCoins(starCoins);
         level.setBombs(bombs);
 
@@ -241,127 +182,66 @@ public class Levels {
         return level;
     }
 
-    private Level addMoonLevel0() {
+    private Level constructorMoonLevel0() {
 
-        level = new Level();
+        Level level = new Level();
 
-        massObjects = new ArrayList<>();
-        starCoins = new ArrayList<>();
-        bombs = new ArrayList<>();
+        ArrayList<VectorXYZ> starCoins = new ArrayList<>();
+        ArrayList<FlyObject> massObjects = new ArrayList<>();
+        ArrayList<Bomb> bombs = new ArrayList<>();
 
-        massObjects.add(new MassObject(
+        //расставляем звёзды
+        starCoins.add(new VectorXYZ(225, 170));
+        starCoins.add(new VectorXYZ(575, 170));
+        starCoins.add(new VectorXYZ(1520, 540));
+
+        massObjects.add(new FlyObject(
                 960,
                 -173700000,
-                0,
                 Math.round(7.3477 * 10E22),
                 173700000));
 
-        //расставляем звёзды
-        starCoins.add(new StarCoin(225, 170));
-        starCoins.add(new StarCoin(575, 170));
-        starCoins.add(new StarCoin(1520, 540));
-
-        level.setFlyObject(new FlyObject(200, 540, 0, 0, 0, 0, 500));
+        level.setRocket(new Rocket(200, 540, 500));
         level.setMassObjects(massObjects);
-        level.setFinishX(1720);
-        level.setFinishY(540);
+        level.setFinish(new VectorXYZ(1720,540));
         level.setStarCoins(starCoins);
-        //level.setBombs(bombs);
 
         level.setLevelNumber(0);
 
         return level;
     }
-    private Level addMoonLevel1() {
+    private Level constructorMoonLevel1() {
 
-        level = new Level();
+        Level level = new Level();
 
-        massObjects = new ArrayList<>();
-        starCoins = new ArrayList<>();
-        bombs = new ArrayList<>();
+        ArrayList<VectorXYZ> starCoins = new ArrayList<>();
+        ArrayList<FlyObject> massObjects = new ArrayList<>();
+        ArrayList<Bomb> bombs = new ArrayList<>();
 
-        massObjects.add(new MassObject(
+        massObjects.add(new FlyObject(
                 960,
                 -173700000,
-                0,
                 Math.round(7.3477 * 10E22),
                 30));
 
         //расставляем звёзды
-        starCoins.add(new StarCoin(225, 170));
-        starCoins.add(new StarCoin(575, 170));
-        starCoins.add(new StarCoin(1520, 540));
+        starCoins.add(new VectorXYZ(225, 170));
+        starCoins.add(new VectorXYZ(575, 170));
+        starCoins.add(new VectorXYZ(1520, 540));
 
-        level.setFlyObject(new FlyObject(200, 540, 0, 0, 0, 0, 500));
+        level.setRocket(new Rocket(200, 540, 500));
         level.setMassObjects(massObjects);
-        level.setFinishX(1720);
-        level.setFinishY(540);
+        level.setFinish(new VectorXYZ(1720, 540));
         level.setStarCoins(starCoins);
-        //level.setBombs(bombs);
+        level.setBombs(bombs);
 
         level.setLevelNumber(1);
 
         return level;
     }
 
-
-
-
-
-
-    public void oldInitialisationOpenSpaceLevels() {
-
-        levels.add(addOpenSpaceLevel0());
-        levels.add(addOpenSpaceLevel1());
-        levels.add(addOpenSpaceLevel2());
-        levels.add(addOpenSpaceLevel3());
-        levels.add(addOpenSpaceLevel4());
-
-        //calculateTranslateNumberLevelFrame();
-    }
-
     public Level getLevel(int indexLevel) {
 
         return levels.get(indexLevel);
     }
-
-    /*
-    private void calculateTranslateNumberLevelFrame() {
-
-        int levelFrameTranslateX = 510;
-        int levelFrameTranslateY = 590;
-
-        for (Level level : levels) {
-
-            level.setVector(new Vector3((double)levelFrameTranslateX, (double)levelFrameTranslateY));
-
-            level.setTranslateX(levelFrameTranslateX);
-            level.setTranslateY(levelFrameTranslateY);
-
-            if (levelCount < 7) {
-
-                levelCount++;
-            } else {
-
-                levelCount = 0;
-            }
-
-            if (levelCount < 4) {
-
-                levelFrameTranslateX += 300;
-                levelFrameTranslateY = 590;
-            } else {
-
-                if (levelCount == 4) {
-                    levelFrameTranslateX -= 1200;
-                }
-                levelFrameTranslateX += 300;
-                levelFrameTranslateY = 255;
-            }
-        }
-    }
-    */
-
-
-
 }

@@ -3,19 +3,21 @@ package io.exformat.space.model;
 
 import java.util.ArrayList;
 
+import io.exformat.space.framework.game.objects.VectorXYZ;
+import io.exformat.space.framework.game.objects.FlyObject;
+
 public class Level {
 
-    private Vector3 vector = new Vector3();
+    private VectorXYZ vector = new VectorXYZ();
 
-    private ArrayList<MassObject> massObjects = new ArrayList<>();
-    private ArrayList<FlyObject>  bombs = new ArrayList<>();
-    private ArrayList<FlyObject>  asteroids = new ArrayList<>();
-    private ArrayList<StarCoin>   starCoins = new ArrayList<>();
+    private ArrayList<FlyObject> massObjects = new ArrayList<>();
+    private ArrayList<Bomb> bombs = new ArrayList<>();
+    private ArrayList<FlyObject> asteroids = new ArrayList<>();
+    private ArrayList<VectorXYZ>  starCoins = new ArrayList<>();
 
-    private FlyObject flyObject = new FlyObject();
+    private Rocket rocket = new Rocket();
 
-    private float finishX = 0;
-    private float finishY = 0;
+    private VectorXYZ finish;
 
     private int levelNumber = 0;
 
@@ -24,35 +26,36 @@ public class Level {
 
 
 //======================================================================================
-    public Vector3 getVector() {
+
+    public VectorXYZ getVector() {
         return vector;
     }
 
-    public void setVector(Vector3 vector) {
+    public VectorXYZ getFinish() {
+        return finish;
+    }
+
+    public void setFinish(VectorXYZ finish) {
+        this.finish = finish;
+    }
+
+    public void setVector(VectorXYZ vector) {
         this.vector = vector;
     }
 
-    public int getLevelNumber() {
-        return levelNumber;
-    }
-
-    public void setLevelNumber(int levelNumber) {
-        this.levelNumber = levelNumber;
-    }
-
-    public ArrayList<MassObject> getMassObjects() {
+    public ArrayList<FlyObject> getMassObjects() {
         return massObjects;
     }
 
-    public void setMassObjects(ArrayList<MassObject> massObjects) {
+    public void setMassObjects(ArrayList<FlyObject> massObjects) {
         this.massObjects = massObjects;
     }
 
-    public ArrayList<FlyObject> getBombs() {
+    public ArrayList<Bomb> getBombs() {
         return bombs;
     }
 
-    public void setBombs(ArrayList<FlyObject> bombs) {
+    public void setBombs(ArrayList<Bomb> bombs) {
         this.bombs = bombs;
     }
 
@@ -64,35 +67,27 @@ public class Level {
         this.asteroids = asteroids;
     }
 
-    public ArrayList<StarCoin> getStarCoins() {
+    public ArrayList<VectorXYZ> getStarCoins() {
         return starCoins;
     }
 
-    public void setStarCoins(ArrayList<StarCoin> starCoins) {
+    public void setStarCoins(ArrayList<VectorXYZ> starCoins) {
         this.starCoins = starCoins;
     }
 
-    public FlyObject getFlyObject() {
-        return flyObject;
+    public Rocket getRocket() {
+        return rocket;
     }
 
-    public void setFlyObject(FlyObject flyObject) {
-        this.flyObject = flyObject;
+    public void setRocket(Rocket rocket) {
+        this.rocket = rocket;
     }
 
-    public float getFinishX() {
-        return finishX;
+    public int getLevelNumber() {
+        return levelNumber;
     }
 
-    public void setFinishX(float finishX) {
-        this.finishX = finishX;
-    }
-
-    public float getFinishY() {
-        return finishY;
-    }
-
-    public void setFinishY(float finishY) {
-        this.finishY = finishY;
+    public void setLevelNumber(int levelNumber) {
+        this.levelNumber = levelNumber;
     }
 }

@@ -149,10 +149,10 @@ public class LevelClearScreen extends Screen {
 
             if (rocket.getX() >= SettingsModels.displayWidth_05) {
 
-                rocket.setvX(0);
+                rocket.setVelocityX(0);
                 startTouched = true;
             } else {
-                rocket.setX(rocket.getX() + rocket.getvX());
+                rocket.setX(rocket.getX() + rocket.getVelocityX());
             }
         }
 
@@ -186,8 +186,8 @@ public class LevelClearScreen extends Screen {
                         nextLevel = true;
                     }
                     else {
-                        rocket.setvX(0);
-                        rocket.setX(SettingsModels.displayWidth_05);
+                        rocket.setVelocityX(0);
+                        rocket.setX(960);
                     }
                 }else {
 
@@ -201,19 +201,19 @@ public class LevelClearScreen extends Screen {
                 if (touchDraggedX > touchDownX){
 
                     if (!Levels.crash) {
-                        rocket.setvX(24);
+                        rocket.setVelocityX(24);
                     }
                     else {
-                        rocket.setvX(0);
+                        rocket.setVelocityX(0);
                     }
                 }else {
-                    rocket.setvX(-24);
+                    rocket.setVelocityX(-24);
                 }
             }
         }
 
         if (startTouched)
-        rocket.setX(rocket.getX() + rocket.getvX());
+        rocket.setX(rocket.getX() + rocket.getVelocityX());
     }
 
     private void choiceLevel(){
@@ -233,7 +233,7 @@ public class LevelClearScreen extends Screen {
                 levelNumber = Levels.level.getLevelNumber();
 
                 Levels.levels = new ArrayList<>();
-                levels.oldInitialisationOpenSpaceLevels();
+                levels.initialPackageLevels();
                 Levels.level = levels.getLevel(levelNumber);
 
                 //reload fuel count
@@ -252,10 +252,6 @@ public class LevelClearScreen extends Screen {
                 if (Levels.level.getLevelNumber() < Levels.levels.size() - 1) {
 
                     levelNumber = Levels.level.getLevelNumber();
-
-                    //reload levels
-                    Levels.levels = new ArrayList<>();
-                    levels.oldInitialisationOpenSpaceLevels();
 
                     Levels.starCoinUpCount = 0;
                     Levels.level = levels.getLevel(levelNumber + 1);

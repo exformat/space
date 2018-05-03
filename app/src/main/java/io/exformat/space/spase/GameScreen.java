@@ -1,25 +1,27 @@
 package io.exformat.space.spase;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import io.exformat.space.calculate.CalculateCoordinate;
-import io.exformat.space.calculate.CalculateDirect;
 import io.exformat.space.framework.Input;
 import io.exformat.space.framework.Screen;
+import io.exformat.space.framework.game.math.MyMath;
+import io.exformat.space.framework.game.math.interfaces.IMyMath;
+import io.exformat.space.framework.game.objects.FlyObject;
+import io.exformat.space.framework.game.objects.VectorXYZ;
+import io.exformat.space.framework.game.physics.Direct;
+import io.exformat.space.framework.game.physics.Gravity;
+import io.exformat.space.framework.game.physics.interfaces.IDirect;
+import io.exformat.space.framework.game.physics.interfaces.IGravity;
 import io.exformat.space.framework.impl.GLGame;
 import io.exformat.space.framework.impl.GLGraphics;
 import io.exformat.space.framework.openGL.FPSCounter;
-import io.exformat.space.model.FlyObject;
-import io.exformat.space.model.MassObject;
+import io.exformat.space.model.Bomb;
 import io.exformat.space.model.Models;
-import io.exformat.space.model.StarCoin;
+import io.exformat.space.model.Rocket;
 import io.exformat.space.model.Textures;
-import io.exformat.space.model.Vector3;
 import io.exformat.space.spase.settings.SettingsModels;
 
 
@@ -30,7 +32,7 @@ public class GameScreen extends Screen {
 
     private LoadingModelsAndTextures reloadTextures = new LoadingModelsAndTextures();
 
-    private double STEP = 0.01;
+    private final float STEP = 0.01f;
 
     private int touchDownX;
     private int touchDownY;
@@ -61,17 +63,15 @@ public class GameScreen extends Screen {
 
 
 
-    private CalculateCoordinate calculateCoordinate = new CalculateCoordinate();
-    private CalculateDirect calculateDirect = new CalculateDirect();
+    private IGravity gravity = new Gravity();
+    private IDirect direct = new Direct();
+    private IMyMath myMath = new MyMath();
 
     //инициализируем ракету, массивные объекты, звёзды и бомбы
-    private FlyObject               flyObject = Levels.level.getFlyObject();
-    private ArrayList<MassObject> massObjects = Levels.level.getMassObjects();
-    private ArrayList<StarCoin>     starCoins = Levels.level.getStarCoins();
-    private ArrayList<FlyObject>        bombs = Levels.level.getBombs();
-
-    private ArrayList<Vector3> bombFragments = new ArrayList<>();
-
+    private Rocket rocket = Levels.level.getRocket();
+    private ArrayList<FlyObject> massObjects = Levels.level.getMassObjects();
+    private ArrayList<VectorXYZ>     starCoins = Levels.level.getStarCoins();
+    private ArrayList<Bomb>        bombs = Levels.level.getBombs();
 
     public GameScreen(io.exformat.space.framework.Game game) {
 
@@ -83,27 +83,27 @@ public class GameScreen extends Screen {
     public void update(float deltaTime) {
 
 
-        angleRotate += flyObject.getAngleSpeedXY() * STEP;
-        flyObject.setAngleDirectXY(angleRotate);
+        angleRotate += rocket.getAngleSpeedXY() * STEP;
+        rocket.setAngleDirectXY(angleRotate);
 
 
 
         //rotate finish image
         angleFinish += -0.1f;
 
-        fuelOut = flyObject.getFuelMass() > 0.01;
+        fuelOut = rocket.getFuelMass() > 0.01;
 
         //перерисовываем количество топлива
         if (fuelOut) {
 
             if (trust) {
                 //высчитываем новое направление
-                calculateDirect.calculateDirection(flyObject, 0, angle, 0);
+                direct.calculateImpulseDirect(rocket, 0, angle, 0);
 
-                flyObject.setAngleSpeedXY(0);
+                rocket.setAngleSpeedXY(0);
                 angleRotate = angle;
 
-                SettingsModels.fuelCountTranslateX -= (flyObject.getFuelOut() * (7.15f));
+                SettingsModels.fuelCountTranslateX -= (rocket.getFuelOut() * (7.15f));
             }
         } else {
             trust = false;
@@ -132,15 +132,15 @@ public class GameScreen extends Screen {
         }
 
         //крушение или взрыв бомбы
-        if (flyObject.getHealthPoints() <= 0){
+        if (rocket.getHealthPoints() <= 0){
 
             Levels.crash = true;
             game.setScreen(new LevelClearScreen(game));
         }
 
         //если вылетели далеко за пределы экрана перезагружаем уровень
-        if (flyObject.getX() > SettingsModels.displayHeight * 2 || flyObject.getY() > SettingsModels.displayWidth * 2 ||
-            flyObject.getX() < -SettingsModels.displayHeight || flyObject.getY() < -SettingsModels.displayWidth){
+        if (rocket.getX() > SettingsModels.displayHeight * 2 || rocket.getY() > SettingsModels.displayWidth * 2 ||
+            rocket.getX() < -SettingsModels.displayHeight || rocket.getY() < -SettingsModels.displayWidth){
 
             Levels.inInfinity = true;
             game.setScreen(new LevelClearScreen(game));
@@ -180,12 +180,12 @@ public class GameScreen extends Screen {
         Models.backgroundVertices.draw(GL10.GL_TRIANGLES, 0, 6);
 
         //draw star coins============================================================
-        for (StarCoin starCoin: starCoins) {
+        for (VectorXYZ starCoin: starCoins) {
 
             Textures.starCoinTexture.bind();
             gl.glMatrixMode(GL10.GL_MODELVIEW);
             gl.glLoadIdentity();
-            gl.glTranslatef(starCoin.getStarCoinX(), starCoin.getStarCoinY(), 0);
+            gl.glTranslatef(starCoin.getX(), starCoin.getY(), 0);
             gl.glRotatef(angleFinish,0,0,1);
             Models.starCoinVertices.draw(GL10.GL_TRIANGLES, 0, 6);
         }
@@ -193,32 +193,32 @@ public class GameScreen extends Screen {
         //draw bomb============================================================
         if (!bombs.isEmpty()) {
 
-            for (FlyObject bomb : bombs) {
+            for (Bomb bomb : bombs) {
 
-                if (bomb.getBombExplosive()){
+                if (bomb.isBombExplosive()){
 
                     Textures.bombExplosiveTexture.bind();
                     gl.glMatrixMode(GL10.GL_MODELVIEW);
                     gl.glLoadIdentity();
-                    gl.glTranslatef((float) bomb.getX(), (float) bomb.getY(), 0);
+                    gl.glTranslatef(bomb.getX(), bomb.getY(), 0);
                     Models.bombExplosiveVertices.draw(GL10.GL_TRIANGLES,0,6);
                 }
 
-                if (bomb.getBombActivated()) {
+                if (bomb.isBombActivated()) {
                     Textures.bombActivateTexture.bind();
                 } else {
                     Textures.bombNotActivateTexture.bind();
                 }
                 gl.glMatrixMode(GL10.GL_MODELVIEW);
                 gl.glLoadIdentity();
-                gl.glTranslatef((float) bomb.getX(), (float) bomb.getY(), (float) bomb.getZ());
+                gl.glTranslatef(bomb.getX(), bomb.getY(), bomb.getZ());
                 gl.glRotatef(bomb.getAngleDirectXY(), 0, 0, 1);
                 Models.bombBackgroundVertices.draw(GL10.GL_TRIANGLES, 0, 6);
 
                 Textures.bombTexture.bind();
                 gl.glMatrixMode(GL10.GL_MODELVIEW);
                 gl.glLoadIdentity();
-                gl.glTranslatef((float) bomb.getX(), (float) bomb.getY(), (float) bomb.getZ());
+                gl.glTranslatef(bomb.getX(), bomb.getY(), bomb.getZ());
                 gl.glRotatef(bomb.getAngleDirectXY(), 0, 0, 1);
                 Models.bombVertices.draw(GL10.GL_TRIANGLES, 0, 6);
             }
@@ -238,18 +238,20 @@ public class GameScreen extends Screen {
         Textures.finishTexture.bind();
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
-        gl.glTranslatef(Levels.level.getFinishX(), Levels.level.getFinishY(), 0);
+        gl.glTranslatef(Levels.level.getFinish().getX(), Levels.level.getFinish().getY(), 0);
         gl.glRotatef(angleFinish,0,0,1);
         Models.finishModel.draw(GL10.GL_TRIANGLES, 0, 6);
 
         //draw mass objects==================================================
-        for (MassObject massObject: massObjects) {
+        if (massObjects.isEmpty()) {
+            for (FlyObject massObject : massObjects) {
 
-            Textures.starTexture.bind();
-            gl.glMatrixMode(GL10.GL_MODELVIEW);
-            gl.glLoadIdentity();
-            gl.glTranslatef((float)massObject.getX(), (float)massObject.getY(), 0);
-            Models.starVertices.draw(GL10.GL_TRIANGLES, 0, 6);
+                Textures.starTexture.bind();
+                gl.glMatrixMode(GL10.GL_MODELVIEW);
+                gl.glLoadIdentity();
+                gl.glTranslatef(massObject.getX(), massObject.getY(), 0);
+                Models.starVertices.draw(GL10.GL_TRIANGLES, 0, 6);
+            }
         }
 
         //==================================================
@@ -279,12 +281,11 @@ public class GameScreen extends Screen {
 
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
-        gl.glTranslatef((float) flyObject.getX(), (float) flyObject.getY(), 0);
-        //gl.glRotatef(flyObject.getAngleDirectXY(), 0,0,1);
+        gl.glTranslatef(rocket.getX(), rocket.getY(), 0);
+        gl.glRotatef(rocket.getAngleDirectXY(), 0,0,1);
         gl.glRotatef(angleRotate, 0,0,1);
         Models.rocketVertices.draw(GL10.GL_TRIANGLES, 0, 6);
 
-        //drawBombFragment(gl);
     }
 
     @Override
@@ -307,54 +308,54 @@ public class GameScreen extends Screen {
     //TODO ну его нафик, потом доделаю...
     /*
     private void azazaza(){
-        Log.d("rocket angle", "" + flyObject.getAngleDirectXY());
+        Log.d("rocket angle", "" + rocket.getAngleDirectXY());
 
-        if (flyObject.getY() <= 100){
+        if (rocket.getY() <= 100){
 
-            if (Math.round(flyObject.getVx()) != 0){
+            if (Math.round(rocket.getVx()) != 0){
 
-                if (flyObject.getVx() > 0) {
+                if (rocket.getVx() > 0) {
 
-                    flyObject.setVx(flyObject.getVx() - 3);
+                    rocket.setVx(rocket.getVx() - 3);
                 }
                 else {
 
-                    flyObject.setVx(flyObject.getVx() + 3);
+                    rocket.setVx(rocket.getVx() + 3);
                 }
             }
 
 
-            if (flyObject.getAngleDirectXY() < 375 && flyObject.getAngleDirectXY() > 345){
+            if (rocket.getAngleDirectXY() < 375 && rocket.getAngleDirectXY() > 345){
 
-                Log.d("rocket angle", "" + flyObject.getAngleDirectXY());
+                Log.d("rocket angle", "" + rocket.getAngleDirectXY());
 
-                flyObject.setAngleDirectXY(0);
+                rocket.setAngleDirectXY(0);
             }
             else {
 
-                if (flyObject.getAngleDirectXY() > 375){
+                if (rocket.getAngleDirectXY() > 375){
 
-                    if (Math.round(flyObject.getAngleDirectXY()) != 450) {
-                        flyObject.setAngleSpeedXY(160);
+                    if (Math.round(rocket.getAngleDirectXY()) != 450) {
+                        rocket.setAngleSpeedXY(160);
                     }
                     else{
-                        flyObject.setAngleSpeedXY(0);
+                        rocket.setAngleSpeedXY(0);
                     }
                 }
                 else {
 
-                    if (Math.round(flyObject.getAngleDirectXY()) != 270) {
+                    if (Math.round(rocket.getAngleDirectXY()) != 270) {
 
-                        flyObject.setAngleSpeedXY(-160);
+                        rocket.setAngleSpeedXY(-160);
                     }
                     else{
-                        flyObject.setAngleSpeedXY(0);
+                        rocket.setAngleSpeedXY(0);
                     }
                 }
             }
 
-            flyObject.setVy(0);
-            flyObject.setY(100);
+            rocket.setVy(0);
+            rocket.setY(100);
         }
 
     }
@@ -397,7 +398,12 @@ public class GameScreen extends Screen {
 
     private void control() {
 
-        calculateCoordinate.calculate(massObjects, flyObject, STEP);
+        if (!massObjects.isEmpty()){
+            gravity.calculateInertial(rocket, STEP);
+        }
+        else {
+            gravity.calculateGravity(massObjects, rocket, STEP);
+        }
 
         List<Input.TouchEvent> touchEvents = game.getInput().getTouchEvents();
 
@@ -422,15 +428,15 @@ public class GameScreen extends Screen {
                 touchDraggedX = event.x;
                 touchDraggedY = event.y;
 
-                angle = calculateDirect.getAngle(touchDownX, touchDownY,
-                        touchDraggedX, touchDraggedY);
+                angle = myMath.calculateAngle(touchDownX, touchDownY,
+                                              touchDraggedX, touchDraggedY);
 
                 angle += 180;
 
-                flyObject.setAngleDirectXY(angle);
+                rocket.setAngleDirectXY(angle);
 
                 //рисуем огонёк у ракеты
-                if (flyObject.getFuelMass() > 0.01) {
+                if (rocket.getFuelMass() > 0.01) {
                     trust = true;
                 }
             }
@@ -445,16 +451,16 @@ public class GameScreen extends Screen {
 
     private void isCrash() {
 
-        for (MassObject massObject : massObjects) {
+        for (FlyObject massObject : massObjects) {
 
-            double distance = calculateCoordinate.calculateRadius(flyObject, massObject);
+            float distance = myMath.calculateDistance(rocket, massObject);
 
-            distance = distance - massObject.getRadius() - flyObject.getRadius();
+            distance = distance - massObject.getRadius() - rocket.getRadius();
 
             if (Math.round(distance) <= 0) {
 
-                flyObject.setVx(0);
-                flyObject.setVy(0);
+                rocket.setVelocityX(0);
+                rocket.setVelocityY(0);
 
                 crash = true;
                 break;
@@ -467,15 +473,15 @@ public class GameScreen extends Screen {
     //проверяем не собрана ли звезда
     private void isStarCoinUp(){
 
-        for (StarCoin starCoin: starCoins) {
+        for (VectorXYZ starCoin: starCoins) {
 
-            double radius = Math.sqrt(Math.pow(flyObject.getX() - starCoin.getStarCoinX(), 2) +
-                    Math.pow(flyObject.getY() - starCoin.getStarCoinY(), 2));
+            float radius = (float) Math.sqrt(Math.pow(rocket.getX() - starCoin.getX(), 2) +
+                    Math.pow(rocket.getY() - starCoin.getY(), 2));
 
-            if (radius <= starCoin.getRadius()) {
+            if (radius <= 15) {
 
-                starCoin.setStarCoinX(-10000);
-                starCoin.setStarCoinY(-10000);
+                starCoin.setX(-10000);
+                starCoin.setY(-10000);
                 starCoinsUp++;
             }
         }
@@ -483,8 +489,8 @@ public class GameScreen extends Screen {
 
     private void isFinish() {
 
-        double radius = Math.sqrt(Math.pow(flyObject.getX() - Levels.level.getFinishX(), 2) +
-                                  Math.pow(flyObject.getY() - Levels.level.getFinishY(), 2));
+        double radius = Math.sqrt(Math.pow(rocket.getX() - Levels.level.getFinish().getX(), 2) +
+                                  Math.pow(rocket.getY() - Levels.level.getFinish().getY(), 2));
 
         if (radius <= 100) {
 
@@ -501,23 +507,29 @@ public class GameScreen extends Screen {
     private void isBombActivated(){
 
 
-        double bombAngle;
+        float bombAngle;
 
-        for (FlyObject bomb : bombs) {
+        for (Bomb bomb : bombs) {
 
             if (bomb.getZ() == 0) {
-                double radius = Math.sqrt(Math.pow(flyObject.getX() - bomb.getX(), 2) +
-                        Math.pow(flyObject.getY() - bomb.getY(), 2));
+                double radius = Math.sqrt(Math.pow(rocket.getX() - bomb.getX(), 2) +
+                                          Math.pow(rocket.getY() - bomb.getY(), 2));
 
-                if (bomb.getBombActivated()) {
+                if (bomb.isBombActivated()) {
 
-                    bombAngle = -calculateDirect.getAngle(
-                            (float) bomb.getX(), (float) bomb.getY(),
-                            (float) flyObject.getX(), (float) flyObject.getY());
+                    bombAngle = -myMath.calculateAngle(
+                            bomb.getX(), bomb.getY(),
+                            rocket.getX(), rocket.getY());
 
-                    bomb.setAngleDirectXY((float) bombAngle);
-                    calculateDirect.calculateDirection(bomb, 0, bombAngle, 0);
-                    calculateCoordinate.calculate(massObjects, bomb, STEP);
+                    bomb.setAngleDirectXY(bombAngle);
+                    direct.calculateImpulseDirect(bomb, bomb.getPowerTrust(), bombAngle, 0);
+
+                    if (massObjects.isEmpty()) {
+                        gravity.calculateInertial(bomb, STEP);
+                    }
+                    else {
+                        gravity.calculateGravity(massObjects, bomb, STEP);
+                    }
                 }
 
                 if (radius <= 150) {
@@ -526,21 +538,21 @@ public class GameScreen extends Screen {
                 }
                 if (radius <= 50) {
 
-                    bomb.setZ(10000);
+                    bomb.setZ(1000000000);
 
                     bomb.setBombExplosive(true);
                     drawExplosive = true;
 
                     //при взрыве бомбы придаём ускорение ракете от взрыва
-                    calculateDirect.calculateDirection(flyObject, 300,
-                            180 + calculateDirect.getAngle((float)bomb.getX(),(float)bomb.getY(),
-                                                     (float)flyObject.getX(),(float)flyObject.getY()) ,0);
+                    direct.calculateImpulseDirect(rocket, 300,
+                            180 + myMath.calculateAngle(bomb.getX(), bomb.getY(),
+                                                     rocket.getX(), rocket.getY()) ,0);
 
-                    flyObject.setHealthPoints(flyObject.getHealthPoints() - 10);
+                    rocket.setHealthPoints(rocket.getHealthPoints() - 10);
                 }
             }
 
-            if (bomb.getBombExplosive()){
+            if (bomb.isBombExplosive()){
 
                 explosiveTick++;
                 bomb.setDrawBombExplosiveTick(bomb.getDrawBombExplosiveTick() + 1);

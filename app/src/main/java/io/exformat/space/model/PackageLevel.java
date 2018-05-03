@@ -5,11 +5,12 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+import io.exformat.space.framework.game.objects.VectorXYZ;
 import io.exformat.space.framework.openGL.Texture;
 
 public class PackageLevel {
 
-    private Vector3 vector = new Vector3();
+    private VectorXYZ vector = new VectorXYZ();
 
     //текстурку иконки пакета уровней хранить буду тут, ну а чего?))
     private Texture iconPackageLevelsTexture;
@@ -49,13 +50,13 @@ public class PackageLevel {
 
     private void calculateTranslateNumberLevelFrame() {
 
-        int levelIconTranslateX = 510;
-        int levelIconTranslateY = 590;
+        float levelIconTranslateX = 510;
+        float levelIconTranslateY = 590;
 
 
         for (Level level : levels) {
 
-            level.setVector(new Vector3((double)levelIconTranslateX,(double)levelIconTranslateY));
+            level.setVector(new VectorXYZ(levelIconTranslateX, levelIconTranslateY));
 
             if (levelCount < 7) {
 
@@ -98,11 +99,11 @@ public class PackageLevel {
         this.levels = levels;
     }
 
-    public Vector3 getVector() {
+    public VectorXYZ getVector() {
         return vector;
     }
 
-    public void setVector(Vector3 vector) {
+    public void setVector(VectorXYZ vector) {
         this.vector = vector;
     }
 

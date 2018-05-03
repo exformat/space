@@ -10,13 +10,12 @@ import javax.microedition.khronos.opengles.GL10;
 import io.exformat.space.framework.Game;
 import io.exformat.space.framework.Input;
 import io.exformat.space.framework.Screen;
+import io.exformat.space.framework.game.objects.VectorXYZ;
 import io.exformat.space.framework.impl.GLGame;
 import io.exformat.space.framework.impl.GLGraphics;
-import io.exformat.space.model.Level;
 import io.exformat.space.model.Models;
 import io.exformat.space.model.PackageLevel;
 import io.exformat.space.model.Textures;
-import io.exformat.space.model.Vector3;
 import io.exformat.space.spase.settings.SettingsModels;
 
 
@@ -172,17 +171,6 @@ public class MainMenuScreen extends Screen {
                         game.setScreen(new ChoiceLevelScreen(game));
                     }
                 }
-
-                /*
-                if (touchUpX > 704 && touchUpX < 1216 &&
-                    touchUpY > 248 && touchUpY < 796){
-
-                    //инициализируем уровни открытого космоса
-                    //levels.oldInitialisationOpenSpaceLevels();
-
-                    game.setScreen(new ChoiceLevelScreen(game));
-                }
-                */
             }
         }
     }
@@ -196,7 +184,7 @@ public class MainMenuScreen extends Screen {
 
             x += 500;
 
-            packageLevel.setVector(new Vector3((double)x,(double)y));
+            packageLevel.setVector(new VectorXYZ(x, y));
         }
     }
 
