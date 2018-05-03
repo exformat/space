@@ -10,9 +10,11 @@ import io.exformat.space.framework.Screen;
 import io.exformat.space.framework.game.math.MyMath;
 import io.exformat.space.framework.game.math.interfaces.IMyMath;
 import io.exformat.space.framework.game.objects.FlyObject;
+import io.exformat.space.framework.game.objects.Vector2;
 import io.exformat.space.framework.game.objects.VectorXYZ;
 import io.exformat.space.framework.game.physics.Direct;
 import io.exformat.space.framework.game.physics.Gravity;
+import io.exformat.space.framework.game.physics.NewDirect;
 import io.exformat.space.framework.game.physics.interfaces.IDirect;
 import io.exformat.space.framework.game.physics.interfaces.IGravity;
 import io.exformat.space.framework.impl.GLGame;
@@ -32,7 +34,7 @@ public class GameScreen extends Screen {
 
     private LoadingModelsAndTextures reloadTextures = new LoadingModelsAndTextures();
 
-    private final float STEP = 0.01f;
+    private final float STEP = 0.1f;
 
     private int touchDownX;
     private int touchDownY;
@@ -283,7 +285,7 @@ public class GameScreen extends Screen {
         gl.glLoadIdentity();
         gl.glTranslatef(rocket.getX(), rocket.getY(), 0);
         gl.glRotatef(rocket.getAngleDirectXY(), 0,0,1);
-        gl.glRotatef(angleRotate, 0,0,1);
+        //gl.glRotatef(angleRotate, 0,0,1);
         Models.rocketVertices.draw(GL10.GL_TRIANGLES, 0, 6);
 
     }
@@ -305,96 +307,6 @@ public class GameScreen extends Screen {
     }
 
     //=========================================================================
-    //TODO ну его нафик, потом доделаю...
-    /*
-    private void azazaza(){
-        Log.d("rocket angle", "" + rocket.getAngleDirectXY());
-
-        if (rocket.getY() <= 100){
-
-            if (Math.round(rocket.getVx()) != 0){
-
-                if (rocket.getVx() > 0) {
-
-                    rocket.setVx(rocket.getVx() - 3);
-                }
-                else {
-
-                    rocket.setVx(rocket.getVx() + 3);
-                }
-            }
-
-
-            if (rocket.getAngleDirectXY() < 375 && rocket.getAngleDirectXY() > 345){
-
-                Log.d("rocket angle", "" + rocket.getAngleDirectXY());
-
-                rocket.setAngleDirectXY(0);
-            }
-            else {
-
-                if (rocket.getAngleDirectXY() > 375){
-
-                    if (Math.round(rocket.getAngleDirectXY()) != 450) {
-                        rocket.setAngleSpeedXY(160);
-                    }
-                    else{
-                        rocket.setAngleSpeedXY(0);
-                    }
-                }
-                else {
-
-                    if (Math.round(rocket.getAngleDirectXY()) != 270) {
-
-                        rocket.setAngleSpeedXY(-160);
-                    }
-                    else{
-                        rocket.setAngleSpeedXY(0);
-                    }
-                }
-            }
-
-            rocket.setVy(0);
-            rocket.setY(100);
-        }
-
-    }
-    private void drawBombFragment(FlyObject bomb, GL10 gl){
-
-        if (bomb.getDrawBombExplosiveTick() == 1) {
-
-            bombFragments.add(new Vector3(bomb.getX(), bomb.getY(), bomb.getZ(), 5, 5, 0));
-            bombFragments.add(new Vector3(bomb.getX(), bomb.getY(), bomb.getZ(), 5, 5, 0));
-            bombFragments.add(new Vector3(bomb.getX(), bomb.getY(), bomb.getZ(), 5, 5, 0));
-            bombFragments.add(new Vector3(bomb.getX(), bomb.getY(), bomb.getZ(), 5, 5, 0));
-
-            bomb.setBombFragments(bombFragments);
-            bombFragments = new ArrayList<>();
-        }
-
-
-        Textures.bombFragmentsAtlasTexture.bind();
-        int a = 100;
-
-        for (int i = 0; i < 4; i++){
-
-
-        }
-
-        for (float[] floats: BombModels.arrayBombFragmentVertices){
-
-            a += 100;
-            Models.bombFragmentVertices.setVertices(floats, 0, 16);
-
-            Models.bombFragmentVertices.bind();
-            gl.glLoadIdentity();
-            gl.glTranslatef(a + 400,500,0);
-            Models.bombFragmentVertices.modelDraw(GL10.GL_TRIANGLES, 0, 6);
-            Models.bombFragmentVertices.unbind();
-        }
-
-    }
-    */
 
     private void control() {
 
@@ -433,10 +345,12 @@ public class GameScreen extends Screen {
 
                 angle += 180;
 
-                rocket.setAngleDirectXY(angle);
+                //rocket.setAngleDirectXY(angle);
 
                 //рисуем огонёк у ракеты
                 if (rocket.getFuelMass() > 0.01) {
+
+                    rocketImpulse();
                     trust = true;
                 }
             }
@@ -568,6 +482,34 @@ public class GameScreen extends Screen {
             }
         }
     }
+
+    private void rocketImpulse(){
+
+        Vector2 normalVector = new Vector2();
+
+        normalVector.setX(touchDownX);
+        normalVector.setY(Math.abs(touchDownY - 1080)); //fixme
+        normalVector.setX2(touchDraggedX);
+        normalVector.setY2(Math.abs(touchDraggedY - 1080));//fixme
+
+        normalVector = new NewDirect().normalVector2(normalVector);
+
+
+        //рисуем огонёк у ракеты
+        if (rocket.getFuelMass() > 0) {
+
+            rocket.setTrust(true);
+
+            new MyMath().calculateAngleDirect(rocket);
+            new NewDirect().newDirect2d(rocket, normalVector,rocket.getPowerTrust() * STEP);
+
+            rocket.setFuelMass(rocket.getFuelMass() - rocket.getFuelOut() * STEP);
+        }
+        else {
+            rocket.setTrust(false);
+        }
+    }
+
 
     private boolean inBounds(Input.TouchEvent event, int x, int y, int width, int height) {
 

@@ -45,8 +45,8 @@ public class LoadingScreenOpenGL extends Screen {
 
         loadingModelsAndTextures.loadModelsAndTextures(glGraphics, game);
 
-        //game.setScreen(new MainMenuScreen(game));
-        game.setScreen(new TestScreen(game));
+        game.setScreen(new MainMenuScreen(game));
+        //game.setScreen(new TestScreen(game));
     }
 
     @Override

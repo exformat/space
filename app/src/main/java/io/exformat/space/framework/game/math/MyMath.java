@@ -37,8 +37,8 @@ public class MyMath implements IMyMath {
 								        f.getY() + f.getVelocityY(),
 										f.getZ() + f.getVelocityZ());
 										
-		f.setAngleDirectXY(angleXY + 90);
-		f.setAngleDirectYZ(angleYZ);
+		f.setAngleDirectXY(angleXY + 270);
+		f.setAngleDirectYZ(angleYZ + 270);
 	}
 
 	@Override

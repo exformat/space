@@ -149,14 +149,7 @@ public class TestScreen extends Screen {
 
     private void rocketImpulse(){
 
-        float angle;
-
         Vector2 normalVector = new Vector2();
-
-        angle = myMath.calculateAngle(touchDownX, touchDownY,
-                touchDraggedX, touchDraggedY);
-
-        //angle -= 90;
 
         normalVector.setX(touchDownX);
         normalVector.setY(Math.abs(touchDownY - 1080)); //fixme
@@ -166,15 +159,12 @@ public class TestScreen extends Screen {
         normalVector = new NewDirect().normalVector2(normalVector);
 
 
-        //rocket.setAngleDirectXY(angle);
-
         //рисуем огонёк у ракеты
         if (rocket.getFuelMass() > 0) {
 
             rocket.setTrust(true);
 
             new MyMath().calculateAngleDirect(rocket);
-            //direct.calculateImpulseDirect(rocket, rocket.getPowerTrust(), angle,0);
             new NewDirect().newDirect2d(rocket, normalVector,rocket.getPowerTrust() * STEP);
 
             rocket.setFuelMass(rocket.getFuelMass() - rocket.getFuelOut() * STEP);
