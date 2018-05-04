@@ -483,12 +483,10 @@ public class GameScreen extends Screen {
 
     private void rocketImpulse(){
 
-        Vector2 normalVector = new Vector2();
-
-        normalVector.setX(touchDownX);
-        normalVector.setY(Math.abs(touchDownY - 1080)); //fixme
-        normalVector.setX2(touchDraggedX);
-        normalVector.setY2(Math.abs(touchDraggedY - 1080));//fixme
+        Vector2 normalVector = new Vector2(touchDownX,
+										   Math.abs(touchDownY - 1080), //fixme,
+										   touchDraggedX,
+										   Math.abs(touchDraggedY - 1080));//fixme
 
         normalVector = new NewDirect().normalVector2(normalVector);
 
