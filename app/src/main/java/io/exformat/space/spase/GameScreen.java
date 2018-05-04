@@ -340,15 +340,8 @@ public class GameScreen extends Screen {
                 touchDraggedX = event.x;
                 touchDraggedY = event.y;
 
-                angle = myMath.calculateAngle(touchDownX, touchDownY,
-                                              touchDraggedX, touchDraggedY);
-
-                angle += 180;
-
-                //rocket.setAngleDirectXY(angle);
-
                 //рисуем огонёк у ракеты
-                if (rocket.getFuelMass() > 0.01) {
+                if (rocket.getFuelMass() > 0.1) {
 
                     rocketImpulse();
                     trust = true;
@@ -387,15 +380,16 @@ public class GameScreen extends Screen {
     //проверяем не собрана ли звезда
     private void isStarCoinUp(){
 
-        for (VectorXYZ starCoin: starCoins) {
+        for (int i = 0; i < starCoins.size(); i++) {
 
+			VectorXYZ starCoin = starCoins.get(i);
+			
             float radius = (float) Math.sqrt(Math.pow(rocket.getX() - starCoin.getX(), 2) +
                     Math.pow(rocket.getY() - starCoin.getY(), 2));
 
             if (radius <= 15) {
 
-                starCoin.setX(-10000);
-                starCoin.setY(-10000);
+                starCoins.remove(i);
                 starCoinsUp++;
             }
         }
@@ -423,8 +417,10 @@ public class GameScreen extends Screen {
 
         float bombAngle;
 
-        for (Bomb bomb : bombs) {
+        for (int i = 0; i < bombs.size(); i++) {
 
+			Bomb bomb = bombs.get(i);
+			
             if (bomb.getZ() == 0) {
                 double radius = Math.sqrt(Math.pow(rocket.getX() - bomb.getX(), 2) +
                                           Math.pow(rocket.getY() - bomb.getY(), 2));
@@ -452,8 +448,10 @@ public class GameScreen extends Screen {
                 }
                 if (radius <= 50) {
 
-                    bomb.setZ(1000000000);
+                    //bomb.setZ(1000000000);
 
+					bombs.remove(i);
+					
                     bomb.setBombExplosive(true);
                     drawExplosive = true;
 
